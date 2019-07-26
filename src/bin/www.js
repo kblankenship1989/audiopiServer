@@ -6,8 +6,6 @@
 
 import { app, server } from '../app';
 import debugLib from 'debug';
-import { createServer } from 'http';
-// import WebSocket from 'ws';
 
 const debug = debugLib('audiopiserver:server');
 

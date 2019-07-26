@@ -1,8 +1,8 @@
 import { wsApp } from '../app';
 
-export const socketBroadcast = (source) => {
+export const socketBroadcast = (updateOn) => {
     const message = {
-        updateOn: source
+        updateOn
     };
     const clients = wsApp.getWss().clients;
     clients.forEach(client => {

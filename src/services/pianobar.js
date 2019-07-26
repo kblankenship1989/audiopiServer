@@ -33,40 +33,18 @@ export const readCurrentSong = () => {
         .catch((error) => error);
 }
 
-export const readStations = (req, res, next) => {
+export const readStations = () => {
     //const path = process.env.HOME + '/.config/pianobar/stationList';
     const path = '/Blankenship/github/audiopiServer/public/stationList';
-    fs.promises.open(path,'r')
+    return fs.promises.open(path,'r')
         .then((fileHandle, error) => {
             console.log('reading station list')
             if (error) {
-                return next(error);
+                return error;
             }
             return fileHandle.readFile();
         })
-        .then((stationList, error) => {
-            if (error) {
-                return next(error);
-            }
-            const stationListString = stationList.toString();
-            if (stationListString) {
-                var stationData = stationListString.split('\n');
-                const stationListJson = stationData.map((station) => {
-                    const stationArray = station.split(":");
-                    return {
-                        stationId: stationArray[0],
-                        stationName: stationArray[1]
-                    };
-                })
-                res.statusCode = 200;
-                res.setHeader('Content-Type','application/json');
-                res.json(stationListJson);
-            } else {
-                error = new Error('No station list data available');
-                return next(error);
-            }
-        })
-        .catch((error) => next(error));
+        .catch((error) => error);
 }
 
 export const startPianoBar = (callBack) => {
