@@ -4,6 +4,8 @@ import bodyParser from 'body-parser';
 import { writeCommandToFifo, readStations, readCurrentSong } from '../../services/pianobar';
 import { socketBroadcast } from '../../services/socketFunctions';
 
+export var songHistory = [];
+
 var pandoraRouter = Router();
 pandoraRouter.use(bodyParser.json());
 
@@ -61,69 +63,36 @@ pandoraRouter.route('/')
 
 pandoraRouter.route('/stations')
     .get((req, res, next) => {
-        let stations = {};
-        readCurrentSong()
-            .then((currentSong, error) => {
-                if (error) {
-                    return next(error);
-                }
-                const currentSongString = currentSong.toString();
-                if (currentSongString) {
-                    var songData = currentSongString.split(',,,');
-                    const currentSongJson = {
-                        artist: songData[0],
-                        title: songData[1],
-                        album: songData[2],
-                        coverArt: songData[3],
-                        rating: songData[4],
-                        stationName: songData[5]
-                    };
-                    readStations()
-                        .then((stationList, error) => {
-                            if (error) {
-                                return next(error);
-                            }
+        let stationList = [];
+        try {
+            stationList = await readStations();
 
-                            const stationListString = stationList.toString();
-                            if (stationListString) {
-                                var stationData = stationListString.split('\n');
-                                const stationListJson = stationData.map((station) => {
-                                    const stationArray = station.split(":");
-                                    return {
-                                        stationId: stationArray[0],
-                                        stationName: stationArray[1].replace('\r', '')
-                                    };
-                                });
-                                stations.stationList = stationListJson;
-                                stations.currentStation = stationListJson.find(station => station.stationName == currentSongJson.stationName)
-
-                                res.statusCode = 200;
-                                res.setHeader('Content-Type', 'application/json');
-                                res.json(stations);
-                            } else {
-                                error = new Error('No station list data available');
-                                return next(error);
-                            }
-                        })
-                        .catch((error) => next(error));
-                } else {
-                    error = new Error('No current song data available');
-                    return next(error);
-                }
-            })
-            .catch(error => next(error));
+            res.statusCode = 200;
+            res.setHeader('Content-Type', 'application/json');
+            res.json(stationList);
+        } catch (error) {
+            next(error);
+        }
     });
 
 pandoraRouter('/songs')
     .get((req, res, next) => {
-        res.send('returns list of all songs in database');
+        res.statusCode = 200;
+            res.setHeader('Content-Type', 'application/json');
+            res.json(songHistory.map((song,index) => ({id: index, song})));
     });
 
 pandoraRouter.route('songs/current')
     .post((req, res, next) => {
-        socketBroadcast('currentSong');
-        res.statusCode = 200;
-        res.setHeader('Content-Type', 'text/plain');
-        res.end('successfully sent to all clients!');
+        try{
+            const currentSong = await readCurrentSong();
+            songHistory.unshift(currentSong).slice(0,5);
+            socketBroadcast('currentSong');
+            res.statusCode = 200;
+            res.setHeader('Content-Type', 'text/plain');
+            res.end('song added to history');
+        } catch (error) {
+            next(error);
+        }
     })
 export default pandoraRouter;
