@@ -16,7 +16,6 @@ pandoraRouter.route('/')
         try {
             pandoraState.currentSong = await readCurrentSong();
             pandoraState.stationList = await readStations();
-            pandoraState.currentStation = pandoraState.stationList.find(station => station.stationName == pandoraState.currentSong.stationName);
 
             res.statusCode = 200;
             res.setHeader('Content-Type', 'application/json');
@@ -46,8 +45,6 @@ pandoraRouter.route('/')
 
                 if (action === validCommands.LOVE) {
                     socketBroadcast('rating');
-                } else if (req.query.command === 'SETSTATION') {
-                    socketBroadcast('station');
                 }
                 res.statusCode = 200;
                 res.setHeader('Content-Type', 'text/plain');
@@ -78,15 +75,15 @@ pandoraRouter.route('/stations')
 pandoraRouter('/songs')
     .get((req, res, next) => {
         res.statusCode = 200;
-            res.setHeader('Content-Type', 'application/json');
-            res.json(songHistory.map((song,index) => ({id: index, song})));
+        res.setHeader('Content-Type', 'application/json');
+        res.json(songHistory.map((song, index) => ({ id: index, song })));
     });
 
 pandoraRouter.route('songs/current')
     .post((req, res, next) => {
-        try{
+        try {
             const currentSong = await readCurrentSong();
-            songHistory.unshift(currentSong).slice(0,5);
+            songHistory.unshift(currentSong).slice(0, 5);
             socketBroadcast('currentSong');
             res.statusCode = 200;
             res.setHeader('Content-Type', 'text/plain');
