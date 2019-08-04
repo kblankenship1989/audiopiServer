@@ -27,8 +27,7 @@ export const writeCommandToFifo = async (action) => {
 }
 
 export const readCurrentSong = async () => {
-    //const path = process.env.HOME + '/.config/pianobar/currentSong';
-    const path = '/Blankenship/github/audiopiServer/public/currentSong';
+    const path = process.env.HOME + '/audiopiServer/public/currentSong';
     const fileHandle = await fs.promises.open(path, 'r');
     console.log('reading current song')
     const currentSong = await fileHandle.readFile();
@@ -49,8 +48,7 @@ export const readCurrentSong = async () => {
 };
 
 export const readStations = async () => {
-    //const path = process.env.HOME + '/.config/pianobar/stationList';
-    const path = '/Blankenship/github/audiopiServer/public/stationList';
+    const path = process.env.HOME + '/audiopiServer/public/stationList';
     const fileHandle = await fs.promises.open(path, 'r')
     console.log('reading station list')
     const stationList = await fileHandle.readFile();
@@ -70,11 +68,11 @@ export const readStations = async () => {
 };    
 
 export const startPianoBar = async () => {
-    //exec('bash /home/pi/Patiobar/scripts/pbstart.sh', callBack);
-    await exec('bash /h/Blankenship/github/audiopiServer/public/pbStart.sh');
+    const path = process.env.HOME + '/audiopiServer/public/pbStart.sh'
+    await exec('bash ' + path);
 }
 
 export const stopPianoBar = async () => {
-    //exec('bash /home/pi/Patiobar/scripts/pbstop.sh', callBack);
-    await exec('bash /h/Blankenship/github/audiopiServer/public/pbStop.sh');
+    const path = process.env.HOME + '/audiopiServer/public/pbStop.sh'
+    await exec('bash ' + path);
 }
