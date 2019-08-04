@@ -43,9 +43,6 @@ pandoraRouter.route('/')
             try {
                 await writeCommandToFifo(action)
 
-                if (action === validCommands.LOVE) {
-                    socketBroadcast('rating');
-                }
                 res.statusCode = 200;
                 res.setHeader('Content-Type', 'text/plain');
                 res.end(action + ' has been written successfully!');
@@ -70,6 +67,9 @@ pandoraRouter.route('/stations')
         } catch (error) {
             next(error);
         }
+    })
+    .post((req, res, next) => {
+        socketBroadcast('station');
     });
 
 pandoraRouter.route('/songs')
@@ -81,15 +81,19 @@ pandoraRouter.route('/songs')
 
 pandoraRouter.route('songs/current')
     .post(async (req, res, next) => {
-        try {
-            const currentSong = await readCurrentSong();
-            songHistory.unshift(currentSong).slice(0, 5);
-            socketBroadcast('currentSong');
-            res.statusCode = 200;
-            res.setHeader('Content-Type', 'text/plain');
-            res.end('song added to history');
-        } catch (error) {
-            next(error);
+        if (req.query.rating) {
+            socketBroadcast('rating');
+        } else {
+            try {
+                const currentSong = await readCurrentSong();
+                songHistory.unshift(currentSong).slice(0, 5);
+                socketBroadcast('currentSong');
+                res.statusCode = 200;
+                res.setHeader('Content-Type', 'text/plain');
+                res.end('song added to history');
+            } catch (error) {
+                next(error);
+            }
         }
     })
 export default pandoraRouter;
