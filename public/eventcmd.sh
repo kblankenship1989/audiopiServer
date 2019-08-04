@@ -8,8 +8,8 @@ baseurl="${host}:${port}/api"
 # Here be dragons! #
 # (Don't change anything below) #
 
-stationList="${HOME}/.config/pianobar/stationList"
-currentSong="${HOME}/.config/pianobar/currentSong"
+stationList="${HOME}/audiopiServer/public/stationList"
+currentSong="${HOME}/audiopiServer/public/currentSong"
 
 while read L; do
 	k="`echo "$L" | cut -d '=' -f 1`"
