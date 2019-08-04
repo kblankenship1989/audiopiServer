@@ -11,7 +11,7 @@ pandoraRouter.use(bodyParser.json());
 
 /* GET users listing. */
 pandoraRouter.route('/')
-    .get((req, res, next) => {
+    .get(async (req, res, next) => {
         let pandoraState = {};
         try {
             pandoraState.currentSong = await readCurrentSong();
@@ -24,7 +24,7 @@ pandoraRouter.route('/')
             next(error);
         }
     })
-    .post((req, res, next) => {
+    .post(async (req, res, next) => {
         const validCommands = {
             LOVE: '+',
             HATE: '-',
@@ -59,7 +59,7 @@ pandoraRouter.route('/')
     });
 
 pandoraRouter.route('/stations')
-    .get((req, res, next) => {
+    .get(async (req, res, next) => {
         let stationList = [];
         try {
             stationList = await readStations();
@@ -72,7 +72,7 @@ pandoraRouter.route('/stations')
         }
     });
 
-pandoraRouter('/songs')
+pandoraRouter.route('/songs')
     .get((req, res, next) => {
         res.statusCode = 200;
         res.setHeader('Content-Type', 'application/json');
@@ -80,7 +80,7 @@ pandoraRouter('/songs')
     });
 
 pandoraRouter.route('songs/current')
-    .post((req, res, next) => {
+    .post(async (req, res, next) => {
         try {
             const currentSong = await readCurrentSong();
             songHistory.unshift(currentSong).slice(0, 5);

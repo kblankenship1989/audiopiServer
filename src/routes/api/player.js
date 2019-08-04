@@ -12,7 +12,7 @@ playerRouter.use(bodyParser.json());
 
 /* GET users listing. */
 playerRouter.route('/')
-    .get(function (req, res, next) {
+    .get((req, res, next) => {
         let playerState = {
             playerRunning,
             isPaused
@@ -21,7 +21,7 @@ playerRouter.route('/')
         res.setHeader('Content-Type', 'application/json');
         res.json(playerState);
     })
-    .post((req, res, next) => {
+    .post(async (req, res, next) => {
         let response;
         const validCommands = {
             VOLUME_UP: ')',

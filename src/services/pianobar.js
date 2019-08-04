@@ -74,7 +74,7 @@ export const startPianoBar = async () => {
     await exec('bash /h/Blankenship/github/audiopiServer/public/pbStart.sh');
 }
 
-export const stopPianoBar = () => {
+export const stopPianoBar = async () => {
     //exec('bash /home/pi/Patiobar/scripts/pbstop.sh', callBack);
     await exec('bash /h/Blankenship/github/audiopiServer/public/pbStop.sh');
 }
