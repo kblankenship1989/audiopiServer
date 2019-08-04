@@ -55,7 +55,7 @@ export const readStations = async () => {
     const stationListString = stationList.toString();
     if (stationListString) {
         const stationData = stationListString.split('\n');
-        return stationData.map((station) => {
+        return stationData.filter((station) => station.includes(':')).map((station) => {
             const stationArray = station.split(":");
             return {
                 stationId: stationArray[0],
