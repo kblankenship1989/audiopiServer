@@ -79,14 +79,15 @@ pandoraRouter.route('/songs')
         res.json(songHistory.map((song, index) => ({ id: index, song })));
     });
 
-pandoraRouter.route('songs/current')
+pandoraRouter.route('/songs/current')
     .post(async (req, res, next) => {
         if (req.query.rating) {
             socketBroadcast('rating');
         } else {
             try {
                 const currentSong = await readCurrentSong();
-                songHistory.unshift(currentSong).slice(0, 5);
+                songHistory.unshift(currentSong);
+		songHistory = songHistory.slice(0,5);
                 socketBroadcast('currentSong');
                 res.statusCode = 200;
                 res.setHeader('Content-Type', 'text/plain');

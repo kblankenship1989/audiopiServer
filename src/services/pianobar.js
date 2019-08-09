@@ -2,8 +2,7 @@ import fs from 'fs';
 import { exec } from 'child_process';
 import { playerRunning } from '../routes/api/player'
 
-//var fifo = process.env.PIANOBAR_FIFO || '/home/pi/Patiobar/ctl';
-var fifo = '/Blankenship/github/audiopiServer/public/ctl';
+var fifo = process.env.HOME + '/audiopiServer/public/ctl';
 
 export const writeCommandToFifo = async (action) => {
     let error;
