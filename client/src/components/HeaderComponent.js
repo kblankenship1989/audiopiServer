@@ -1,6 +1,5 @@
 import React from 'react';
 import {Nav,NavItem,NavLink,Navbar,NavbarToggler,NavbarBrand,Collapse} from 'reactstrap';
-import {join} from 'path';
 
 function Header(props) {
     return(
@@ -8,7 +7,7 @@ function Header(props) {
             <Navbar dark expand="md">
                 <div className="container">
                     <NavbarBrand className="mr-auto" href="/" target="_blank">
-                        <img src={join(__dirname,"assets/raspi.png")} width="40" height="35" alt="" /> 
+                        <img src={require('../assets/Raspi.png')} width="40" height="35" alt="" /> 
                     </NavbarBrand>
                     <NavbarToggler onClick={props.toggleNav} />
                     <Collapse isOpen={props.isNavOpen} navbar>
