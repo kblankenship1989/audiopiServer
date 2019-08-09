@@ -1,0 +1,39 @@
+body {
+	font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+	background-color: #333;
+}
+
+nav {
+	background-color: rgb(0, 51, 135);
+}
+
+#controls {
+}
+
+#details {
+	margin:10px 0;
+	padding:0 40px;
+}
+
+#title {
+	color: orange;
+	font-size:130%;
+}
+
+#albumartist {
+	color: orange;
+	font-style: italic;
+	font-size:110%;
+}
+
+#player {
+	background-color: #222;
+	border-radius:3px;
+	max-width:640px;
+	padding:5px;
+}
+
+#stations button {
+ margin-left: 1px;
+ margin-right: 1px;
+}
