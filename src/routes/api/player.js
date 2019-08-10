@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import bodyParser from 'body-parser';
-import { find } from 'find-process';
+import * as findProcess from 'find-process';
 
 import { writeCommandToFifo, stopPianoBar, startPianoBar } from '../../services/pianobar';
 import { socketBroadcast } from '../../services/socketFunctions';
@@ -9,8 +9,13 @@ export let isPaused = false,
 	playerRunning;
 
 async function findPianobar() {
-	pianobarProcesses = await find('name','pianobar');
-	return pianobarProcesses.length;
+	try{
+        const pianobarProcesses = await findProcess.default('name','pianobar');
+        return pianobarProcesses.length;
+    } catch (error) {
+        console.log(error);
+        return false;
+    };
 };
 
 playerRunning = findPianobar();
