@@ -6,19 +6,18 @@ import { writeCommandToFifo, stopPianoBar, startPianoBar } from '../../services/
 import { socketBroadcast } from '../../services/socketFunctions';
 
 export let isPaused = false,
-	playerRunning;
+	playerRunning = false;
 
-async function findPianobar() {
-	try{
-        const pianobarProcesses = await findProcess.default('name','pianobar');
-        return pianobarProcesses.length;
-    } catch (error) {
-        console.log(error);
-        return false;
-    };
-};
-
-playerRunning = findPianobar();
+setInterval(() => {
+	findProcess.default('name','pianobar')
+		.then((list) => {
+			const pianobarFound = !!list.length;
+			if (pianobarFound != playerRunning){
+				playerRunning = pianobarFound;
+				socketBroadcast('player');
+			};
+		});
+},5000);
 
 var playerRouter = Router();
 playerRouter.use(bodyParser.json());
