@@ -1,11 +1,19 @@
 import { Router } from 'express';
 import bodyParser from 'body-parser';
+import { find } from 'find-process';
 
 import { writeCommandToFifo, stopPianoBar, startPianoBar } from '../../services/pianobar';
 import { socketBroadcast } from '../../services/socketFunctions';
 
-export var isPaused = false;
-export var playerRunning = false;
+export let isPaused = false,
+	playerRunning;
+
+async function findPianobar() {
+	pianobarProcesses = await find('name','pianobar');
+	return pianobarProcesses.length;
+};
+
+playerRunning = findPianobar();
 
 var playerRouter = Router();
 playerRouter.use(bodyParser.json());

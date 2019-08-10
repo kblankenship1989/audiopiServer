@@ -1,8 +1,10 @@
 import fs from 'fs';
 import { exec } from 'child_process';
+import { join } from 'path';
+
 import { playerRunning } from '../routes/api/player'
 
-var fifo = process.env.HOME + '/.config/pianobar/ctl';
+var fifo = '/home/pi/.config/pianobar/ctl';
 
 export const writeCommandToFifo = async (action) => {
     let error;
@@ -26,7 +28,7 @@ export const writeCommandToFifo = async (action) => {
 }
 
 export const readCurrentSong = async () => {
-    const path = process.env.HOME + '/audiopiServer/public/currentSong';
+    const path = join(__dirname, '../../public/currentSong');
     const fileHandle = await fs.promises.open(path, 'r');
     console.log('reading current song')
     const currentSong = await fileHandle.readFile();
@@ -47,7 +49,7 @@ export const readCurrentSong = async () => {
 };
 
 export const readStations = async () => {
-    const path = process.env.HOME + '/audiopiServer/public/stationList';
+    const path = join(__dirname, '../../public/stationList');
     const fileHandle = await fs.promises.open(path, 'r')
     console.log('reading station list')
     const stationList = await fileHandle.readFile();
@@ -67,11 +69,11 @@ export const readStations = async () => {
 };    
 
 export const startPianoBar = async () => {
-    const path = process.env.HOME + '/audiopiServer/public/pbStart.sh'
+    const path = join(__dirname, '../../public/pbStart.sh');
     await exec('bash ' + path);
 }
 
 export const stopPianoBar = async () => {
-    const path = process.env.HOME + '/audiopiServer/public/pbStop.sh'
+    const path = join(__dirname, '../../public/pbStop.sh');
     await exec('bash ' + path);
 }
