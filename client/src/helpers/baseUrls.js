@@ -1,2 +1,2 @@
-export const wsBaseUrl = 'ws://pandorapi:3000/ws';
-export const apiBaseUrl = 'http://pandorapi:3000/api';
+export const wsBaseUrl = 'ws://local:3000/ws';
+export const apiBaseUrl = 'http://local:3000/api';

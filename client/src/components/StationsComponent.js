@@ -1,8 +1,7 @@
 import React from 'react';
 import { Col } from 'reactstrap';
 import Select from 'react-select';
-
-const apiBaseUrl = 'http://localhost:9000/api';
+import { apiBaseUrl } from '../helpers/baseUrls';
 
 export const StationSelect = ({stationList, currentStationName, playerRunning}) => {
 
