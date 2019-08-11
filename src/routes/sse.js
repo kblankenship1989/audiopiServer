@@ -53,5 +53,5 @@ export const publishPandora = (eventData) => {
 };
 
 export const publishPlayer = (eventData) => {
-    emmiter.emit('player', eventData);
+    emitter.emit('player', eventData);
 };

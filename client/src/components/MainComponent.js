@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button } from 'reactstrap';
+import { Button, Alert } from 'reactstrap';
 
 import Header from './HeaderComponent';
 import Footer from './FooterComponent';
@@ -9,25 +9,27 @@ import { apiBaseUrl } from '../helpers/baseUrls';
 
 export const Main = (props) => {
     const [isNavOpen, setIsNavOpen] = useState(false);
+    const [isAlerting, setIsAlerting] = useState(false);
+    const [alertValue, setAlertValue] = useState();
 
     const toggleNav = () => {
         setIsNavOpen(!isNavOpen);
     }
 
     const eventHandlers = {
-        'player': (data) => props.updatePlayer(data),
-        'pandora': (data) => props.updatePandora(data)
+        'player': (e) => {
+            setAlertValue(e);
+            setIsAlerting(true);
+            props.updatePlayer(e.data)
+        },
+        'pandora': (e) => props.updatePandora(e.data)
     };
 
     useEffect(() => {
         if (props.eventSource){
-            props.eventSource.onmessage = (e) => {
-                if (e.lastEventId === '-1') {
-                    eventSource.close();
-                } else {
-                    eventHandlers[e.event](e.data);
-                }
-            }
+            Object.keys(eventHandlers).forEach((eventType) => {
+                props.eventSource.addEventListener(eventType, eventHandlers[eventType]);
+            });
         }
     },[]);
 
@@ -40,6 +42,7 @@ export const Main = (props) => {
         if (props.player.playerRunning) {
             return (
                 <>
+                    <Alert isOpen={isAlerting} >{alertValue}</Alert>
                     <StationSelect
                         stationList={props.pandora.stationList}
                         currentStation={props.pandora.currentStation}

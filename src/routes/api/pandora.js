@@ -42,7 +42,7 @@ pandoraRouter.route('/')
             console.log('Starting write to file');
             action = validCommands[req.query.command];
             if (action === validCommands.SETSTATION) {
-                action += req.query.stationId.toString();
+                action = `${action}${req.query.stationId.toString()}\n`;
             }
 
             try {
@@ -93,7 +93,7 @@ pandoraRouter.route('/songs/current')
         } else {
             try {
                 pandoraState.currentSong.currentSong = await readCurrentSong();
-                pandoraState.songHistory.unshift(currentSong);
+                pandoraState.songHistory.unshift(pandoraState.currentSong.currentSong);
                 pandoraState.songHistory = pandoraState.songHistory.slice(0, 5);
                 publishPandora(pandoraState);
                 res.statusCode = 200;
