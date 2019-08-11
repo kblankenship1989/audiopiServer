@@ -3,18 +3,20 @@ import bodyParser from 'body-parser';
 import * as findProcess from 'find-process';
 
 import { writeCommandToFifo, stopPianoBar, startPianoBar } from '../../services/pianobar';
-import { socketBroadcast } from '../../services/socketFunctions';
+import { publishPlayer } from '../sse';
 
-export let isPaused = false,
-	playerRunning = false;
+export let playerState = {
+    playerRunning: false,
+    isPaused: false
+}
 
 setInterval(() => {
 	findProcess.default('name','pianobar')
 		.then((list) => {
 			const pianobarFound = !!list.length;
-			if (pianobarFound != playerRunning){
-				playerRunning = pianobarFound;
-				socketBroadcast('player');
+			if (pianobarFound != playerState.playerRunning){
+				playerState.playerRunning = pianobarFound;
+				publishPlayer(playerState);
 			};
 		});
 },5000);
@@ -25,10 +27,6 @@ playerRouter.use(bodyParser.json());
 /* GET users listing. */
 playerRouter.route('/')
     .get((req, res, next) => {
-        let playerState = {
-            playerRunning,
-            isPaused
-        };
         res.statusCode = 200;
         res.setHeader('Content-Type', 'application/json');
         res.json(playerState);
@@ -50,21 +48,21 @@ playerRouter.route('/')
             try {
                 if (action === validCommands.STOPPLAYER) {
                     await stopPianoBar();
-                    playerRunning = false;
-                    isPaused = false;
-                    socketBroadcast('player');
+                    playerState.playerRunning = false;
+                    playerState.isPaused = false;
+                    publishPlayer(playerState);
                     response = 'Successfully terminated PianoBar';
                 } else if (action === validCommands.STARTPLAYER) {
                     await startPianoBar();
-                    playerRunning = true;
-                    isPaused = false;
-                    socketBroadcast('player');
+                    playerState.playerRunning = true;
+                    playerState.isPaused = false;
+                    publishPlayer(playerState);
                     response = 'Successfully started PianoBar';
                 } else {
                     await writeCommandToFifo(action);
                     if (action === validCommands.PLAYPAUSE) {
-                        isPaused = !isPaused;
-                        socketBroadcast('isPaused');
+                        playerState.isPaused = !isPaused;
+                        publishPlayer(playerState);
                     }
                     response = action + ' has been written successfully!';
                 }

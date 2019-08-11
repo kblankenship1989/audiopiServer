@@ -2,27 +2,32 @@ import { Router } from 'express';
 import bodyParser from 'body-parser';
 
 import { writeCommandToFifo, readStations, readCurrentSong } from '../../services/pianobar';
-import { socketBroadcast } from '../../services/socketFunctions';
+import { publishPandora } from '../sse'
 
-export var songHistory = [];
+export let pandoraState = {
+    currentSong: {
+        currentSong: {}
+    },
+    stationList: [],
+    songHistory: []
+};
 
-var pandoraRouter = Router();
+const getInitialState = async () => {
+    pandoraState.currentSong.currentSong = await readCurrentSong();
+    pandoraState.stationList = await readStations();
+};
+
+getInitialState();
+
+const pandoraRouter = Router();
 pandoraRouter.use(bodyParser.json());
 
 /* GET users listing. */
 pandoraRouter.route('/')
-    .get(async (req, res, next) => {
-        let pandoraState = {};
-        try {
-            pandoraState.currentSong = await readCurrentSong();
-            pandoraState.stationList = await readStations();
-
-            res.statusCode = 200;
-            res.setHeader('Content-Type', 'application/json');
-            res.json(pandoraState);
-        } catch (error) {
-            next(error);
-        }
+    .get((req, res, next) => {
+        res.statusCode = 200;
+        res.setHeader('Content-Type', 'application/json');
+        res.json(pandoraState);
     })
     .post(async (req, res, next) => {
         const validCommands = {
@@ -56,39 +61,41 @@ pandoraRouter.route('/')
     });
 
 pandoraRouter.route('/stations')
-    .get(async (req, res, next) => {
-        let stationList = [];
+    .get((req, res, next) => {
+        res.statusCode = 200;
+        res.setHeader('Content-Type', 'application/json');
+        res.json(pandoraState.stationList);
+    })
+    .post(async (req, res, next) => {
         try {
-            stationList = await readStations();
-
+            pandoraState.stationList = await readStations();
+            publishPandora(pandoraState);
             res.statusCode = 200;
             res.setHeader('Content-Type', 'application/json');
-            res.json(stationList);
+            res.json(pandoraState.stationList);
         } catch (error) {
             next(error);
         }
-    })
-    .post((req, res, next) => {
-        socketBroadcast('station');
     });
 
 pandoraRouter.route('/songs')
     .get((req, res, next) => {
         res.statusCode = 200;
         res.setHeader('Content-Type', 'application/json');
-        res.json(songHistory.map((song, index) => ({ id: index, song })));
+        res.json(pandoraState.songHistory.map((song, index) => ({ id: index, song })));
     });
 
 pandoraRouter.route('/songs/current')
     .post(async (req, res, next) => {
         if (req.query.rating) {
-            socketBroadcast('rating');
+            pandoraState.currentSong.currentSong.rating = req.query.rating;
+            publishPandora(pandoraState);
         } else {
             try {
-                const currentSong = await readCurrentSong();
-                songHistory.unshift(currentSong);
-		songHistory = songHistory.slice(0,5);
-                socketBroadcast('currentSong');
+                pandoraState.currentSong.currentSong = await readCurrentSong();
+                pandoraState.songHistory.unshift(currentSong);
+                pandoraState.songHistory = pandoraState.songHistory.slice(0, 5);
+                publishPandora(pandoraState);
                 res.statusCode = 200;
                 res.setHeader('Content-Type', 'text/plain');
                 res.end('song added to history');

@@ -13,7 +13,7 @@ import usersRouter from './routes/api/users';
 import playerRouter from './routes/api/player';
 import pandoraRouter from './routes/api/pandora';
 import relaysRouter from './routes/api/relays';
-import { wsRouter } from './routes/ws';
+import { subscribe } from './routes/sse';
 
 export const app = express();
 export const server = Server(app);
@@ -39,7 +39,7 @@ app.use('/api/player', playerRouter);
 app.use('/api/pandora', pandoraRouter);
 app.use('/api/relays', relaysRouter);
 
-app.use('/ws', wsRouter);
+app.use('/sse', cors(), subscribe);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -51,7 +51,7 @@ app.use(function(err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
-
+  console.log(err);
   // render the error page
   res.status(err.status || 500);
   res.render('error');

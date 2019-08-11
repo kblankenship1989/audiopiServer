@@ -1,44 +1,35 @@
 import React, { useState, useEffect } from 'react';
-import WebSocket from 'react-websocket';
 import { Button } from 'reactstrap';
 
 import Header from './HeaderComponent';
 import Footer from './FooterComponent';
 import { StationSelect } from './StationsComponent';
 import SongControls from './SongComponent';
-import { apiBaseUrl, wsBaseUrl } from '../helpers/baseUrls';
+import { apiBaseUrl } from '../helpers/baseUrls';
 
 export const Main = (props) => {
     const [isNavOpen, setIsNavOpen] = useState(false);
-
-    const { fetchPandora, fetchPlayer } = props;
-
-    useEffect(() => {
-        fetchPandora();
-        fetchPlayer();
-    }, []);
 
     const toggleNav = () => {
         setIsNavOpen(!isNavOpen);
     }
 
-    const handleMessage = (message) => {
-        console.log(message);
-        const updateOn = JSON.parse(message).updateOn;
-        console.log(updateOn);
-
-        const updateTriggers = {
-            'player': props.fetchPlayer,
-            'pandora': props.fetchPandora,
-            'isPaused': props.fetchIsPaused,
-            'playerRunning': props.fetchPlayerRunning,
-            'rating': props.updateSongRating,
-            'currentSong': props.fetchCurrentSong,
-            'station': props.fetchStations
-        }
-
-        return Object.keys(updateTriggers).includes(updateOn) ? updateTriggers[updateOn]() : null;
+    const eventHandlers = {
+        'player': (data) => props.updatePlayer(data),
+        'pandora': (data) => props.updatePandora(data)
     };
+
+    useEffect(() => {
+        if (props.eventSource){
+            props.eventSource.onmessage = (e) => {
+                if (e.lastEventId === '-1') {
+                    eventSource.close();
+                } else {
+                    eventHandlers[e.event](e.data);
+                }
+            }
+        }
+    },[]);
 
     const startPlayer = () => {
         fetch(apiBaseUrl + '/player?command=STARTPLAYER', { method: 'post' })
@@ -83,10 +74,6 @@ export const Main = (props) => {
             <Body />
             <br />
             <Footer />
-            <WebSocket
-                url={wsBaseUrl}
-                onMessage={handleMessage}
-            />
         </div>
     );
 }

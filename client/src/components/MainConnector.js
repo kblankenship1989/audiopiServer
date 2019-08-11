@@ -12,13 +12,8 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = (dispatch) => ({
-    fetchCurrentSong: () => {dispatch(ActionCreators.fetchCurrentSong())},
-    fetchIsPaused: () => {dispatch(ActionCreators.fetchIsPaused())},
-    fetchPandora: () => {dispatch(ActionCreators.fetchPandora())},
-    fetchPlayer: () => {dispatch(ActionCreators.fetchPlayer())},
-    fetchPlayerRunning: () => {dispatch(ActionCreators.fetchPlayerRunning())},
-    updateSongRating: () => {dispatch(ActionCreators.updateSongRating())},
-    fetchStations: () => {dispatch(ActionCreators.fetchStations())}
+    updatePandora: (newPandora) => {dispatch(ActionCreators.updatePandora(newPandora))},
+    updatePlayer: (newPlayer) => {dispatch(ActionCreators.updatePlayer(newPlayer))}
 });
 
 export const getMainConnector = () => withRouter(connect(mapStateToProps, mapDispatchToProps)(Main));
