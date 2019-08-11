@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Alert } from 'reactstrap';
+import { Button } from 'reactstrap';
 
 import Header from './HeaderComponent';
 import Footer from './FooterComponent';
@@ -9,8 +9,6 @@ import { apiBaseUrl, SSEUrl } from '../helpers/baseUrls';
 
 export const Main = (props) => {
     const [isNavOpen, setIsNavOpen] = useState(false);
-    const [isAlerting, setIsAlerting] = useState(false);
-    const [alertValue, setAlertValue] = useState();
     const [eventSource, setEventSource] = useState(new EventSource(SSEUrl));
 
     const toggleNav = () => {
@@ -28,8 +26,7 @@ export const Main = (props) => {
         }
 
         eventSource.onmessage = (e) => {
-            setAlertValue(e);
-            setIsAlerting(true);
+            console.log(e);
         }
 
         return () => eventSource.close();
@@ -46,7 +43,6 @@ export const Main = (props) => {
         if (props.player.playerRunning) {
             return (
                 <>
-                    <Alert isOpen={isAlerting} >{alertValue}</Alert>
                     <StationSelect
                         stationList={props.pandora.stationList}
                         currentStation={props.pandora.currentStation}
