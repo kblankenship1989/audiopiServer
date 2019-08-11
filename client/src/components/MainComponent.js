@@ -18,11 +18,7 @@ export const Main = (props) => {
     }
 
     const eventHandlers = {
-        'pandora': (e) => {
-            setAlertValue(e);
-            setIsAlerting(true);
-            props.updatePandora(e.data)
-        },
+        'pandora': (e) => props.updatePandora(e.data),
         'player': (e) => props.updatePlayer(e.data)
     };
 
@@ -31,9 +27,10 @@ export const Main = (props) => {
             setEventSource(new EventSource(SSEUrl));
         }
 
-        Object.keys(eventHandlers).forEach((eventType) => {
-            eventSource.addEventListener(eventType, eventHandlers[eventType]);
-        });
+        eventSource.onmessage = (e) => {
+            setAlertValue(e);
+            setIsAlerting(true);
+        }
 
         return () => eventSource.close();
     },[]);
