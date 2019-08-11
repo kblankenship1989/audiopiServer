@@ -7,13 +7,14 @@ const emitter = new EventEmitter();
 export const subscribe = (req, res, next) => {
     let id = 0;
 
-    res.statusCode = 200;
-    res.setHeader('Content-Type', 'text/event-stream');
-    res.setHeader('Cache-Control', 'no-cache');
-    res.setHeader('Connection', 'keep-alive');
+    res.writeHead(200, {
+        Connection: "keep-alive",
+        "Content-Type": "text/event-stream",
+        "Cache-Control": "no-cache"
+    });
     
     const nln = function() {
-		res.write('\n');
+        res.write('\n');
     };
     
     const hbt = setInterval(nln, 15000);
@@ -21,14 +22,14 @@ export const subscribe = (req, res, next) => {
     const onPlayer = function(data) {
         id += 1
 		res.write('retry: 500\n');
-		res.write(`event: player\n`);
+		res.write('event: player\n');
 		res.write(`data: ${JSON.stringify(data)}\n\n`);
     };
 
     const onPandora = function(data) {
         id += 1
 		res.write('retry: 500\n');
-		res.write(`event: pandora\n`);
+		res.write('event: pandora\n');
 		res.write(`data: ${JSON.stringify(data)}\n\n`);
     };
     

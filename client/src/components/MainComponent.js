@@ -10,7 +10,7 @@ import { apiBaseUrl, SSEUrl } from '../helpers/baseUrls';
 export const Main = (props) => {
     const [isNavOpen, setIsNavOpen] = useState(false);
     const [eventSource, setEventSource] = useState(new EventSource(SSEUrl));
-
+    console.log(eventSource);
     const toggleNav = () => {
         setIsNavOpen(!isNavOpen);
     }
@@ -25,14 +25,26 @@ export const Main = (props) => {
             setEventSource(new EventSource(SSEUrl));
         }
 
-        eventSource.onmessage = (e) => {
-            console.log(e);
+        eventSource.onopen = () => {
+            console.log('Source opened!');
         }
+
+        eventSource.onerror = () => {
+            console.log(eventSource.readyState);
+        }
+
+        Object.keys(eventHandlers).forEach((eventType) => {
+            eventSource.addEventListener(eventType, (e) => {
+                console.log(eventType);
+                console.log(e);
+                eventHandlers[eventType](e);
+            });
+        });
 
         return () => eventSource.close();
     },[]);
 
-    setTimeout(eventSource.close(), 10000);
+    setTimeout(() => {eventSource.close()}, 1000000);
 
     const startPlayer = () => {
         fetch(apiBaseUrl + '/player?command=STARTPLAYER', { method: 'post' })

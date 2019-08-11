@@ -1,11 +1,11 @@
 import * as ActionTypes from './ActionTypes';
 
 export const updatePlayer = (newPlayer) => (dispatch) => {
-    dispatch(addPlayer(newPlayer));
+    dispatch(addPlayer(JSON.parse(newPlayer)));
 };
 
 export const updatePandora = (newPandora) => (dispatch) => {
-    dispatch(addPandora(newPandora));
+    dispatch(addPandora(JSON.parse(newPandora)));
 };
 
 export const addPlayer = (player) => ({
