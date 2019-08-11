@@ -1,6 +1,11 @@
 
 const path = require('path');
+const webpack = require('webpack');
 module.exports = {
+    devtool: false,
+    plugins: [
+        new webpack.SourceMapDevToolPlugin({})
+    ],
     entry: './client/src/index.js',
     output: {
         path: path.join(__dirname, 'dist'),

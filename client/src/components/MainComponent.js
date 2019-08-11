@@ -5,46 +5,24 @@ import Header from './HeaderComponent';
 import Footer from './FooterComponent';
 import { StationSelect } from './StationsComponent';
 import SongControls from './SongComponent';
-import { apiBaseUrl, SSEUrl } from '../helpers/baseUrls';
+import { apiBaseUrl } from '../helpers/baseUrls';
 
 export const Main = (props) => {
     const [isNavOpen, setIsNavOpen] = useState(false);
-    const [eventSource, setEventSource] = useState(new EventSource(SSEUrl));
-    console.log(eventSource);
+    
     const toggleNav = () => {
         setIsNavOpen(!isNavOpen);
     }
 
-    const eventHandlers = {
-        'pandora': (e) => props.updatePandora(e.data),
-        'player': (e) => props.updatePlayer(e.data)
-    };
-
     useEffect(() => {
-        if (!eventSource){
-            setEventSource(new EventSource(SSEUrl));
+        if (props.SSEPlayerState) {
+            props.updatePlayer(props.SSEPlayerState);
         }
 
-        eventSource.onopen = () => {
-            console.log('Source opened!');
+        if (props.SSEPandoraState) {
+            props.updatePandora(props.SSEPandoraState);
         }
-
-        eventSource.onerror = () => {
-            console.log(eventSource.readyState);
-        }
-
-        Object.keys(eventHandlers).forEach((eventType) => {
-            eventSource.addEventListener(eventType, (e) => {
-                console.log(eventType);
-                console.log(e);
-                eventHandlers[eventType](e);
-            });
-        });
-
-        return () => eventSource.close();
-    },[]);
-
-    setTimeout(() => {eventSource.close()}, 1000000);
+    },[props.SSEPlayerState, props.SSEPandoraState]);
 
     const startPlayer = () => {
         fetch(apiBaseUrl + '/player?command=STARTPLAYER', { method: 'post' })
