@@ -5,32 +5,37 @@ import Header from './HeaderComponent';
 import Footer from './FooterComponent';
 import { StationSelect } from './StationsComponent';
 import SongControls from './SongComponent';
-import { apiBaseUrl } from '../helpers/baseUrls';
+import { apiBaseUrl, SSEUrl } from '../helpers/baseUrls';
 
 export const Main = (props) => {
     const [isNavOpen, setIsNavOpen] = useState(false);
     const [isAlerting, setIsAlerting] = useState(false);
     const [alertValue, setAlertValue] = useState();
+    const [eventSource, setEventSource] = useState(new EventSource(SSEUrl));
 
     const toggleNav = () => {
         setIsNavOpen(!isNavOpen);
     }
 
     const eventHandlers = {
-        'player': (e) => {
+        'pandora': (e) => {
             setAlertValue(e);
             setIsAlerting(true);
-            props.updatePlayer(e.data)
+            props.updatePandora(e.data)
         },
-        'pandora': (e) => props.updatePandora(e.data)
+        'player': (e) => props.updatePlayer(e.data)
     };
 
     useEffect(() => {
-        if (props.eventSource){
-            Object.keys(eventHandlers).forEach((eventType) => {
-                props.eventSource.addEventListener(eventType, eventHandlers[eventType]);
-            });
+        if (!eventSource){
+            setEventSource(new EventSource(SSEUrl));
         }
+
+        Object.keys(eventHandlers).forEach((eventType) => {
+            eventSource.addEventListener(eventType, eventHandlers[eventType]);
+        });
+
+        return () => eventSource.close();
     },[]);
 
     const startPlayer = () => {

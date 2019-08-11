@@ -8,25 +8,12 @@ import { ConfigureStore } from './redux/configureStore';
 import { SSEUrl } from './helpers/baseUrls';
 
 const App = () => {
-  const [eventSource, setEventSource] = useState();
-
-  useEffect(() => {
-    if (!eventSource) {
-      setEventSource(new EventSource(SSEUrl));
-    }
-  }, [eventSource]);
-
-  useEffect(() => {
-    return () => eventSource.close();
-  },[])
 
   return (
     <Provider store={ConfigureStore()}>
       <BrowserRouter>
         <div className="App">
-          <MainConnector
-            eventSource={eventSource}
-            />
+          <MainConnector />
         </div>
       </BrowserRouter>
     </Provider>
