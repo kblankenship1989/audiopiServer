@@ -35,6 +35,8 @@ export const Main = (props) => {
         return () => eventSource.close();
     },[]);
 
+    setTimeout(eventSource.close(), 10000);
+
     const startPlayer = () => {
         fetch(apiBaseUrl + '/player?command=STARTPLAYER', { method: 'post' })
             .then(response => console.log(response), error => console.log(error));
