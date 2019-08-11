@@ -34,8 +34,10 @@ export const subscribe = (req, res, next) => {
     };
     
     if (id === 0) {
-        onPlayer(playerState);
-        onPandora(pandoraState);
+        setTimeout(() => {
+            onPlayer(playerState);
+            onPandora(pandoraState);
+        }, 500);
     }
     
     emitter.on('player', onPlayer);
