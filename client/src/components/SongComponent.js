@@ -13,7 +13,7 @@ function SongControls(props) {
 			id: 'love',
 			class: 'float-left',
 			command: '/pandora?command=LOVE',
-			icon: currentSong.rating === "1" ? fas.faThumbsUp : far.faThumbsUp
+			icon: currentSong.currentSong.rating === "1" ? fas.faThumbsUp : far.faThumbsUp
 		},
 		{
 			id: 'pauseplay',
@@ -52,7 +52,7 @@ function SongControls(props) {
 			icon: far.faThumbsDown
 		}
 	];
-	const songPlayed = Math.round(100*parseInt(currentSong.songPlayed)/parseInt(currentSong.songDuration));
+	const songPlayed = Math.round(100*parseInt(currentSong.currentSong.songPlayed)/parseInt(currentSong.currentSong.songDuration));
 	console.log(songPlayed);
 	
 	const handleClick = (command) => {
@@ -63,11 +63,11 @@ function SongControls(props) {
 
     return(
         <Col md="6 m-auto">
-            <Media src={currentSong.coverArt} alt={currentSong.title} className="col-12 m-auto"/>
+            <Media src={currentSong.currentSong.coverArt} alt={currentSong.currentSong.title} className="col-12 m-auto"/>
             <Media>
                 <Media bottom body>
-                    <Media heading>{currentSong.title}</Media>
-                    {currentSong.artist}
+                    <Media heading>{currentSong.currentSong.title}</Media>
+                    {currentSong.currentSong.artist}
                 </Media>
             </Media>
             <br />

@@ -52,12 +52,12 @@ export const Main = (props) => {
     };
 
     const Body = () => {
-        if (props.player.playerRunning) {
+        if (props.player.playerRunning && !props.player.isLoading && !props.pandora.isLoading) {
             return (
                 <>
                     <StationSelect
                         stationList={props.pandora.stationList}
-                        currentStation={props.pandora.currentStation}
+                        currentStationName={props.pandora.currentSong.currentSong.stationName}
                         playerRunning={props.player.playerRunning}
                     />
                     <br />

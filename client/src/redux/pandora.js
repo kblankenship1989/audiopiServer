@@ -6,13 +6,14 @@ const emptyState = {
         isLoading: true,
         currentSong: {}
     },
-    stationList: []
+    stationList: [],
+    songHistory: []
 };
 
 export const Pandora = (state = emptyState, action) => {
 
     const actionMap = {
-        [ActionTypes.ADD_PANDORA]: { ...state, ...action.payload, isLoading: false }
+        [ActionTypes.ADD_PANDORA]: { ...state, ...action.payload, currentSong: {...state.currentSong, ...(action.payload ? action.payload.currentSong : {}), isLoading: false}, isLoading: false }
     };
 
     return Object.keys(actionMap).includes(action.type) ? actionMap[action.type] : state;
