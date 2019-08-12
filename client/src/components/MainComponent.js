@@ -9,8 +9,7 @@ import { apiBaseUrl, SSEUrl } from '../helpers/baseUrls';
 
 export const Main = (props) => {
     const [isNavOpen, setIsNavOpen] = useState(false);
-    const [eventSource, setEventSource] = useState(new EventSource(SSEUrl));
-    console.log(eventSource);
+    const [eventSource, setEventSource] = useState();
     const toggleNav = () => {
         setIsNavOpen(!isNavOpen);
     }
@@ -21,30 +20,30 @@ export const Main = (props) => {
     };
 
     useEffect(() => {
-        if (!eventSource){
+        if (!eventSource) {
             setEventSource(new EventSource(SSEUrl));
-        }
+        } else {
+            eventSource.onopen = () => {
+                console.log('Source opened!');
+            }
 
-        eventSource.onopen = () => {
-            console.log('Source opened!');
-        }
+            eventSource.onerror = () => {
+                console.log(eventSource.readyState);
+            }
 
-        eventSource.onerror = () => {
-            console.log(eventSource.readyState);
-        }
-
-        Object.keys(eventHandlers).forEach((eventType) => {
-            eventSource.addEventListener(eventType, (e) => {
-                console.log(eventType);
-                console.log(e);
-                eventHandlers[eventType](e);
+            Object.keys(eventHandlers).forEach((eventType) => {
+                eventSource.addEventListener(eventType, (e) => {
+                    console.log(eventType);
+                    console.log(e);
+                    eventHandlers[eventType](e);
+                });
             });
-        });
+        }
+    }, [eventSource]);
 
+    useEffect(() => {
         return () => eventSource.close();
-    },[]);
-
-    setTimeout(() => {eventSource.close()}, 1000000);
+    }, []);
 
     const startPlayer = () => {
         fetch(apiBaseUrl + '/player?command=STARTPLAYER', { method: 'post' })
