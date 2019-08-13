@@ -6,7 +6,7 @@ import { writeCommandToFifo, stopPianoBar, startPianoBar } from '../../services/
 import { publishPlayer } from '../sse';
 
 export let playerState = {
-    playerRunning: true,
+    playerRunning: false,
     isPaused: false
 }
 

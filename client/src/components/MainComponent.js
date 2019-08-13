@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from 'reactstrap';
+import { Switch, Route } from 'react-router-dom';
 
 import Header from './HeaderComponent';
 import Footer from './FooterComponent';
@@ -50,7 +51,7 @@ export const Main = (props) => {
             .then(response => console.log(response), error => console.log(error));
     };
 
-    const Body = () => {
+    const Pandora = () => {
         if (props.player.playerRunning && !props.player.isLoading && !props.pandora.isLoading) {
             return (
                 <>
@@ -85,7 +86,8 @@ export const Main = (props) => {
         <div>
             <Header isNavOpen={isNavOpen} toggleNav={toggleNav} />
             <br />
-            <Body />
+            <Switch 
+            <Pandora />
             <br />
             <Footer />
         </div>
