@@ -1,31 +1,32 @@
 import React from 'react';
 import {Nav,NavItem,NavLink,Navbar,NavbarToggler,NavbarBrand,Collapse} from 'reactstrap';
+import {NavLink as RRNavLink} from 'react-router-dom';
 
 function Header(props) {
     return(
         <>
             <Navbar dark expand="md">
                 <div className="container">
-                    <NavbarBrand className="mr-auto" href="/" target="_blank">
+                    <NavbarBrand className="mr-auto" href="/" target="_blank" tag={RRNavLink}>
                         <img src={require('../assets/Raspi.png')} width="40" height="35" alt="" /> 
                     </NavbarBrand>
                     <NavbarToggler onClick={props.toggleNav} />
                     <Collapse isOpen={props.isNavOpen} navbar>
                         <Nav navbar>
                             <NavItem>
-                                <NavLink className="nav-link" to="/home">Home</NavLink>
+                                <NavLink tag={RRNavLink} className="nav-link" to="/home">Home</NavLink>
                             </NavItem>
                             <NavItem>
-                                <NavLink className="nav-link" to="/pandora">Pandora</NavLink>
+                                <NavLink tag={RRNavLink} className="nav-link" to="/pandora">Pandora</NavLink>
                             </NavItem>
                             <NavItem>
-                                <NavLink className="nav-link" to="/iheartradio">I-Heart Radio</NavLink>
+                                <NavLink tag={RRNavLink} className="nav-link" to="/iheartradio">I-Heart Radio</NavLink>
                             </NavItem>
                             <NavItem>
-                                <NavLink className="nav-link" to="/relays">Relay Control</NavLink>
+                                <NavLink tag={RRNavLink} className="nav-link" to="/relays">Relay Control</NavLink>
                             </NavItem>
                             <NavItem>
-                                <NavLink className="nav-link" to="/settings">Settings</NavLink>
+                                <NavLink tag={RRNavLink} className="nav-link" to="/settings">Settings</NavLink>
                             </NavItem>
                         </Nav>
                     </Collapse>

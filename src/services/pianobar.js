@@ -28,23 +28,30 @@ export const writeCommandToFifo = async (action) => {
 }
 
 export const readCurrentSong = async () => {
-    const path = join(__dirname, '../../public/currentSong');
-    const fileHandle = await fs.promises.open(path, 'r');
-    console.log('reading current song')
-    const currentSong = await fileHandle.readFile();
-    const currentSongString = currentSong.toString();
-    if (currentSongString) {
-        var songData = currentSongString.split(',,,');
-        return {
-            artist: songData[0],
-            title: songData[1],
-            album: songData[2],
-            coverArt: songData[3],
-            rating: songData[4],
-            stationName: songData[5]
-        };
+    let error;
+    
+    try{
+        const path = join(__dirname, '../../public/currentSong');
+        const fileHandle = await fs.promises.open(path, 'r');
+        console.log('reading current song')
+        const currentSong = await fileHandle.readFile();
+        const currentSongString = currentSong.toString();
+        if (currentSongString) {
+            var songData = currentSongString.split(',,,');
+            return {
+                artist: songData[0],
+                title: songData[1],
+                album: songData[2],
+                coverArt: songData[3],
+                rating: songData[4],
+                stationName: songData[5]
+            };
+        }
+
+        error = new Error('No current song data available.');
+    } catch (err) {
+        error = err;
     }
-    let error = new Error('No current song data available.');
     throw error;
 };
 
