@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from 'reactstrap';
+import { Switch, Route } from 'react-router-dom';
 
 import Header from './HeaderComponent';
 import Footer from './FooterComponent';
@@ -9,27 +10,43 @@ import { apiBaseUrl } from '../helpers/baseUrls';
 
 export const Main = (props) => {
     const [isNavOpen, setIsNavOpen] = useState(false);
-    
+    const [eventSource, setEventSource] = useState();
     const toggleNav = () => {
         setIsNavOpen(!isNavOpen);
     }
 
     useEffect(() => {
-        if (props.SSEPlayerState) {
-            props.updatePlayer(props.SSEPlayerState);
-        }
+        if (!eventSource) {
+            setEventSource(new EventSource(SSEUrl));
+        } else {
+            eventSource.onopen = () => {
+                console.log('Source opened!');
+            }
 
-        if (props.SSEPandoraState) {
-            props.updatePandora(props.SSEPandoraState);
+            eventSource.onerror = () => {
+                console.log(eventSource.readyState);
+            }
+
+            Object.keys(eventHandlers).forEach((eventType) => {
+                eventSource.addEventListener(eventType, (e) => {
+                    console.log(eventType);
+                    console.log(e);
+                    eventHandlers[eventType](e);
+                });
+            });
         }
-    },[props.SSEPlayerState, props.SSEPandoraState]);
+    }, [eventSource]);
+
+    useEffect(() => {
+        return () => eventSource.close();
+    }, []);
 
     const startPlayer = () => {
         fetch(apiBaseUrl + '/player?command=STARTPLAYER', { method: 'post' })
             .then(response => console.log(response), error => console.log(error));
     };
 
-    const Body = () => {
+    const Pandora = () => {
         if (props.player.playerRunning && !props.player.isLoading && !props.pandora.isLoading) {
             return (
                 <>
@@ -64,7 +81,8 @@ export const Main = (props) => {
         <div>
             <Header isNavOpen={isNavOpen} toggleNav={toggleNav} />
             <br />
-            <Body />
+            <Switch 
+            <Pandora />
             <br />
             <Footer />
         </div>
