@@ -5,6 +5,7 @@
   "scripts": {
     "postinstall": "webpack",
     "test": "echo \"Error: no test specified\" && exit 1",
+    "webpack": "webpack",
     "start:dev": "webpack -- -w & nodemon --ignore client/ --ignore dist/ --exec babel-node src/bin/www.js"
   },
   "dependencies": {
@@ -63,11 +64,18 @@
     "@babel/node": "^7.5.5",
     "@babel/preset-env": "^7.5.5",
     "@babel/preset-react": "^7.0.0",
+    "autoprefixer": "^9.6.1",
     "constantinople": ">=3.1.1",
     "css-loader": "^3.2.0",
     "file-loader": "^4.2.0",
     "image-webpack-loader": "^5.0.0",
+    "jquery": "^3.4.1",
+    "media-query-plugin": "^1.3.1",
     "nodemon": "^1.19.1",
+    "postcss-loader": "^3.0.0",
+    "precss": "^4.0.0",
+    "react-scripts": "^3.1.1",
+    "sass-loader": "^7.2.0",
     "style-loader": "^1.0.0",
     "webpack": "^4.39.1",
     "webpack-cli": "^3.3.6"

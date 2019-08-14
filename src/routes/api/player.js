@@ -61,7 +61,7 @@ playerRouter.route('/')
                 } else {
                     await writeCommandToFifo(action);
                     if (action === validCommands.PLAYPAUSE) {
-                        playerState.isPaused = !isPaused;
+                        playerState.isPaused = !playerState.isPaused;
                         publishPlayer(playerState);
                     }
                     response = action + ' has been written successfully!';

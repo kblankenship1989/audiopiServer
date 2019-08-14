@@ -6,7 +6,7 @@ import * as far from '@fortawesome/free-regular-svg-icons';
 
 import { apiBaseUrl } from '../helpers/baseUrls';
 
-function SongControls(props) {
+export const SongControls = (props) => {
 	const {currentSong, playerRunning, isPaused} = props;
 	const buttonList = [
 		{
@@ -62,7 +62,7 @@ function SongControls(props) {
 	}
 
     return(
-        <Col md="6 m-auto">
+        <Col md="6 m-auto" className="song-controls">
             <Media src={currentSong.currentSong.coverArt} alt={currentSong.currentSong.title} className="col-12 m-auto"/>
             <Media>
                 <Media bottom body>
@@ -86,5 +86,3 @@ function SongControls(props) {
         </Col>
     );
 }
-
-export default SongControls;

@@ -29,10 +29,7 @@ app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use('/dist', express.static(join(__dirname, '../dist')));
-app.use('/', express.static(join(__dirname, '../dist')));
 app.use(cors());
-
-app.use('/', indexRouter);
 
 app.use('/api/users', usersRouter);
 app.use('/api/player', playerRouter);
@@ -40,6 +37,12 @@ app.use('/api/pandora', pandoraRouter);
 app.use('/api/relays', relaysRouter);
 
 app.use('/sse', cors(), subscribe);
+
+app.use(/\/api.*/, function(req, res, next) {
+  next(createError(404));
+})
+
+app.use('*', indexRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

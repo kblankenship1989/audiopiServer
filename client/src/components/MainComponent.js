@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from 'reactstrap';
-import { Switch, Route } from 'react-router-dom';
+import { Switch, Route, Redirect } from 'react-router-dom';
 
 import Header from './HeaderComponent';
 import Footer from './FooterComponent';
 import { StationSelect } from './StationsComponent';
-import SongControls from './SongComponent';
-import { apiBaseUrl } from '../helpers/baseUrls';
+import { SongControls } from './SongComponent';
+import { Home } from './HomeComponent';
+import { apiBaseUrl, SSEUrl } from '../helpers/baseUrls';
 
 export const Main = (props) => {
     const [isNavOpen, setIsNavOpen] = useState(false);
@@ -14,6 +15,11 @@ export const Main = (props) => {
     const toggleNav = () => {
         setIsNavOpen(!isNavOpen);
     }
+
+    const eventHandlers = {
+        'pandora': (e) => props.updatePandora(e.data),
+        'player': (e) => props.updatePlayer(e.data)
+    };
 
     useEffect(() => {
         if (!eventSource) {
@@ -29,8 +35,6 @@ export const Main = (props) => {
 
             Object.keys(eventHandlers).forEach((eventType) => {
                 eventSource.addEventListener(eventType, (e) => {
-                    console.log(eventType);
-                    console.log(e);
                     eventHandlers[eventType](e);
                 });
             });
@@ -38,7 +42,7 @@ export const Main = (props) => {
     }, [eventSource]);
 
     useEffect(() => {
-        return () => eventSource.close();
+        return () => {if (evenSource) {eventSource.close()}};
     }, []);
 
     const startPlayer = () => {
@@ -81,8 +85,11 @@ export const Main = (props) => {
         <div>
             <Header isNavOpen={isNavOpen} toggleNav={toggleNav} />
             <br />
-            <Switch 
-            <Pandora />
+            <Switch>
+                <Route path="/home" component={Home} />
+                <Route exact path="/pandora" component={Pandora} />
+                <Redirect to="/home" />
+            </Switch>
             <br />
             <Footer />
         </div>

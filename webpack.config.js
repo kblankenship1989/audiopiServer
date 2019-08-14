@@ -1,10 +1,19 @@
 
 const path = require('path');
 const webpack = require('webpack');
+const MediaQueryPlugin = require('media-query-plugin');
 module.exports = {
     devtool: false,
     plugins: [
-        new webpack.SourceMapDevToolPlugin({})
+        new webpack.SourceMapDevToolPlugin({}),
+        new MediaQueryPlugin({
+            include: [
+                'App'
+            ],
+            queries: {
+                'print, screen and (min-width: 75em)': 'desktop'
+            }
+        })
     ],
     entry: './client/src/index.js',
     output: {
@@ -27,7 +36,7 @@ module.exports = {
                 ]
             }, {
                 test: /\.css$/i,
-                use: ['style-loader', 'css-loader'],
+                use: ['style-loader', 'css-loader', MediaQueryPlugin.loader],
             },
             {
                 test: /\.m?js$/,
