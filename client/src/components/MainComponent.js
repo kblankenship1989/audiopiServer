@@ -42,7 +42,7 @@ export const Main = (props) => {
     }, [eventSource]);
 
     useEffect(() => {
-        return () => {if (evenSource) {eventSource.close()}};
+        return () => {if (eventSource) {eventSource.close()}};
     }, []);
 
     const startPlayer = () => {

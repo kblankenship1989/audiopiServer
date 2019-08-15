@@ -4,6 +4,6 @@ import { join } from 'path';
 var router = Router();
 
 /* GET home page. */
-router.get('/', (req, res, next) => res.sendFile(join(__dirname,'../index.html')));
+router.get('/', (req, res, next) => res.sendFile(join(__dirname,'../../public/index.html')));
 
 export default router;
