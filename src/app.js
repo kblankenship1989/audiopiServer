@@ -21,7 +21,7 @@ export const wsApp = expressWs(app,server, {leaveRouterUntouched: false});
 
 // view engine setup
 app.set('views', join(__dirname, '../views'));
-app.set('view engine', 'jade');
+app.set('view engine', 'pug');
 
 app.use(logger('dev'));
 app.use(express.json());
