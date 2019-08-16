@@ -4,9 +4,10 @@
   "private": true,
   "homepage": "/dist",
   "scripts": {
+    "postinstall": "npm run build:client",
     "test": "echo \"Error: no test specified\" && exit 1",
     "webpack": "webpack",
-    "start:dev": "nodemon --ignore client/ --ignore dist/ --exec babel-node src/bin/www.js",
+    "start:dev": "npm run build:client && nodemon --ignore client/ --ignore dist/ --exec babel-node src/bin/www.js",
     "start:client": "node scripts/start.js",
     "build:client": "node scripts/build.js",
     "test:client": "node scripts/test.js"
