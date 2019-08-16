@@ -8,7 +8,7 @@ function Header(props) {
             <Navbar dark expand="md">
                 <div className="container">
                     <NavbarBrand className="mr-auto" href="/" target="_blank" tag={RRNavLink}>
-                        <img src={require('../assets/Raspi.png')} width="40" height="35" alt="" /> 
+                        <img src={`${process.env.PUBLIC_URL}/assets/Raspi.png`} width="40" height="35" alt="" /> 
                     </NavbarBrand>
                     <NavbarToggler onClick={props.toggleNav} />
                     <Collapse isOpen={props.isNavOpen} navbar>
