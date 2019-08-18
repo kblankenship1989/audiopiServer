@@ -42,3 +42,11 @@ nav {
 .song-controls {
   background-color: lightblue
 }
+
+.btn {
+	height: 50px;
+}
+
+.btn * {
+	vertical-align: middle;
+}

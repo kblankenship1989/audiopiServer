@@ -23,7 +23,7 @@ function Header(props) {
                                 <NavLink tag={RRNavLink} className="nav-link" to="/iheartradio">I-Heart Radio</NavLink>
                             </NavItem>
                             <NavItem>
-                                <NavLink tag={RRNavLink} className="nav-link" to="/relays">Relay Control</NavLink>
+                                <NavLink tag={RRNavLink} className="nav-link" to="/relays">Room Control</NavLink>
                             </NavItem>
                             <NavItem>
                                 <NavLink tag={RRNavLink} className="nav-link" to="/settings">Settings</NavLink>
