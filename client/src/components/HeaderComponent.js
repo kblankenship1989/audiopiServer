@@ -7,7 +7,7 @@ function Header(props) {
         <>
             <Navbar dark expand="md">
                 <div className="container">
-                    <NavbarBrand className="mr-auto" href="/" target="_blank" tag={RRNavLink}>
+                    <NavbarBrand className="mr-auto" to="/" target="_blank" tag={RRNavLink}>
                         <img src={`${process.env.PUBLIC_URL}/assets/Raspi.png`} width="40" height="35" alt="" /> 
                     </NavbarBrand>
                     <NavbarToggler onClick={props.toggleNav} />
@@ -17,10 +17,7 @@ function Header(props) {
                                 <NavLink tag={RRNavLink} className="nav-link" to="/home">Home</NavLink>
                             </NavItem>
                             <NavItem>
-                                <NavLink tag={RRNavLink} className="nav-link" to="/pandora">Pandora</NavLink>
-                            </NavItem>
-                            <NavItem>
-                                <NavLink tag={RRNavLink} className="nav-link" to="/iheartradio">I-Heart Radio</NavLink>
+                                <NavLink tag={RRNavLink} className="nav-link" to="/player">Player</NavLink>
                             </NavItem>
                             <NavItem>
                                 <NavLink tag={RRNavLink} className="nav-link" to="/relays">Room Control</NavLink>

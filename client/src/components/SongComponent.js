@@ -1,13 +1,15 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { Col, Media, Button, Progress } from 'reactstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import * as fas from '@fortawesome/free-solid-svg-icons';
 import * as far from '@fortawesome/free-regular-svg-icons';
+import CoverFlow from 'react-coverflow';
 
 import { apiBaseUrl } from '../helpers/baseUrls';
 
 export const SongControls = (props) => {
-	const {currentSong, playerRunning, isPaused} = props;
+	const [displayReplay, setDisplayReplay] = useState(false);
+	const {currentSong, playerRunning, isPaused, songHistory} = props;
 	const buttonList = [
 		{
 			id: 'love',
@@ -52,6 +54,15 @@ export const SongControls = (props) => {
 			icon: far.faThumbsDown
 		}
 	];
+
+	const showReplay = () => {
+		setDisplayReplay(true);
+	};
+
+	const hideReplay = () => {
+		setDisplayReplay(false);
+	};
+	
 	const songPlayed = Math.round(100*parseInt(currentSong.currentSong.songPlayed)/parseInt(currentSong.currentSong.songDuration));
 	console.log(songPlayed);
 	
@@ -63,13 +74,34 @@ export const SongControls = (props) => {
 
     return(
         <Col md="6 m-auto" className="song-controls">
-            <Media src={currentSong.currentSong.coverArt} alt={currentSong.currentSong.title} className="col-12 m-auto"/>
-            <Media>
-                <Media bottom body>
-                    <Media heading>{currentSong.currentSong.title}</Media>
-                    {currentSong.currentSong.artist}
-                </Media>
-            </Media>
+			<CoverFlow
+				displayQuantityOfSide={2}
+				navigation={true}
+				active={songHistory.length}
+				width="auto"
+				enableScroll={true}
+			>
+				{songHistory.map((song) => {
+					return (
+						<div key={song.title}>
+							<Media src={song.coverArt} alt={song.title} className="col-12 m-auto"/>
+							<Media bottom body>
+								<Media heading>{song.title}</Media>
+								{song.artist}
+							</Media>
+						</div>
+					);
+				})}
+				<div key={currentSong.currentSong.title}>
+					<Media src={currentSong.currentSong.coverArt} alt={currentSong.currentSong.title} className="col-12 m-auto"/>
+					<Media>
+						<Media bottom body>
+							<Media heading>{currentSong.currentSong.title}</Media>
+							{currentSong.currentSong.artist}
+						</Media>
+					</Media>
+				</div>
+			</CoverFlow>
             <br />
             <Progress value={songPlayed} />
 			<br />

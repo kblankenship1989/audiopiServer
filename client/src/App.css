@@ -40,7 +40,7 @@ nav {
 }
 
 .song-controls {
-  background-color: lightblue
+  background-color: #3895d3
 }
 
 .btn {
@@ -49,4 +49,19 @@ nav {
 
 .btn * {
 	vertical-align: middle;
+}
+
+.overlaybtn {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	-ms-transform: translate(-50%, -50%);
+	background-color: #555;
+	color: white;
+	font-size: 16px;
+	padding: 12px 24px;
+	border: none;
+	cursor: pointer;
+	border-radius: 5px;
 }

@@ -50,7 +50,7 @@ export const Main = (props) => {
             .then(response => console.log(response), error => console.log(error));
     };
 
-    const Pandora = () => {
+    const Player = () => {
         if (props.player.playerRunning && !props.player.isLoading && !props.pandora.isLoading) {
             return (
                 <>
@@ -87,7 +87,7 @@ export const Main = (props) => {
             <br />
             <Switch>
                 <Route path="/home" component={Home} />
-                <Route exact path="/pandora" component={Pandora} />
+                <Route exact path="/player" component={Player} />
                 <Redirect to="/home" />
             </Switch>
             <br />
