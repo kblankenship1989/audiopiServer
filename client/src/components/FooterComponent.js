@@ -6,7 +6,7 @@ function Footer(props) {
         <>
             <div className="container">
                 <div className="row justify-content-center">
-                    <a onClick="" >Mute All</a> | <a onClick="">Restart Server</a>
+                    <span onClick={() => undefined} >Mute All</span> | <span onClick={() => undefined} >Restart Server</span>
                 </div>
             </div>
         </>
