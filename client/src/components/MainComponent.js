@@ -1,13 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Button } from 'reactstrap';
 import { Switch, Route, Redirect } from 'react-router-dom';
 
 import Header from './HeaderComponent';
 import Footer from './FooterComponent';
-import { StationSelect } from './StationsComponent';
-import { SongControls } from './SongComponent';
-import { Home } from './HomeComponent';
-import { apiBaseUrl, SSEUrl } from '../helpers/baseUrls';
+import { SSEUrl } from '../helpers/baseUrls';
+import {HomeComponent} from './HomeComponent';
 
 export const Main = (props) => {
     const [isNavOpen, setIsNavOpen] = useState(false);
@@ -45,49 +42,17 @@ export const Main = (props) => {
         return () => {if (eventSource) {eventSource.close()}};
     }, []);
 
-    const startPlayer = () => {
-        fetch(apiBaseUrl + '/player?command=STARTPLAYER', { method: 'post' })
-            .then(response => console.log(response), error => console.log(error));
-    };
-
-    const Player = () => {
-        if (props.player.playerRunning && !props.player.isLoading && !props.pandora.isLoading) {
-            return (
-                <>
-                    <StationSelect
-                        stationList={props.pandora.stationList}
-                        currentStationName={props.pandora.currentSong.currentSong.stationName}
-                        playerRunning={props.player.playerRunning}
-                    />
-                    <br />
-                    <SongControls
-                        currentSong={props.pandora.currentSong}
-                        playerRunning={props.player.playerRunning}
-                        isPaused={props.player.isPaused}
-                    />
-                </>
-            );
-        }
-
-        return (
-            <>
-                <Button
-                    id="startPlayer"
-                    key="startPlayer"
-                    color='light'
-                    onClick={() => startPlayer()}
-                >Start Player</Button>
-            </>
-        );
-    }
-
     return (
         <div>
             <Header isNavOpen={isNavOpen} toggleNav={toggleNav} />
             <br />
             <Switch>
-                <Route path="/home" component={Home} />
-                <Route exact path="/player" component={Player} />
+                <Route path="/home" 
+                render={(routeProps) => <HomeComponent
+                    {...routeProps}
+                    pandora={props.pandora}
+                    player={props.player}
+                />} />
                 <Redirect to="/home" />
             </Switch>
             <br />
