@@ -4,6 +4,7 @@ import * as findProcess from 'find-process';
 
 import { writeCommandToFifo, stopPianoBar, startPianoBar } from '../../services/pianobar';
 import { publishPlayer } from '../sse';
+import { getInitialPandoraState } from './pandora';
 
 export let playerState = {
     playerRunning: false,
@@ -32,7 +33,8 @@ playerRouter.route('/')
         res.json(playerState);
     })
     .post(async (req, res, next) => {
-        let response;
+        let action, 
+            response;
         const validCommands = {
             VOLUME_UP: ')',
             VOLUME_DOWN: '(',
@@ -45,7 +47,7 @@ playerRouter.route('/')
         console.log('Got command ' + req.query.command);
         if (Object.keys(validCommands).includes(req.query.command)) {
             console.log('Starting write to file');
-            const action = validCommands[req.query.command];
+            action = validCommands[req.query.command];
             try {
                 if (action === validCommands.STOPPLAYER) {
                     await stopPianoBar();
@@ -55,6 +57,7 @@ playerRouter.route('/')
                     response = 'Successfully terminated PianoBar';
                 } else if (action === validCommands.STARTPLAYER) {
                     await startPianoBar();
+                    getInitialPandoraState();
                     playerState.playerRunning = true;
                     playerState.isPaused = false;
                     publishPlayer(playerState);
