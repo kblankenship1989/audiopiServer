@@ -43,7 +43,7 @@ export const Main = (props) => {
     }, []);
 
     return (
-        <div>
+        <>
             <Header isNavOpen={isNavOpen} toggleNav={toggleNav} />
             <br />
             <Switch>
@@ -57,6 +57,6 @@ export const Main = (props) => {
             </Switch>
             <br />
             <Footer />
-        </div>
+        </>
     );
 }
