@@ -38,6 +38,7 @@ playerRouter.route('/')
             VOLUME_DOWN: '(',
             PLAYPAUSE: 'p',
             NEXT: 'n',
+            REPLAY: 'h',
             STOPPLAYER: 'STOPPLAYER',
             STARTPLAYER: 'STARTPLAYER'
         }
@@ -59,6 +60,9 @@ playerRouter.route('/')
                     publishPlayer(playerState);
                     response = 'Successfully started PianoBar';
                 } else {
+                    if (action === validCommands.REPLAY) {
+                        action = `${action}${req.query.songIndex.toString()}\n`
+                    }
                     await writeCommandToFifo(action);
                     if (action === validCommands.PLAYPAUSE) {
                         playerState.isPaused = !playerState.isPaused;
