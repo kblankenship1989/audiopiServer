@@ -5,6 +5,7 @@ import Header from './HeaderComponent';
 import Footer from './FooterComponent';
 import { SSEUrl } from '../helpers/baseUrls';
 import {HomeComponent} from './HomeComponent';
+import { Settings } from './SettingsComponent';
 
 export const Main = (props) => {
     const [isNavOpen, setIsNavOpen] = useState(false);
@@ -53,6 +54,7 @@ export const Main = (props) => {
                     pandora={props.pandora}
                     player={props.player}
                 />} />
+                <Route path="/settings" component={Settings} />
                 <Redirect to="/home" />
             </Switch>
             <br />
