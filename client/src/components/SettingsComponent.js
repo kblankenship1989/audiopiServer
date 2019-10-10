@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import * as ReactStrap from 'reactstrap';
+import Select from 'react-select';
 import { StationSelect } from './StationsComponent';
 
 export const Settings = (props) => {
@@ -13,7 +14,7 @@ export const Settings = (props) => {
 
     return (
         <>
-            <ReactStrap.Nav tabs>
+            {/* <ReactStrap.Nav tabs>
                 <ReactStrap.NavItem>
                     <ReactStrap.NavLink
                         className={`${activeTab === 'Player' ? 'active' : null}`}
@@ -38,16 +39,34 @@ export const Settings = (props) => {
                         Alarm
                     </ReactStrap.NavLink>
                 </ReactStrap.NavItem>
-            </ReactStrap.Nav>
-            <ReactStrap.TabContent activeTab={activeTab}>
-                <ReactStrap.TabPane tabId="Player">
+            </ReactStrap.Nav> */}
+            {/* <ReactStrap.TabContent activeTab={activeTab}>
+                <ReactStrap.TabPane tabId="Player"> */}
                     <ReactStrap.Row>
-                        <ReactStrap.Col sm="12">
-                            <h4>Tab 1 Contents</h4>
+                        <ReactStrap.Col>
+                            <ReactStrap.Card body>
+                                <ReactStrap.CardTitle>Player Configurations</ReactStrap.CardTitle>
+                                <ReactStrap.Form>
+                                    <ReactStrap.FormGroup>
+                                        <ReactStrap.Label for="defaultVolume">Default Volume (dB)</ReactStrap.Label>
+                                        <ReactStrap.Input type="number" min={-30} max={+5} step={0.5} name="defaultVolume" id="defaultVolume"/>
+                                    </ReactStrap.FormGroup>
+                                    <ReactStrap.FormGroup>
+                                        <ReactStrap.Label for="quality">Audio Quality</ReactStrap.Label>
+                                        <Select                
+                                            value={'high'}
+                                            options={{
+                                                high: 'high',
+                                                low: 'low'
+                                            }}/>
+                                    </ReactStrap.FormGroup>
+                                    <ReactStrap.Button>Save Player Settings</ReactStrap.Button>
+                                </ReactStrap.Form>
+                            </ReactStrap.Card>
                         </ReactStrap.Col>
                     </ReactStrap.Row>
-                </ReactStrap.TabPane>
-                <ReactStrap.TabPane tabId="Pandora">
+                {/* </ReactStrap.TabPane>
+                <ReactStrap.TabPane tabId="Pandora"> */}
                     <ReactStrap.Row>
                         <ReactStrap.Col>
                             <ReactStrap.Card body>
@@ -62,16 +81,20 @@ export const Settings = (props) => {
                                         <ReactStrap.Input type="password" name="password" id="password" />
                                     </ReactStrap.FormGroup>
                                     <ReactStrap.FormGroup>
-                                        <ReactStrap.Label for="username">Station on Start</ReactStrap.Label>
-                                        <StationSelect />
+                                        <ReactStrap.Label for="defaultstation">Station on Start</ReactStrap.Label>
+                                        <StationSelect id="defaultstation" name="defaultstation"/>
                                     </ReactStrap.FormGroup>
-                                    <ReactStrap.Button>Save Settings</ReactStrap.Button>
+                                    <ReactStrap.FormGroup>
+                                        <ReactStrap.Label for="history">Song History Size</ReactStrap.Label>
+                                        <ReactStrap.Input type="number" min={0} max={15} step={1} name="history" id="history"/>
+                                    </ReactStrap.FormGroup>
+                                    <ReactStrap.Button>Save Pandora Settings</ReactStrap.Button>
                                 </ReactStrap.Form>
                             </ReactStrap.Card>
                         </ReactStrap.Col>
                     </ReactStrap.Row>
-                </ReactStrap.TabPane>
-            </ReactStrap.TabContent>
+                {/* </ReactStrap.TabPane>
+            </ReactStrap.TabContent> */}
         </>
     )
 }
