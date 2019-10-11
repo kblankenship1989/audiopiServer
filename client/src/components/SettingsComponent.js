@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import * as ReactStrap from 'reactstrap';
+import {Form, Card, FormGroup, CardBody, CardTitle, Label, Input, Row, Col, Button} from 'reactstrap';
 import Select from 'react-select';
 import { StationSelect } from './StationsComponent';
 
@@ -14,87 +14,61 @@ export const Settings = (props) => {
 
     return (
         <>
-            {/* <ReactStrap.Nav tabs>
-                <ReactStrap.NavItem>
-                    <ReactStrap.NavLink
-                        className={`${activeTab === 'Player' ? 'active' : null}`}
-                        onClick={() => {toggle('Player');}}
-                    >
-                        Player
-                    </ReactStrap.NavLink>
-                </ReactStrap.NavItem>
-                <ReactStrap.NavItem>
-                    <ReactStrap.NavLink
-                        className={`${activeTab === 'Pandora' ? 'active' : null}`}
-                        onClick={() => {toggle('Pandora')}}
-                    >
-                        Pandora
-                    </ReactStrap.NavLink>
-                </ReactStrap.NavItem>
-                <ReactStrap.NavItem>
-                    <ReactStrap.NavLink
-                        className={`${activeTab === 'Alarm' ? 'active' : null}`}
-                        onClick={() => {toggle('Alarm')}}
-                    >
-                        Alarm
-                    </ReactStrap.NavLink>
-                </ReactStrap.NavItem>
-            </ReactStrap.Nav> */}
-            {/* <ReactStrap.TabContent activeTab={activeTab}>
-                <ReactStrap.TabPane tabId="Player"> */}
-                    <ReactStrap.Row>
-                        <ReactStrap.Col>
-                            <ReactStrap.Card body>
-                                <ReactStrap.CardTitle>Player Configurations</ReactStrap.CardTitle>
-                                <ReactStrap.Form>
-                                    <ReactStrap.FormGroup>
-                                        <ReactStrap.Label for="defaultVolume">Default Volume (dB)</ReactStrap.Label>
-                                        <ReactStrap.Input type="number" min={-30} max={+5} step={0.5} name="defaultVolume" id="defaultVolume"/>
-                                    </ReactStrap.FormGroup>
-                                    <ReactStrap.FormGroup>
-                                        <ReactStrap.Label for="quality">Audio Quality</ReactStrap.Label>
-                                        <Select                
-                                            value={'high'}
-                                            options={{
-                                                high: 'high',
-                                                low: 'low'
-                                            }}/>
-                                    </ReactStrap.FormGroup>
-                                    <ReactStrap.Button>Save Player Settings</ReactStrap.Button>
-                                </ReactStrap.Form>
-                            </ReactStrap.Card>
-                        </ReactStrap.Col>
-                    </ReactStrap.Row>
-                {/* </ReactStrap.TabPane>
-                <ReactStrap.TabPane tabId="Pandora"> */}
-                    <ReactStrap.Row>
-                        <ReactStrap.Col>
-                            <ReactStrap.Card body>
-                                <ReactStrap.CardTitle>Pandora Configurations</ReactStrap.CardTitle>
-                                <ReactStrap.Form>
-                                    <ReactStrap.FormGroup>
-                                        <ReactStrap.Label for="username">Username</ReactStrap.Label>
-                                        <ReactStrap.Input type="text" name="username" id="username" placeholder="Pandora Account UserName" />
-                                    </ReactStrap.FormGroup>
-                                    <ReactStrap.FormGroup>
-                                        <ReactStrap.Label for="password">Password</ReactStrap.Label>
-                                        <ReactStrap.Input type="password" name="password" id="password" />
-                                    </ReactStrap.FormGroup>
-                                    <ReactStrap.FormGroup>
-                                        <ReactStrap.Label for="defaultstation">Station on Start</ReactStrap.Label>
-                                        <StationSelect id="defaultstation" name="defaultstation"/>
-                                    </ReactStrap.FormGroup>
-                                    <ReactStrap.FormGroup>
-                                        <ReactStrap.Label for="history">Song History Size</ReactStrap.Label>
-                                        <ReactStrap.Input type="number" min={0} max={15} step={1} name="history" id="history"/>
-                                    </ReactStrap.FormGroup>
-                                    <ReactStrap.Button>Save Pandora Settings</ReactStrap.Button>
-                                </ReactStrap.Form>
-                            </ReactStrap.Card>
-                        </ReactStrap.Col>
-                    </ReactStrap.Row>
-                {/* </ReactStrap.TabPane>
-            </ReactStrap.TabContent> */}
+            <Form>
+                <Card body>
+                    <CardTitle>Player Configurations</CardTitle>
+                    <CardBody>
+                        <FormGroup>
+                            <Row>
+                                <Label className="col-md-3" for="defaultVolume">Default Volume (dB)</Label>
+                                <Input className="col-md-2" type="number" min={-30} max={+5} step={0.5} name="defaultVolume" id="defaultVolume"/>
+                            </Row>
+                        </FormGroup>
+                        <FormGroup>
+                            <Row>
+                                <Label className="col-md-3" for="quality">Audio Quality</Label>
+                                <Select
+                                    className="col-md-2 form-select"
+                                    value={'high'}
+                                    options={[
+                                        {
+                                            label: 'high',
+                                            value: 'high'
+                                        },
+                                        {
+                                            label: 'low',
+                                            value: 'low'
+                                        }
+                                    ]}/>
+                                </Row>
+                        </FormGroup>
+                    </CardBody>
+                </Card>
+                <br />
+                <Card body>
+                    <CardTitle>Pandora Configurations</CardTitle>
+                    <CardBody>
+                        <FormGroup>
+                            <Label for="username">Username</Label>
+                            <Input type="text" name="username" id="username" placeholder="Pandora Account UserName" />
+                        </FormGroup>
+                        <FormGroup>
+                            <Label for="password">Password</Label>
+                            <Input type="password" name="password" id="password" />
+                        </FormGroup>
+                        {/* <FormGroup>
+                            <Label for="defaultstation">Station on Start</Label>
+                            <StationSelect id="defaultstation" name="defaultstation"/>
+                        </FormGroup> */}
+                        <FormGroup>
+                            <Label for="history">Song History Size</Label>
+                            <Input type="number" min={0} max={15} step={1} name="history" id="history"/>
+                        </FormGroup>
+                    </CardBody>
+                </Card>
+                <br />
+                <Button type="submit">Save Settings</Button>
+            </Form>
         </>
     )
 }

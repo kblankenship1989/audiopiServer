@@ -99,3 +99,7 @@ nav {
 .footer {
 	background-color: rgba(85, 85, 85, 0.75);
 }
+
+.form-select {
+	padding: 0;
+}
