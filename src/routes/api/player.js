@@ -4,11 +4,14 @@ import * as findProcess from 'find-process';
 
 import { writeCommandToFifo, stopPianoBar, startPianoBar } from '../../services/pianobar';
 import { publishPlayer } from '../sse';
+import { resetPlayerTimeout, clearPlayerTimeout } from '../../services/playerTimeout';
+import { getInitialPandoraState } from './pandora';
 
 export let playerState = {
     playerRunning: false,
-    isPaused: false
-}
+    isPaused: false,
+    playerTimedOut: false
+};
 
 setInterval(() => {
 	findProcess.default('name','pianobar')
@@ -32,38 +35,47 @@ playerRouter.route('/')
         res.json(playerState);
     })
     .post(async (req, res, next) => {
-        let response;
+        let action, 
+            response;
         const validCommands = {
             VOLUME_UP: ')',
             VOLUME_DOWN: '(',
             PLAYPAUSE: 'p',
             NEXT: 'n',
+            REPLAY: 'h',
             STOPPLAYER: 'STOPPLAYER',
             STARTPLAYER: 'STARTPLAYER'
         }
         console.log('Got command ' + req.query.command);
         if (Object.keys(validCommands).includes(req.query.command)) {
             console.log('Starting write to file');
-            const action = validCommands[req.query.command];
+            action = validCommands[req.query.command];
             try {
                 if (action === validCommands.STOPPLAYER) {
                     await stopPianoBar();
                     playerState.playerRunning = false;
                     playerState.isPaused = false;
+                    clearPlayerTimeout();
                     publishPlayer(playerState);
                     response = 'Successfully terminated PianoBar';
                 } else if (action === validCommands.STARTPLAYER) {
                     await startPianoBar();
+                    getInitialPandoraState();
                     playerState.playerRunning = true;
                     playerState.isPaused = false;
+                    resetPlayerTimeout();
                     publishPlayer(playerState);
                     response = 'Successfully started PianoBar';
                 } else {
+                    if (action === validCommands.REPLAY) {
+                        action = `${action}${req.query.songIndex.toString()}\n`
+                    }
                     await writeCommandToFifo(action);
                     if (action === validCommands.PLAYPAUSE) {
                         playerState.isPaused = !playerState.isPaused;
-                        publishPlayer(playerState);
                     }
+                    resetPlayerTimeout();
+                    publishPlayer(playerState);
                     response = action + ' has been written successfully!';
                 }
                 res.status = 200;
