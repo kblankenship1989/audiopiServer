@@ -5,6 +5,7 @@ import Header from './HeaderComponent';
 import Footer from './FooterComponent';
 import { SSEUrl } from '../helpers/baseUrls';
 import {HomeComponent} from './HomeComponent';
+import { TimeoutModal } from './TimeoutModal';
 
 export const Main = (props) => {
     const [isNavOpen, setIsNavOpen] = useState(false);
@@ -44,6 +45,7 @@ export const Main = (props) => {
 
     return (
         <>
+            <TimeoutModal player={props.player} />
             <Header isNavOpen={isNavOpen} toggleNav={toggleNav} />
             <br />
             <Switch>

@@ -10,6 +10,7 @@ import { getInitialPandoraState } from './pandora';
 export let playerState = {
     playerRunning: false,
     isPaused: false,
+    minutesRemaining: 0,
     playerTimedOut: false
 };
 
