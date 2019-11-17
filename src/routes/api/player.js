@@ -4,12 +4,14 @@ import * as findProcess from 'find-process';
 
 import { writeCommandToFifo, stopPianoBar, startPianoBar } from '../../services/pianobar';
 import { publishPlayer } from '../sse';
+import { resetPlayerTimeout, clearPlayerTimeout } from '../../services/playerTimeout';
 import { getInitialPandoraState } from './pandora';
 
 export let playerState = {
     playerRunning: false,
-    isPaused: false
-}
+    isPaused: false,
+    playerTimedOut: false
+};
 
 setInterval(() => {
 	findProcess.default('name','pianobar')
@@ -53,6 +55,7 @@ playerRouter.route('/')
                     await stopPianoBar();
                     playerState.playerRunning = false;
                     playerState.isPaused = false;
+                    clearPlayerTimeout();
                     publishPlayer(playerState);
                     response = 'Successfully terminated PianoBar';
                 } else if (action === validCommands.STARTPLAYER) {
@@ -60,6 +63,7 @@ playerRouter.route('/')
                     getInitialPandoraState();
                     playerState.playerRunning = true;
                     playerState.isPaused = false;
+                    resetPlayerTimeout();
                     publishPlayer(playerState);
                     response = 'Successfully started PianoBar';
                 } else {
@@ -69,8 +73,9 @@ playerRouter.route('/')
                     await writeCommandToFifo(action);
                     if (action === validCommands.PLAYPAUSE) {
                         playerState.isPaused = !playerState.isPaused;
-                        publishPlayer(playerState);
                     }
+                    resetPlayerTimeout();
+                    publishPlayer(playerState);
                     response = action + ' has been written successfully!';
                 }
                 res.status = 200;
