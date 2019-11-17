@@ -22,12 +22,12 @@ const setPlayerPauseTimeout = () => {
 const setPlayerCloseInterval = () => {
     timeoutClose = setInterval(() => {
         const newMinutesRemaining = playerState.minutesRemaining - 1;
+        playerState.minutesRemaining = newMinutesRemaining;
         if (newMinutesRemaining === 0) {
             stopPianoBar();
-        } else {
-            playerState.minutesRemaining = newMinutesRemaining;
-            publishPlayer(playerState);
+            playerState.playerTimedOut = false;
         }
+        publishPlayer(playerState);
     }, 60000)
 };
 
