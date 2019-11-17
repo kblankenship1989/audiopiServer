@@ -3,7 +3,9 @@ import * as ActionTypes from './ActionTypes';
 const emptyState = {
     isLoading: true,
     isPaused: false,
-    playerRunning: true
+    minutesRemaining: 15,
+    playerRunning: true,
+    playerTimedOut: true
 };
 
 export const Player = (state = emptyState, action) => {
