@@ -2,8 +2,8 @@ import { playerState } from "../routes/api/player";
 import { stopPianoBar, writeCommandToFifo } from "./pianobar";
 import { publishPlayer } from "../routes/sse";
 
-const timeout = 1 * 60000;
-const closeTimeout = 1 * 30000;
+const timeout = 120 * 60000;
+const closeTimeout = 15 * 60000;
 
 let timeoutCheck,
     timeoutClose;
