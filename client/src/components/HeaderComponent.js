@@ -17,9 +17,6 @@ function Header(props) {
                                 <NavLink tag={RRNavLink} className="nav-link" to="/home">Home</NavLink>
                             </NavItem>
                             <NavItem>
-                                <NavLink tag={RRNavLink} className="nav-link" to="/player">Player</NavLink>
-                            </NavItem>
-                            <NavItem>
                                 <NavLink tag={RRNavLink} className="nav-link" to="/relays">Room Control</NavLink>
                             </NavItem>
                             <NavItem>

@@ -1,5 +1,7 @@
 .App {
   text-align: center;
+  max-width: 100vh;
+  margin: auto;
 }
 
 body {
@@ -40,7 +42,7 @@ nav {
 }
 
 .song-controls {
-  background-color: #3895d3
+  background-color: #146194
 }
 
 .btn {
@@ -64,4 +66,36 @@ nav {
 	border: none;
 	cursor: pointer;
 	border-radius: 5px;
+}
+
+.song-controls .last-item .carousel-control-next {
+	display: none;
+}
+
+.song-controls .first-item .carousel-control-prev {
+	display: none;
+}
+
+.song-controls .carousel-caption {
+	background-color: rgba(85, 85, 85, 0.5);
+}
+
+.song-controls .display-caption.carousel-caption {
+	display: block!important;
+}
+
+.song-controls .btn {
+	margin: 2px;
+	padding: 0;
+	height: 30px;
+	width: 30px;
+}
+
+.carousel-item img {
+	width: 100%;
+	max-width: 500px;
+}
+
+.footer {
+	background-color: rgba(85, 85, 85, 0.75);
 }

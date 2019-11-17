@@ -1,31 +1,53 @@
-import React, {useState} from 'react';
-import { Col, Media, Button, Progress } from 'reactstrap';
+import React, {useState, useEffect} from 'react';
+import { 
+	Col,
+	Button, 
+	//Progress, 
+	Carousel, 
+	CarouselItem, 
+	CarouselCaption, 
+	CarouselControl
+} from 'reactstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import * as fas from '@fortawesome/free-solid-svg-icons';
 import * as far from '@fortawesome/free-regular-svg-icons';
-import CoverFlow from 'react-coverflow';
 
 import { apiBaseUrl } from '../helpers/baseUrls';
 
 export const SongControls = (props) => {
-	const [displayReplay, setDisplayReplay] = useState(false);
 	const {currentSong, playerRunning, isPaused, songHistory} = props;
+	const [currentDisplayIndex, setCurrentDisplayIndex] = useState(songHistory.length-1);
+	const [displayCaption, setDisplayCaption] = useState('');
+	const currentSongClass = currentDisplayIndex === songHistory.length -1 ? '' : 'd-none';
+
+	useEffect(() => {
+		setCurrentDisplayIndex(songHistory.length-1);
+	}, [songHistory])
+
+	const replayIndex = songHistory.length-2-currentDisplayIndex;
+
 	const buttonList = [
 		{
 			id: 'love',
-			class: 'float-left',
+			class: `${currentSongClass} float-left`,
 			command: '/pandora?command=LOVE',
 			icon: currentSong.currentSong.rating === "1" ? fas.faThumbsUp : far.faThumbsUp
 		},
 		{
 			id: 'pauseplay',
-			class: '',
+			class: currentSongClass,
 			command: '/player?command=PLAYPAUSE',
 			icon: isPaused ? fas.faPlay : fas.faPause
 		},
 		{
+			id: 'replay',
+			class: currentDisplayIndex === songHistory.length -1 ? 'd-none' : '',
+			command: `/player?command=REPLAY&songIndex=${replayIndex}`,
+			icon: fas.faRedoAlt
+		},
+		{
 			id: 'next',
-			class: '',
+			class: currentSongClass,
 			command: '/player?command=NEXT',
 			icon: fas.faFastForward
 		},
@@ -49,22 +71,25 @@ export const SongControls = (props) => {
 		},
 		{
 			id: 'hate',
-			class: 'float-right',
+			class: `${currentSongClass} float-right`,
 			command: '/pandora?command=HATE',
 			icon: far.faThumbsDown
 		}
 	];
 
-	const showReplay = () => {
-		setDisplayReplay(true);
-	};
+	const toggleCaption = () => {
+		Boolean(displayCaption) ? setDisplayCaption('') : setDisplayCaption('display-caption');
+	}
 
-	const hideReplay = () => {
-		setDisplayReplay(false);
-	};
+	const progressNext = () => {
+		setCurrentDisplayIndex(currentDisplayIndex+1);
+	}
+
+	const progressPrevious = () => {
+		setCurrentDisplayIndex(currentDisplayIndex-1);
+	}
 	
-	const songPlayed = Math.round(100*parseInt(currentSong.currentSong.songPlayed)/parseInt(currentSong.currentSong.songDuration));
-	console.log(songPlayed);
+	//const songPlayed = Math.round(100*parseInt(currentSong.currentSong.songPlayed)/parseInt(currentSong.currentSong.songDuration));
 	
 	const handleClick = (command) => {
 		console.log("Execute Pianobar command: " + command);
@@ -72,39 +97,36 @@ export const SongControls = (props) => {
 			.then(response => console.log(response), error => console.log(error));
 	}
 
+	const songs = songHistory.reverse().map((song, index) => {
+		return (
+		  <CarouselItem
+			key={`${index} - ${song.coverArt}`}
+		  >
+			<img src={song.coverArt} alt={song.title} 
+				onClick={toggleCaption}/>
+			<CarouselCaption 
+				captionText={`${song.album} - ${song.artist}`} 
+				captionHeader={song.title}
+				className={displayCaption} />
+		  </CarouselItem>
+		);
+	  });
+
     return(
-        <Col md="6 m-auto" className="song-controls">
-			<CoverFlow
-				displayQuantityOfSide={2}
-				navigation={true}
-				active={songHistory.length}
-				width="auto"
-				enableScroll={true}
+        <Col className="song-controls">
+			<Carousel
+				activeIndex={currentDisplayIndex}
+				interval={false}
+				previous={progressPrevious}
+				next={progressNext}
 			>
-				{songHistory.map((song) => {
-					return (
-						<div key={song.title}>
-							<Media src={song.coverArt} alt={song.title} className="col-12 m-auto"/>
-							<Media bottom body>
-								<Media heading>{song.title}</Media>
-								{song.artist}
-							</Media>
-						</div>
-					);
-				})}
-				<div key={currentSong.currentSong.title}>
-					<Media src={currentSong.currentSong.coverArt} alt={currentSong.currentSong.title} className="col-12 m-auto"/>
-					<Media>
-						<Media bottom body>
-							<Media heading>{currentSong.currentSong.title}</Media>
-							{currentSong.currentSong.artist}
-						</Media>
-					</Media>
-				</div>
-			</CoverFlow>
+				{songs}
+				{Boolean(currentDisplayIndex) && <CarouselControl direction="prev" directionText="Previous" onClickHandler={progressPrevious} />}
+        		{(currentDisplayIndex !== songHistory.length-1) && <CarouselControl direction="next" directionText="Next" onClickHandler={progressNext} />}
+			</Carousel>
             <br />
-            <Progress value={songPlayed} />
-			<br />
+            {/*<Progress value={songPlayed} />
+			<br />*/}
 			{buttonList.map(songButton => (
 				<Button
 					id={songButton.id}

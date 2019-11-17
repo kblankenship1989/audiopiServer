@@ -3,7 +3,7 @@ import * as ActionTypes from './ActionTypes';
 const emptyState = {
     isLoading: true,
     isPaused: false,
-    playerRunning: false
+    playerRunning: true
 };
 
 export const Player = (state = emptyState, action) => {

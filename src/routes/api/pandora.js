@@ -12,12 +12,16 @@ export let pandoraState = {
     songHistory: []
 };
 
-const getInitialState = async () => {
+export const getInitialPandoraState = async () => {
     pandoraState.currentSong.currentSong = await readCurrentSong();
     pandoraState.stationList = await readStations();
+    pandoraState.songHistory = [
+        pandoraState.currentSong.currentSong
+    ];
+    publishPandora(pandoraState);
 };
 
-getInitialState();
+getInitialPandoraState();
 
 const pandoraRouter = Router();
 pandoraRouter.use(bodyParser.json());
