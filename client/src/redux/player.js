@@ -2,7 +2,7 @@ import * as ActionTypes from './ActionTypes';
 
 const emptyState = {
     isPaused: false,
-    minutesRemaining: 15,
+    minutesRemaining: 0,
     playerRunning: true,
     playerTimedOut: false
 };

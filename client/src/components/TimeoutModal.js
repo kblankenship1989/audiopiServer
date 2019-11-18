@@ -16,6 +16,12 @@ export const TimeoutModal = (props) => {
             .then(response => console.log(response), error => console.log(error));
     };
 
+    const stopPlayer = () => {
+        const command = '/player?command=STOPPLAYER';
+        fetch(apiBaseUrl + command, {method: 'post'})
+            .then(response => console.log(response), error => console.log(error));
+    };
+
     return (
         <>
             <Modal
@@ -36,7 +42,8 @@ export const TimeoutModal = (props) => {
                 <ModalFooter  style={{
                     justifyContent: "center"
                 }}>
-                    <Button color="primary" onClick={resumePlaying}>Resume</Button>
+                    <Button color="primary" onClick={resumePlaying}>Resume</Button>{" "}
+                    <Button color="danger" onClick={stopPlayer}>Stop</Button>
                 </ModalFooter>
             </Modal>
         </>
