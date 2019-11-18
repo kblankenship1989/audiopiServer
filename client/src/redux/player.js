@@ -1,17 +1,16 @@
 import * as ActionTypes from './ActionTypes';
 
 const emptyState = {
-    isLoading: true,
     isPaused: false,
     minutesRemaining: 15,
     playerRunning: true,
-    playerTimedOut: true
+    playerTimedOut: false
 };
 
 export const Player = (state = emptyState, action) => {
 
     const actionMap = {
-        [ActionTypes.ADD_PLAYER]: { ...state, ...action.payload, isLoading: false }
+        [ActionTypes.ADD_PLAYER]: { ...state, ...action.payload }
     };
 
     return Object.keys(actionMap).includes(action.type) ? actionMap[action.type] : state;
