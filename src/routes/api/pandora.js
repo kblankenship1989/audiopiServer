@@ -5,6 +5,7 @@ import { writeCommandToFifo, readStations, readCurrentSong } from '../../service
 import { publishPandora } from '../sse'
 
 export let pandoraState = {
+    isLoading: true,
     currentSong: {
         currentSong: {}
     },
@@ -13,6 +14,7 @@ export let pandoraState = {
 };
 
 export const getInitialPandoraState = async () => {
+    pandoraState.isLoading = true;
     pandoraState.currentSong.currentSong = await readCurrentSong();
     pandoraState.stationList = await readStations();
     pandoraState.songHistory = [
@@ -47,6 +49,11 @@ pandoraRouter.route('/')
             action = validCommands[req.query.command];
             if (action === validCommands.SETSTATION) {
                 action = `${action}${req.query.stationId.toString()}\n`;
+                pandoraState.isLoading = true;
+                publishPandora(pandoraState);
+            } else if (action === validCommands.HATE) {
+                pandoraState.isLoading = true;
+                publishPandora(pandoraState);
             }
 
             try {
@@ -91,6 +98,7 @@ pandoraRouter.route('/songs')
 
 pandoraRouter.route('/songs/current')
     .post(async (req, res, next) => {
+        pandoraState.isLoading = false;
         if (req.query.rating) {
             pandoraState.currentSong.currentSong.rating = req.query.rating;
             publishPandora(pandoraState);

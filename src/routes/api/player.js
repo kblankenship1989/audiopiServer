@@ -8,9 +8,9 @@ import { resetPlayerTimeout, clearPlayerTimeout } from '../../services/playerTim
 import { getInitialPandoraState } from './pandora';
 
 export let playerState = {
-    playerRunning: false,
     isPaused: false,
     minutesRemaining: 0,
+    playerRunning: false,
     playerTimedOut: false
 };
 
@@ -69,7 +69,12 @@ playerRouter.route('/')
                     response = 'Successfully started PianoBar';
                 } else {
                     if (action === validCommands.REPLAY) {
-                        action = `${action}${req.query.songIndex.toString()}\n`
+                        action = `${action}${req.query.songIndex.toString()}\n`;
+                        pandoraState.isLoading = true;
+                        publishPandora(pandoraState);
+                    } else if (action === validCommands.NEXT) {
+                        pandoraState.isLoading = true;
+                        publishPandora(pandoraState);
                     }
                     await writeCommandToFifo(action);
                     if (action === validCommands.PLAYPAUSE) {
