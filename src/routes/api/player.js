@@ -56,6 +56,7 @@ playerRouter.route('/')
                     await stopPianoBar();
                     playerState.playerRunning = false;
                     playerState.isPaused = false;
+                    playerState.playerTimedOut = false;
                     clearPlayerTimeout();
                     publishPlayer(playerState);
                     response = 'Successfully terminated PianoBar';
@@ -64,6 +65,7 @@ playerRouter.route('/')
                     getInitialPandoraState();
                     playerState.playerRunning = true;
                     playerState.isPaused = false;
+                    playerState.playerTimedOut = false;
                     resetPlayerTimeout();
                     publishPlayer(playerState);
                     response = 'Successfully started PianoBar';
@@ -79,6 +81,7 @@ playerRouter.route('/')
                     await writeCommandToFifo(action);
                     if (action === validCommands.PLAYPAUSE) {
                         playerState.isPaused = !playerState.isPaused;
+                        playerState.playerTimedOut = false;
                     }
                     resetPlayerTimeout();
                     publishPlayer(playerState);
