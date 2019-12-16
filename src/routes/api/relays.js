@@ -1,9 +1,10 @@
 import { Router } from 'express';
-var router = Router();
+
+var relayRouter = Router();
 
 /* GET users listing. */
-router.get('/', function(req, res, next) {
+relayRouter.get('/', function(req, res, next) {
   res.send('respond with relay statuses');
 });
 
-export default router;
+export default relayRouter;

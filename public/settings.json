@@ -1,0 +1,7 @@
+{
+    "firstFloorRelayState": 0,
+    "secondFloorRelayState": 0,
+    "timeoutInMinutes": 120,
+    "closoeTimeoutInMinutes": 15,
+    "songHistoryLength": 5
+}
