@@ -58,3 +58,7 @@ export const publishPandora = (eventData) => {
 export const publishPlayer = (eventData) => {
     emitter.emit('player', eventData);
 };
+
+export const publishRelays = (eventData) => {
+    emitter.emit('relays', eventData);
+}

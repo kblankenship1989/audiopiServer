@@ -1,5 +1,6 @@
 import { Router } from 'express';
-import { setFirstFloor, setSecondFloor } from '../../services/relays';
+import { setFirstFloor, setSecondFloor, getRelayStates } from '../../services/relays';
+import { publishRelays } from '../sse';
 
 var relayRouter = Router();
 
@@ -7,7 +8,7 @@ var relayRouter = Router();
 relayRouter.get('/', function(req, res, next) {
     res.statusCode = 200;
     res.setHeader('Content-Type', 'application/json');
-    res.json(playerState);
+    res.json(getRelayStates());
 })
 .post('/', function(req, res, next) {
     const relayMapping = {
@@ -19,6 +20,7 @@ relayRouter.get('/', function(req, res, next) {
 
     if (call) {
         call(req.query.value, () => {
+            publishRelays(getRelayStates());
             res.status = 200;
             res.setHeader('Content-Type', 'text/plain');
             res.end(`Successfully updated FLOOR: ${req.query.floor} to VALUE: ${req.query.value}`);

@@ -6,6 +6,7 @@ import Footer from './FooterComponent';
 import { SSEUrl } from '../helpers/baseUrls';
 import {HomeComponent} from './HomeComponent';
 import { TimeoutModal } from './TimeoutModal';
+import { RelayComponent } from './RelayComponent';
 
 export const Main = (props) => {
     const [isNavOpen, setIsNavOpen] = useState(false);
@@ -16,7 +17,8 @@ export const Main = (props) => {
 
     const eventHandlers = {
         'pandora': (e) => props.updatePandora(e.data),
-        'player': (e) => props.updatePlayer(e.data)
+        'player': (e) => props.updatePlayer(e.data),
+        'relays': (e) => props.updateRelays(e.data)
     };
 
     useEffect(() => {
@@ -50,11 +52,18 @@ export const Main = (props) => {
             <br />
             <Switch>
                 <Route path="/home" 
-                render={(routeProps) => <HomeComponent
-                    {...routeProps}
-                    pandora={props.pandora}
-                    player={props.player}
-                />} />
+                    render={(routeProps) => <HomeComponent
+                        {...routeProps}
+                        pandora={props.pandora}
+                        player={props.player}
+                    />}
+                />
+                <Route exact path="/relays"
+                    render={(routeProps) => <RelayComponent
+                        {...routeProps}
+                        relays={props.relays}
+                    />}
+                />
                 <Redirect to="/home" />
             </Switch>
             <br />
