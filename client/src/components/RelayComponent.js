@@ -1,17 +1,21 @@
-import React from 'react';
-import { Button, CardHeader, Card, Row, Label } from 'reactstrap';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import * as fas from '@fortawesome/free-solid-svg-icons';
+import React, { useState } from 'react';
+import { Button, ButtonGroup, Nav, Label, NavItem, NavLink, TabPane, TabContent } from 'reactstrap';
 import { apiBaseUrl } from '../helpers/baseUrls';
 
 export const RelayComponent = (props) => {
+    const [activeTab, setActiveTab] = useState('FirstFloor');
+
+    const toggleTab = tab => {
+        if (activeTab !== tab) setActiveTab(tab);
+    }
+
     const toggleRelayState = (leftIndex, rightIndex, floor) => {
         let currentState;
         const testIndex = (1 << leftIndex) | (1 << rightIndex);
 
-        if(floor === 'FIRST') {
+        if (floor === 'FIRST') {
             currentState = parseInt(props.relays.firstFloor, 16);
-        } else if(floor === 'SECOND') {
+        } else if (floor === 'SECOND') {
             currentState = parseInt(props.relays.secondFloor, 16);
         } else {
             return;
@@ -21,14 +25,13 @@ export const RelayComponent = (props) => {
             .then(response => console.log(response), error => console.log(error));
     }
 
-    const getRelayButton = (state, label, clickHandler) => {
-        return(
+    const getRelayButton = (state, label, clickHandler, block) => {
+        return (
             <Button
-                block 
+                block={block}
                 color={state ? 'success' : 'danger'}
                 onClick={clickHandler}>
-                <FontAwesomeIcon size="2x" icon={state ? fas.faToggleOn : fas.faToggleOff} onClick={clickHandler}/>
-                <Label>{label}</Label>
+                {label}
             </Button>
         )
     }
@@ -66,6 +69,21 @@ export const RelayComponent = (props) => {
         }
     ];
 
+    const firstFloorInputControl = [
+        {
+            label: 'Aux',
+            leftIndex: 6,
+            rightIndex: 9,
+            onState: 0
+        },
+        {
+            label: 'Pi',
+            leftIndex: 6,
+            rightIndex: 9,
+            onState: 1
+        }
+    ];
+
     const secondFloorControls = [
         {
             label: 'Master Bedroom',
@@ -99,6 +117,21 @@ export const RelayComponent = (props) => {
         }
     ];
 
+    const secondFloorInputControl = [
+        {
+            label: 'Aux',
+            leftIndex: 6,
+            rightIndex: 9,
+            onState: 0
+        },
+        {
+            label: 'Pi',
+            leftIndex: 6,
+            rightIndex: 9,
+            onState: 1
+        }
+    ];
+
     let currentState,
         leftState,
         newState,
@@ -106,42 +139,102 @@ export const RelayComponent = (props) => {
 
     return (
         <div className="relays">
-            <Card color="dark">
-                <CardHeader>First Floor</CardHeader>
-                {firstFloorControls.map((room) => {
-                    currentState = parseInt(props.relays.firstFloor, 16);
-                    leftState = (currentState >> room.leftIndex) & 1;
-                    rightState = (currentState >> room.rightIndex) & 1;
-                    if (leftState !== rightState) {
-                        leftState = 0;
-                        rightState = 0;
-                        newState = (currentState & ~(1 << room.leftIndex)) & (currentState & ~(1 << room.rightIndex));
-                        fetch(apiBaseUrl + `/relays?floor=FIRST&value=${newState}`, { method: 'post' })
-                            .then(response => console.log(response), error => console.log(error));
-                    }
+            <Nav tabs>
+                <NavItem className={'col-6'}>
+                    <NavLink
+                        className={activeTab === 'FirstFloor' ? 'active' : 'inactive'}
+                        onClick={() => { toggleTab('FirstFloor'); }}
+                    >
+                        First Floor
+                    </NavLink>
+                </NavItem>
+                <NavItem className={'col-6'}>
+                    <NavLink
+                        className={activeTab === 'SecondFloor' ? 'active' : 'inactive'}
+                        onClick={() => { toggleTab('SecondFloor'); }}
+                    >
+                        Second Floor
+                    </NavLink>
+                </NavItem>
+            </Nav>
+            <TabContent activeTab={activeTab}>
+                <TabPane tabId={'FirstFloor'}>
+                    <h4>Audio Source</h4>
+                    <ButtonGroup className={'audio-source'}>
+                        {firstFloorInputControl.map((input) => {
+                            currentState = parseInt(props.relays.firstFloor, 16);
+                            leftState = (currentState >> input.leftIndex) & 1;
+                            rightState = (currentState >> input.rightIndex) & 1;
+                            if (leftState !== rightState) {
+                                leftState = 0;
+                                rightState = 0;
+                                newState = (currentState & ~(1 << input.leftIndex)) & (currentState & ~(1 << input.rightIndex));
+                                fetch(apiBaseUrl + `/relays?floor=FIRST&value=${newState}`, { method: 'post' })
+                                    .then(response => console.log(response), error => console.log(error));
+                            }
+    
+                            const onclickHandler = () => toggleRelayState(input.leftIndex, input.rightIndex, 'FIRST');
+                            return getRelayButton(leftState === input.onState, input.label, onclickHandler, false);
+                        })}
+                    </ButtonGroup>
+                    <hr/>
+                    <h4>Rooms</h4>
+                    {firstFloorControls.map((room) => {
+                        currentState = parseInt(props.relays.firstFloor, 16);
+                        leftState = (currentState >> room.leftIndex) & 1;
+                        rightState = (currentState >> room.rightIndex) & 1;
+                        if (leftState !== rightState) {
+                            leftState = 0;
+                            rightState = 0;
+                            newState = (currentState & ~(1 << room.leftIndex)) & (currentState & ~(1 << room.rightIndex));
+                            fetch(apiBaseUrl + `/relays?floor=FIRST&value=${newState}`, { method: 'post' })
+                                .then(response => console.log(response), error => console.log(error));
+                        }
 
-                    const onclickHandler = () => toggleRelayState(room.leftIndex, room.rightIndex, 'FIRST');
-                    return getRelayButton(leftState === room.onState, room.label, onclickHandler);
-                })}
-            </Card>
-            <Card color="dark">
-                <CardHeader>Second Floor</CardHeader>
-                {secondFloorControls.map((room, index) => {
-                    currentState = parseInt(props.relays.secondFloor, 16);
-                    leftState = (currentState >> room.leftIndex) & 1;
-                    rightState = (currentState >> room.rightIndex) & 1;
-                    if (leftState !== rightState) {
-                        leftState = 0;
-                        rightState = 0;
-                        newState = (currentState & ~(1 << room.leftIndex)) & (currentState & ~(1 << room.rightIndex));
-                        fetch(apiBaseUrl + `/relays?floor=SECOND&value=${newState}`, { method: 'post' })
-                            .then(response => console.log(response), error => console.log(error));
-                    }
+                        const onclickHandler = () => toggleRelayState(room.leftIndex, room.rightIndex, 'FIRST');
+                        return getRelayButton(leftState === room.onState, room.label, onclickHandler, true);
+                    })}
+                    <br/>
+                </TabPane>
+                <TabPane tabId={'SecondFloor'}>
+                <h4>Audio Source</h4>
+                    <ButtonGroup className={'audio-source'}>
+                        {secondFloorInputControl.map((input) => {
+                            currentState = parseInt(props.relays.secondFloor, 16);
+                            leftState = (currentState >> input.leftIndex) & 1;
+                            rightState = (currentState >> input.rightIndex) & 1;
+                            if (leftState !== rightState) {
+                                leftState = 0;
+                                rightState = 0;
+                                newState = (currentState & ~(1 << input.leftIndex)) & (currentState & ~(1 << input.rightIndex));
+                                fetch(apiBaseUrl + `/relays?floor=SECOND&value=${newState}`, { method: 'post' })
+                                    .then(response => console.log(response), error => console.log(error));
+                            }
+    
+                            const onclickHandler = () => toggleRelayState(input.leftIndex, input.rightIndex, 'SECOND');
+                            return getRelayButton(leftState === input.onState, input.label, onclickHandler, false);
+                        })}
+                    </ButtonGroup>
+                    <hr/>
+                    <h4>Rooms</h4>
+                    {secondFloorControls.map((room, index) => {
+                        currentState = parseInt(props.relays.secondFloor, 16);
+                        leftState = (currentState >> room.leftIndex) & 1;
+                        rightState = (currentState >> room.rightIndex) & 1;
+                        if (leftState !== rightState) {
+                            leftState = 0;
+                            rightState = 0;
+                            newState = (currentState & ~(1 << room.leftIndex)) & (currentState & ~(1 << room.rightIndex));
+                            fetch(apiBaseUrl + `/relays?floor=SECOND&value=${newState}`, { method: 'post' })
+                                .then(response => console.log(response), error => console.log(error));
+                        }
 
-                    const onclickHandler = () => toggleRelayState(room.leftIndex, room.rightIndex, 'SECOND');
-                    return getRelayButton(leftState === room.onState, room.label, onclickHandler);
-                })}
-            </Card>
+                        const onclickHandler = () => toggleRelayState(room.leftIndex, room.rightIndex, 'SECOND');
+                        return getRelayButton(leftState === room.onState, room.label, onclickHandler, true);
+                    })}
+                    <br/>
+                </TabPane>
+            </TabContent>
         </div>
     );
 };
