@@ -53,25 +53,25 @@ export const RelayComponent = (props) => {
             label: 'Kitchen',
             leftIndex: 11,
             rightIndex: 3,
-            onState: 0
+            onState: 1
         },
         {
             label: 'Patio',
             leftIndex: 4,
             rightIndex: 12,
-            onState: 0
+            onState: 1
         },
         {
             label: 'Office',
             leftIndex: 10,
             rightIndex: 2,
-            onState: 0
+            onState: 1
         },
         {
             label: 'Basement',
             leftIndex: 5,
             rightIndex: 13,
-            onState: 0
+            onState: 1
         }
     ];
 
@@ -80,13 +80,13 @@ export const RelayComponent = (props) => {
             label: 'Aux',
             leftIndex: 7,
             rightIndex: 8,
-            onState: 0
+            onState: 1
         },
         {
             label: 'Pi',
             leftIndex: 7,
             rightIndex: 8,
-            onState: 1
+            onState: 0
         }
     ];
 
@@ -95,31 +95,31 @@ export const RelayComponent = (props) => {
             label: 'Master Bedroom',
             leftIndex: 11,
             rightIndex: 3,
-            onState: 0
+            onState: 1
         },
         {
             label: 'Master Closet',
             leftIndex: 4,
             rightIndex: 12,
-            onState: 0
+            onState: 1
         },
         {
             label: 'Master Bathroom',
             leftIndex: 10,
             rightIndex: 2,
-            onState: 0
+            onState: 1
         },
         {
             label: 'Debbie\'s Room',
             leftIndex: 5,
             rightIndex: 13,
-            onState: 0
+            onState: 1
         },
         {
             label: 'Henry\'s Room',
             leftIndex: 9,
             rightIndex: 1,
-            onState: 0
+            onState: 1
         }
     ];
 
@@ -128,13 +128,13 @@ export const RelayComponent = (props) => {
             label: 'Aux',
             leftIndex: 7,
             rightIndex: 8,
-            onState: 0
+            onState: 1
         },
         {
             label: 'Pi',
             leftIndex: 7,
             rightIndex: 8,
-            onState: 1
+            onState: 0
         }
     ];
 

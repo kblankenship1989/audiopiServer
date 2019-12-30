@@ -96,8 +96,8 @@ export const SongControls = (props) => {
 		fetch(apiBaseUrl + command, {method: 'post'})
 			.then(response => console.log(response), error => console.log(error));
 	}
-
-	const songs = songHistory.reverse().map((song, index) => {
+	const songHistoryReveresed = [...songHistory].reverse();
+	const songs = songHistoryReveresed.map((song, index) => {
 		return (
 		  <CarouselItem
 			key={`${index} - ${song.coverArt}`}
