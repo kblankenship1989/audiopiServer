@@ -9,6 +9,7 @@ export const updatePandora = (newPandora) => (dispatch) => {
 };
 
 export const updateRelays = (newRelays) => (dispatch) => {
+    console.log('updating relays', newRelays);
     dispatch(addRelays(JSON.parse(newRelays)));
 }
 
