@@ -191,16 +191,8 @@ export const RelayComponent = (props) => {
                             currentState = parseInt(props.relays.secondFloor, 16);
                             leftState = (currentState >> input.leftIndex) & 1;
                             rightState = (currentState >> input.rightIndex) & 1;
-                            if (leftState !== rightState) {
-                                leftState = 0;
-                                rightState = 0;
-                                newState = (currentState & ~(1 << input.leftIndex)) & (currentState & ~(1 << input.rightIndex));
-                                fetch(apiBaseUrl + `/relays?floor=SECOND&value=${newState}`, { method: 'post' })
-                                    .then(response => console.log(response), error => console.log(error));
-                            }
-    
                             const onclickHandler = () => toggleRelayState(input.leftIndex, input.rightIndex, 'SECOND');
-                            return getRelayButton(leftState === input.onState, input.label, onclickHandler, false);
+                            return getRelayButton((leftState & rightState) === input.onState, input.label, onclickHandler, false);
                         })}
                     </ButtonGroup>
                     <hr/>
@@ -209,16 +201,8 @@ export const RelayComponent = (props) => {
                         currentState = parseInt(props.relays.secondFloor, 16);
                         leftState = (currentState >> room.leftIndex) & 1;
                         rightState = (currentState >> room.rightIndex) & 1;
-                        if (leftState !== rightState) {
-                            leftState = 0;
-                            rightState = 0;
-                            newState = (currentState & ~(1 << room.leftIndex)) & (currentState & ~(1 << room.rightIndex));
-                            fetch(apiBaseUrl + `/relays?floor=SECOND&value=${newState}`, { method: 'post' })
-                                .then(response => console.log(response), error => console.log(error));
-                        }
-
                         const onclickHandler = () => toggleRelayState(room.leftIndex, room.rightIndex, 'SECOND');
-                        return getRelayButton(leftState === room.onState, room.label, onclickHandler, true);
+                        return getRelayButton((leftState & rightState) === room.onState, room.label, onclickHandler, true);
                     })}
                     <br/>
                 </TabPane>
