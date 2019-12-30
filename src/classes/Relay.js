@@ -8,11 +8,12 @@ export class Relay {
     }
 
     setRelays(newState) {
+        const state = parseInt(newState, 16);
         this.latch.writeSync(0);
         this.clock.writeSync(0);
         let j=0;
         for (j=0;j<16;j++){
-            this.data.writeSync((newState >> j) & 1);
+            this.data.writeSync((state >> j) & 1);
             this.clock.writeSync(1);
             this.clock.writeSync(0);
         }
