@@ -1,7 +1,8 @@
 
 import {readFileSync, writeFile} from 'fs';
+import {resolve} from 'path';
 
-const filePath = __dirname + "/public/settings.json";
+const filePath = resolve("../../public/settings.json");
 const encoding = 'utf8';
 
 const settingsRaw = readFileSync(filePath, encoding);
