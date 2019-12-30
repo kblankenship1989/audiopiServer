@@ -25,5 +25,5 @@ export const addPandora = (pandora) => ({
 
 export const addRelays = (relays) => ({
     type: ActionTypes.ADD_RELAYS,
-    paylaod: relays
+    payload: relays
 }) 
