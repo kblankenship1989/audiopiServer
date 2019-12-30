@@ -1,8 +1,8 @@
 import {Relay} from '../../classes/Relay';
 import {settings, updateSetting} from './settings';
 
-const firstFloor = new Relay();
-const secondFloor = new Relay();
+const secondFloor = new Relay(11, 9, 10);
+const firstFloor = new Relay(25, 8, 7);
 
 setFirstFloor(settings.firstFloorRelayState);
 setSecondFloor(settings.secondFloorRelayState);

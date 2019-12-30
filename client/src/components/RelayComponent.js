@@ -39,32 +39,26 @@ export const RelayComponent = (props) => {
     const firstFloorControls = [
         {
             label: 'Kitchen',
-            leftIndex: 0,
-            rightIndex: 15,
-            onState: 0
-        },
-        {
-            label: 'Office',
-            leftIndex: 1,
-            rightIndex: 14,
+            leftIndex: 11,
+            rightIndex: 3,
             onState: 0
         },
         {
             label: 'Patio',
-            leftIndex: 2,
-            rightIndex: 13,
-            onState: 0
-        },
-        {
-            label: 'Basement',
-            leftIndex: 3,
+            leftIndex: 4,
             rightIndex: 12,
             onState: 0
         },
         {
-            label: 'Garage',
-            leftIndex: 4,
-            rightIndex: 11,
+            label: 'Office',
+            leftIndex: 10,
+            rightIndex: 2,
+            onState: 0
+        },
+        {
+            label: 'Basement',
+            leftIndex: 5,
+            rightIndex: 13,
             onState: 0
         }
     ];
@@ -72,14 +66,14 @@ export const RelayComponent = (props) => {
     const firstFloorInputControl = [
         {
             label: 'Aux',
-            leftIndex: 6,
-            rightIndex: 9,
+            leftIndex: 7,
+            rightIndex: 8,
             onState: 0
         },
         {
             label: 'Pi',
-            leftIndex: 6,
-            rightIndex: 9,
+            leftIndex: 7,
+            rightIndex: 8,
             onState: 1
         }
     ];
@@ -87,32 +81,32 @@ export const RelayComponent = (props) => {
     const secondFloorControls = [
         {
             label: 'Master Bedroom',
-            leftIndex: 0,
-            rightIndex: 15,
+            leftIndex: 11,
+            rightIndex: 3,
             onState: 0
         },
         {
             label: 'Master Closet',
-            leftIndex: 1,
-            rightIndex: 14,
-            onState: 0
-        },
-        {
-            label: 'Master Bathroom',
-            leftIndex: 2,
-            rightIndex: 13,
-            onState: 0
-        },
-        {
-            label: 'Debbie\'s Room',
-            leftIndex: 3,
+            leftIndex: 4,
             rightIndex: 12,
             onState: 0
         },
         {
+            label: 'Master Bathroom',
+            leftIndex: 10,
+            rightIndex: 2,
+            onState: 0
+        },
+        {
+            label: 'Debbie\'s Room',
+            leftIndex: 5,
+            rightIndex: 13,
+            onState: 0
+        },
+        {
             label: 'Henry\'s Room',
-            leftIndex: 4,
-            rightIndex: 11,
+            leftIndex: 9,
+            rightIndex: 1,
             onState: 0
         }
     ];
@@ -120,14 +114,14 @@ export const RelayComponent = (props) => {
     const secondFloorInputControl = [
         {
             label: 'Aux',
-            leftIndex: 6,
-            rightIndex: 9,
+            leftIndex: 7,
+            rightIndex: 8,
             onState: 0
         },
         {
             label: 'Pi',
-            leftIndex: 6,
-            rightIndex: 9,
+            leftIndex: 7,
+            rightIndex: 8,
             onState: 1
         }
     ];
