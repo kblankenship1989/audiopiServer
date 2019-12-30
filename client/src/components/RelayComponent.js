@@ -24,6 +24,8 @@ export const RelayComponent = (props) => {
         const leftState = (currentState >> leftIndex) & 1;
         const rightState = (currentState >> rightIndex) & 1;
         const testIndex = (1 << leftIndex) | (1 << rightIndex);
+        console.log(currentState);
+
 
         if (leftState === rightState) {
             newState = currentState ^ testIndex;
@@ -31,7 +33,7 @@ export const RelayComponent = (props) => {
             newState = currentState | testIndex;
         }
         console.log(newState);
-        fetch(apiBaseUrl + `/relays?floor=${floor}&value=${newState}`, { method: 'post' })
+        fetch(apiBaseUrl + `/relays?floor=${floor}&value=${newState.toString(16)}`, { method: 'post' })
             .then(response => console.log(response), error => console.log(error));
     }
 
