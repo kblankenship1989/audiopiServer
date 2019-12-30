@@ -15,8 +15,6 @@ export const setSecondFloor = (newState, callback) => {
 }
 
 export const getRelayStates = () => {
-    console.log('getting relay state');
-    console.log(settings);
     return {
         firstFloor: settings.firstFloorRelayState,
         secondFloor: settings.secondFloorRelayState

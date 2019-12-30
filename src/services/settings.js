@@ -12,5 +12,6 @@ export const updateSetting = (key, value, callback) => {
     const callbackToExecute = callback || noop;
     settings[key] = value;
     console.log(JSON.stringify(settings));
+    console.log(filePath);
     writeFile(filePath, JSON.stringify(settings), callbackToExecute);
 }

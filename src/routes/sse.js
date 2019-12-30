@@ -69,6 +69,5 @@ export const publishPlayer = (eventData) => {
 };
 
 export const publishRelays = (eventData) => {
-    console.log('emmiting relays', eventData);
     emitter.emit('relays', eventData);
 }

@@ -10,8 +10,8 @@ export const RelayComponent = (props) => {
     }
 
     const toggleRelayState = (leftIndex, rightIndex, floor) => {
-        let currentState;
-        const testIndex = (1 << leftIndex) | (1 << rightIndex);
+        let currentState,
+            newState;
 
         if (floor === 'FIRST') {
             currentState = parseInt(props.relays.firstFloor, 16);
@@ -20,7 +20,17 @@ export const RelayComponent = (props) => {
         } else {
             return;
         }
-        const newState = currentState ^ testIndex;
+
+        const leftState = (currentState >> leftIndex) & 1;
+        const rightState = (currentState >> rightIndex) & 1;
+        const testIndex = (1 << leftIndex) | (1 << rightIndex);
+
+        if (leftState === rightState) {
+            newState = currentState ^ testIndex;
+        } else {
+            newState = currentState | testIndex;
+        }
+        console.log(newState);
         fetch(apiBaseUrl + `/relays?floor=${floor}&value=${newState}`, { method: 'post' })
             .then(response => console.log(response), error => console.log(error));
     }
@@ -159,16 +169,8 @@ export const RelayComponent = (props) => {
                             currentState = parseInt(props.relays.firstFloor, 16);
                             leftState = (currentState >> input.leftIndex) & 1;
                             rightState = (currentState >> input.rightIndex) & 1;
-                            if (leftState !== rightState) {
-                                leftState = 0;
-                                rightState = 0;
-                                newState = (currentState & ~(1 << input.leftIndex)) & (currentState & ~(1 << input.rightIndex));
-                                fetch(apiBaseUrl + `/relays?floor=FIRST&value=${newState}`, { method: 'post' })
-                                    .then(response => console.log(response), error => console.log(error));
-                            }
-    
                             const onclickHandler = () => toggleRelayState(input.leftIndex, input.rightIndex, 'FIRST');
-                            return getRelayButton(leftState === input.onState, input.label, onclickHandler, false);
+                            return getRelayButton((leftState & rightState) === input.onState, input.label, onclickHandler, false);
                         })}
                     </ButtonGroup>
                     <hr/>
@@ -177,16 +179,8 @@ export const RelayComponent = (props) => {
                         currentState = parseInt(props.relays.firstFloor, 16);
                         leftState = (currentState >> room.leftIndex) & 1;
                         rightState = (currentState >> room.rightIndex) & 1;
-                        if (leftState !== rightState) {
-                            leftState = 0;
-                            rightState = 0;
-                            newState = (currentState & ~(1 << room.leftIndex)) & (currentState & ~(1 << room.rightIndex));
-                            fetch(apiBaseUrl + `/relays?floor=FIRST&value=${newState}`, { method: 'post' })
-                                .then(response => console.log(response), error => console.log(error));
-                        }
-
                         const onclickHandler = () => toggleRelayState(room.leftIndex, room.rightIndex, 'FIRST');
-                        return getRelayButton(leftState === room.onState, room.label, onclickHandler, true);
+                        return getRelayButton((leftState & rightState) === room.onState, room.label, onclickHandler, true);
                     })}
                     <br/>
                 </TabPane>
