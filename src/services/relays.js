@@ -1,4 +1,4 @@
-import {Relay} from '../../classes/Relay';
+import {Relay} from '../classes/Relay';
 import {settings, updateSetting} from './settings';
 
 const secondFloor = new Relay(11, 9, 10);
