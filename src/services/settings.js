@@ -9,6 +9,8 @@ const settingsRaw = readFileSync(filePath, encoding);
 export const settings = JSON.parse(settingsRaw);
 
 export const updateSetting = (key, value, callback) => {
+    var noop = function(){};
+    const callbackToExecute = callback || noop;
     settings[key] = value;
-    writeFile(filePath, JSON.stringify(settings), encoding, callback);
+    writeFile(filePath, JSON.stringify(settings), encoding, callbackToExecute);
 }
