@@ -1,7 +1,7 @@
 import * as ActionTypes from './ActionTypes';
 
 const emptyState = {
-    firstFloor: '8001',
+    firstFloor: '0000',
     secondFloor: '0000'
 };
 

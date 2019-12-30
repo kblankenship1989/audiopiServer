@@ -1,7 +1,7 @@
 import * as ActionTypes from './ActionTypes';
 
 const emptyState = {
-    isLoading: false,
+    isLoading: true,
     currentSong: {
         currentSong: {}
     },

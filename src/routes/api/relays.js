@@ -20,6 +20,7 @@ relayRouter.get('/', function(req, res, next) {
 
     if (call) {
         call(req.query.value, () => {
+            console.log('executing callback');
             publishRelays(getRelayStates());
             res.status = 200;
             res.setHeader('Content-Type', 'text/plain');
