@@ -1,8 +1,8 @@
 
 import {readFileSync, writeFile} from 'fs';
-import {resolve} from 'path';
+import {join} from 'path';
 
-const filePath = resolve("../../public/settings.json");
+const filePath = join(__dirname, '../../public/stationList');
 const encoding = 'utf8';
 
 const settingsRaw = readFileSync(filePath, encoding);
