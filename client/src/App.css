@@ -103,3 +103,44 @@ nav {
 .form-select {
 	padding: 0;
 }
+
+.relays .audio-source {
+	display: block;
+}
+
+.relays .audio-source .btn {
+	width: 45%;
+}
+
+.relays h4 {
+	color: black;
+}
+
+.relays hr {
+	background: black;
+}
+
+.relays .nav-link.active {
+	background-color: lightslategray;
+	border-bottom: 0px;
+	border-color: darkslategray;
+}
+
+.relays .nav-link.inactive {
+	background-color: darkgrey;
+	border: 0px;
+	font-style: italic;
+}
+
+.relays .tab-content {
+	background-color: lightslategray;
+}
+
+.relays .tab-content .btn-block {
+	margin-left: 5%;
+	width: 90%
+}
+
+.relays .nav-tabs {
+	border-bottom: 0px;
+}

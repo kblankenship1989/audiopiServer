@@ -4,12 +4,15 @@ import * as findProcess from 'find-process';
 
 import { writeCommandToFifo, stopPianoBar, startPianoBar } from '../../services/pianobar';
 import { publishPlayer } from '../sse';
+import { resetPlayerTimeout, clearPlayerTimeout } from '../../services/playerTimeout';
 import { getInitialPandoraState } from './pandora';
 
 export let playerState = {
+    isPaused: false,
+    minutesRemaining: 0,
     playerRunning: false,
-    isPaused: false
-}
+    playerTimedOut: false
+};
 
 setInterval(() => {
 	findProcess.default('name','pianobar')
@@ -53,6 +56,8 @@ playerRouter.route('/')
                     await stopPianoBar();
                     playerState.playerRunning = false;
                     playerState.isPaused = false;
+                    playerState.playerTimedOut = false;
+                    clearPlayerTimeout();
                     publishPlayer(playerState);
                     response = 'Successfully terminated PianoBar';
                 } else if (action === validCommands.STARTPLAYER) {
@@ -60,17 +65,26 @@ playerRouter.route('/')
                     getInitialPandoraState();
                     playerState.playerRunning = true;
                     playerState.isPaused = false;
+                    playerState.playerTimedOut = false;
+                    resetPlayerTimeout();
                     publishPlayer(playerState);
                     response = 'Successfully started PianoBar';
                 } else {
                     if (action === validCommands.REPLAY) {
-                        action = `${action}${req.query.songIndex.toString()}\n`
+                        action = `${action}${req.query.songIndex.toString()}\n`;
+                        pandoraState.isLoading = true;
+                        publishPandora(pandoraState);
+                    } else if (action === validCommands.NEXT) {
+                        pandoraState.isLoading = true;
+                        publishPandora(pandoraState);
                     }
                     await writeCommandToFifo(action);
                     if (action === validCommands.PLAYPAUSE) {
                         playerState.isPaused = !playerState.isPaused;
-                        publishPlayer(playerState);
+                        playerState.playerTimedOut = false;
                     }
+                    resetPlayerTimeout();
+                    publishPlayer(playerState);
                     response = action + ' has been written successfully!';
                 }
                 res.status = 200;
