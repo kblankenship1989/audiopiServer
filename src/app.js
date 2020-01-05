@@ -14,6 +14,7 @@ import playerRouter from './routes/api/player';
 import pandoraRouter from './routes/api/pandora';
 import relaysRouter from './routes/api/relays';
 import { subscribe } from './routes/sse';
+import settingsRouter from './routes/api/settings';
 
 export const app = express();
 export const server = Server(app);
@@ -35,6 +36,7 @@ app.use('/api/users', usersRouter);
 app.use('/api/player', playerRouter);
 app.use('/api/pandora', pandoraRouter);
 app.use('/api/relays', relaysRouter);
+app.use('/api/settings', settingsRouter);
 
 app.use('/sse', cors(), subscribe);
 

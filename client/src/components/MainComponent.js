@@ -57,8 +57,15 @@ export const Main = (props) => {
                     {...routeProps}
                     pandora={props.pandora}
                     player={props.player}
-                />} />
-                <Route path="/settings" component={Settings} />
+                    />}
+                />
+                <Route path="/settings" 
+                    render={(routeProps) => <Settings
+                        {...routeProps}
+                        settings={props.settings}
+                        updateSettings={props.updateSettings}
+                    />}
+                />
                 <Route exact path="/relays"
                     render={(routeProps) => <RelayComponent
                         {...routeProps}
