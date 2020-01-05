@@ -5,6 +5,7 @@ import Header from './HeaderComponent';
 import Footer from './FooterComponent';
 import { SSEUrl } from '../helpers/baseUrls';
 import {HomeComponent} from './HomeComponent';
+import { Settings } from './SettingsComponent';
 import { TimeoutModal } from './TimeoutModal';
 import { RelayComponent } from './RelayComponent';
 
@@ -52,10 +53,17 @@ export const Main = (props) => {
             <br />
             <Switch>
                 <Route path="/home" 
-                    render={(routeProps) => <HomeComponent
+                render={(routeProps) => <HomeComponent
+                    {...routeProps}
+                    pandora={props.pandora}
+                    player={props.player}
+                    />}
+                />
+                <Route path="/settings" 
+                    render={(routeProps) => <Settings
                         {...routeProps}
-                        pandora={props.pandora}
-                        player={props.player}
+                        settings={props.settings}
+                        updateSettings={props.updateSettings}
                     />}
                 />
                 <Route exact path="/relays"

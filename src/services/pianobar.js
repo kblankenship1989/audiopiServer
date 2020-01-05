@@ -3,6 +3,8 @@ import { exec } from 'child_process';
 import { join } from 'path';
 
 import { playerState } from '../routes/api/player'
+import { setVolume, unMuteAll } from './volumeControl';
+import { settings } from './settings';
 
 var fifo = '/home/pi/.config/pianobar/ctl';
 
@@ -76,11 +78,14 @@ export const readStations = async () => {
 };    
 
 export const startPianoBar = async () => {
+    await setVolume(settings.defaultVolume);
+    await unMuteAll();
     const path = join(__dirname, '../../public/pbStart.sh');
     await exec('bash ' + path);
 }
 
 export const stopPianoBar = async () => {
+    await writeCommandToFifo('q');
     const path = join(__dirname, '../../public/pbStop.sh');
     await exec('bash ' + path);
 }

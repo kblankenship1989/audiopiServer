@@ -2,6 +2,7 @@
     "firstFloorRelayState": "0000",
     "secondFloorRelayState": "0000",
     "timeoutInMinutes": 120,
-    "closoeTimeoutInMinutes": 15,
+    "closeTimeoutInMinutes": 15,
+    "defaultVolume": 83,
     "songHistoryLength": 5
 }
