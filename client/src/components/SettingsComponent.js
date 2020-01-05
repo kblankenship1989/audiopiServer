@@ -29,7 +29,9 @@ export const Settings = (props) => {
     useEffect(() => {
         fetch(apiBaseUrl + `/settings`, { method: 'get' })
             .then((response) => {
-                const settings = JSON.parse(response);
+                return response.json();
+            })
+            .then((settings) => {
                 setCurrentSettings(settings);
                 props.updateSettings(settings);
             })
