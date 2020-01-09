@@ -16,7 +16,8 @@ export const Settings = (props) => {
         });
     }
 
-    const submitForm = () => {
+    const submitForm = (event) => {
+        event.preventDefault();
         fetch(apiBaseUrl + `/settings`, {
             method: 'POST',
             headers: {
