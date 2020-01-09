@@ -1,9 +1,10 @@
 import { playerState } from "../routes/api/player";
 import { stopPianoBar, writeCommandToFifo } from "./pianobar";
 import { publishPlayer } from "../routes/sse";
+import { settings } from "./settings";
 
-const timeout = 120 * 60000;
-const closeTimeout = 15 * 60000;
+const getTimeout = () => settings.timeoutInMinutes * 60000;
+const getCloseTimeout = () => settings.closeTimeoutInMinutes * 60000;
 
 let timeoutCheck,
     timeoutClose;
@@ -13,10 +14,10 @@ const setPlayerPauseTimeout = () => {
         await writeCommandToFifo('p');
         playerState.playerTimedOut = true;
         playerState.isPaused = true;
-        playerState.minutesRemaining = closeTimeout / 60000;
+        playerState.minutesRemaining = getCloseTimeout() / 60000;
         publishPlayer(playerState);
         setPlayerCloseInterval();
-    }, timeout)
+    }, getTimeout())
 };
 
 const setPlayerCloseInterval = () => {
