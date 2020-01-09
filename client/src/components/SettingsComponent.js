@@ -19,6 +19,9 @@ export const Settings = (props) => {
     const submitForm = () => {
         fetch(apiBaseUrl + `/settings`, {
             method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
             body: JSON.stringify(currentSettings),
         })
             .then((response) => {
