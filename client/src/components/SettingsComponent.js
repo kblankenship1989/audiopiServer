@@ -17,7 +17,10 @@ export const Settings = (props) => {
     }
 
     const submitForm = () => {
-        fetch(apiBaseUrl + `/settings`, { method: 'post', body: JSON.stringify(currentSettings) })
+        fetch(apiBaseUrl + `/settings`, {
+            method: 'POST',
+            body: JSON.stringify(currentSettings),
+        })
             .then((response) => {
                 props.updateSettings(currentSettings);
             })
@@ -29,7 +32,7 @@ export const Settings = (props) => {
     useEffect(() => {
         fetch(apiBaseUrl + `/settings`, { method: 'get' })
             .then((response) => {
-                const settings = JSON.parse(response);
+                const settings = response.json();
                 setCurrentSettings(settings);
                 props.updateSettings(settings);
             })

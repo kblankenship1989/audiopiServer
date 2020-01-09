@@ -4,7 +4,7 @@ import {join} from 'path';
 
 const filePath = join(__dirname, '../../public/settings.json');
 
-const settingsRaw = readFileSync(filePath);
+const settingsRaw = readFileSync(filePath) || {};
 export const settings = JSON.parse(settingsRaw);
 
 export const updateSetting = (key, value, callback) => {
