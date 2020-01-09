@@ -10,8 +10,6 @@ settingsRouter.get('/', function(req, res, next) {
 })
 .post('/', function(req, res, next) {
     try{
-        console.log(req);
-        console.log(req.body);
         const newSettings = req.body;
         
         Object.keys(newSettings).forEach((key) => {

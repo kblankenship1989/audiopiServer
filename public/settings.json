@@ -1,8 +1,1 @@
-{
-    "firstFloorRelayState": "0000",
-    "secondFloorRelayState": "0000",
-    "timeoutInMinutes": 120,
-    "closeTimeoutInMinutes": 15,
-    "defaultVolume": 83,
-    "songHistoryLength": 5
-} 
+{"firstFloorRelayState":"c0c","secondFloorRelayState":"2a2a","timeoutInMinutes":121,"closeTimeoutInMinutes":15,"defaultVolume":83,"songHistoryLength":5}
