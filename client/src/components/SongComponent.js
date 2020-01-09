@@ -93,7 +93,7 @@ export const SongControls = (props) => {
 	
 	const handleClick = (command) => {
 		console.log("Execute Pianobar command: " + command);
-		fetch(apiBaseUrl + command, {method: 'post'})
+		fetch(apiBaseUrl + command, {method: 'POST'})
 			.then(response => console.log(response), error => console.log(error));
 	}
 	const songHistoryReveresed = [...songHistory].reverse();

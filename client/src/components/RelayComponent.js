@@ -33,7 +33,7 @@ export const RelayComponent = (props) => {
             newState = currentState | testIndex;
         }
         console.log(newState);
-        fetch(apiBaseUrl + `/relays?floor=${floor}&value=${newState.toString(16)}`, { method: 'post' })
+        fetch(apiBaseUrl + `/relays?floor=${floor}&value=${newState.toString(16)}`, { method: 'POST' })
             .then(response => console.log(response), error => console.log(error));
     }
 

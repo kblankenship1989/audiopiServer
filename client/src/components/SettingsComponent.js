@@ -30,7 +30,7 @@ export const Settings = (props) => {
     };
 
     useEffect(() => {
-        fetch(apiBaseUrl + `/settings`, { method: 'get' })
+        fetch(apiBaseUrl + `/settings`, { method: 'GET' })
             .then((response) => {
                 const settings = response.json();
                 setCurrentSettings(settings);
