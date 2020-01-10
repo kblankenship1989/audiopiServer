@@ -2,7 +2,7 @@ import fs from 'fs';
 import { exec } from 'child_process';
 import { join } from 'path';
 
-import { playerState } from '../routes/api/player'
+import { getPlayerState } from '../routes/api/player'
 import { setVolume, unMuteAll } from './volumeControl';
 import { settings } from './settings';
 
@@ -11,7 +11,7 @@ var fifo = '/home/pi/.config/pianobar/ctl';
 export const writeCommandToFifo = async (action) => {
     let error;
 
-    if (!playerState.playerRunning) {
+    if (!getPlayerState().playerRunning) {
         error = new Error('No player currently running.  Start player before sending commands.');
         throw error;
     }

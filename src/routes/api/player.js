@@ -7,12 +7,18 @@ import { publishPlayer } from '../sse';
 import { resetPlayerTimeout, clearPlayerTimeout } from '../../services/playerTimeout';
 import { getInitialPandoraState } from './pandora';
 
-export let playerState = {
+let playerState = {
     isPaused: false,
     minutesRemaining: 0,
     playerRunning: false,
     playerTimedOut: false
 };
+
+export const getPlayerState = () => playerState;
+
+export const setPlayerState = (newState) => {
+    playerState = newState;
+}
 
 setInterval(() => {
 	findProcess.default('name','pianobar')
