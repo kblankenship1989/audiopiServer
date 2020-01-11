@@ -8,10 +8,10 @@ import {
     getNextAlarm
 } from '../../services/alarms';
 
-const relayRouter = Router();
+const alarmsRouter = Router();
 
 /* GET users listing. */
-relayRouter.get('/', function (req, res) {
+alarmsRouter.get('/', function (req, res) {
         res.statusCode = 200;
         res.setHeader('Content-Type', 'application/json');
         res.json(getAlarms());
@@ -43,3 +43,5 @@ relayRouter.get('/', function (req, res) {
         res.setHeader('Content-Type', 'application/json');
         res.json(getAlarms());
     });
+
+export default alarmsRouter;
