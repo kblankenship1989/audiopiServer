@@ -86,7 +86,7 @@ function onError(error) {
  * Event listener for HTTP server "listening" event.
  */
 
-const onListening = async () => {
+function onListening() {
   var addr = server.address();
   var bind = typeof addr === 'string'
     ? 'pipe ' + addr
@@ -101,7 +101,7 @@ const onListening = async () => {
     initializeAlarms(settings.alarms);
     setFirstFloor(settings.firstFloorRelayState);
     setSecondFloor(settings.secondFloorRelayState);
-    await getInitialPandoraState();
+    getInitialPandoraState();
   } catch (e) {
     console.log(e);
   }
