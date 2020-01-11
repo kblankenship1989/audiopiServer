@@ -1,6 +1,6 @@
 {
     "firstFloorRelayState": "c0c",
-    "secondFloorRelayState": "2a2a",
+    "secondFloorRelayState": "a0a",
     "timeoutInMinutes": 121,
     "closeTimeoutInMinutes": 15,
     "defaultVolume": 83,
@@ -16,4 +16,3 @@
         }
     ]
 }
-
