@@ -87,9 +87,7 @@ export const getAlarms = () => {
     }));
 };
 
-export const initializeAlarms = () => {
-    const alarms = getSettings().alarms;
-
+export const initializeAlarms = (alarms) => {
     console.log('initializing alarms: ', alarms);
 
     alarms.forEach((alarm) => {

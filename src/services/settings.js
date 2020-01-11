@@ -10,7 +10,7 @@ const filePath = join(__dirname, '../../public/settings.json');
 const settingsRaw = readFileSync(filePath) || {};
 const settings = JSON.parse(settingsRaw);
 
-initializeAlarms();
+initializeAlarms(settings.alarms);
 setFirstFloor(settings.firstFloorRelayState);
 setSecondFloor(settings.secondFloorRelayState);
 
