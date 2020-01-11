@@ -29,8 +29,6 @@ export const getInitialPandoraState = async () => {
     publishPandora(pandoraState);
 };
 
-getInitialPandoraState();
-
 const pandoraRouter = Router();
 pandoraRouter.use(bodyParser.json());
 

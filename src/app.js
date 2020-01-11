@@ -11,7 +11,7 @@ import cors from 'cors';
 import indexRouter from './routes/index';
 import alarmsRouter from './routes/api/alarms';
 import playerRouter from './routes/api/player';
-import pandoraRouter from './routes/api/pandora';
+import pandoraRouter, { getInitialPandoraState } from './routes/api/pandora';
 import relaysRouter from './routes/api/relays';
 import { subscribe } from './routes/sse';
 import settingsRouter from './routes/api/settings';
@@ -67,13 +67,18 @@ app.use(function(err, req, res) {
   res.render('error');
 });
 
-app.on('listening', () => {
+app.on('listening', async () => {
   const settings = getSettings();
 
   console.log(settings);
   
-  initializeAlarms(settings.alarms);
-  setFirstFloor(settings.firstFloorRelayState);
-  setSecondFloor(settings.secondFloorRelayState);
+  try {
+    initializeAlarms(settings.alarms);
+    setFirstFloor(settings.firstFloorRelayState);
+    setSecondFloor(settings.secondFloorRelayState);
+    await getInitialPandoraState();
+  } catch (e) {
+    console.log(e);
+  }
 })
 //export default app;
