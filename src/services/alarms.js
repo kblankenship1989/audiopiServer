@@ -2,14 +2,23 @@ import {scheduleJob} from 'node-schedule';
 import {v4} from 'uuid';
 
 import { startPianoBar } from './pianobar';
-import { getPlayerState } from '../routes/api/player';
+import { getPlayerState, setPlayerState } from '../routes/api/player';
 import { getSettings, updateSetting } from './settings';
+import { getInitialPandoraState } from '../routes/api/pandora';
+import { resetPlayerTimeout } from './playerTimeout';
+import { publishPlayer } from '../routes/sse';
 
 const alarmJobs = {};
 
-const startPianoBarCallback = () => {
+const startPianoBarCallback = async () => {
     if (!getPlayerState().playerRunning) {
-        startPianoBar();
+        await startPianoBar();
+        getInitialPandoraState();
+        setPlayerState('playerRunning', true);
+        setPlayerState('isPaused', false);
+        setPlayerState('playerTimedOut', false);
+        resetPlayerTimeout();
+        publishPlayer(getPlayerState());
     }
 };
 
