@@ -90,6 +90,8 @@ export const getAlarms = () => {
 export const initializeAlarms = () => {
     const alarms = getSettings().alarms;
 
+    console.log('initializing alarms: ', alarms);
+
     alarms.forEach((alarm) => {
         const schedule = getSchedule(alarm);
         alarmJobs[alarm.id] = scheduleJob(alarm.name, schedule, startPianoBarCallback);
