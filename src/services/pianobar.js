@@ -4,7 +4,7 @@ import { join } from 'path';
 
 import { getPlayerState } from '../routes/api/player'
 import { setVolume, unMuteAll } from './volumeControl';
-import { settings } from './settings';
+import { getSettings } from './settings';
 
 var fifo = '/home/pi/.config/pianobar/ctl';
 
@@ -80,7 +80,7 @@ export const readStations = async () => {
 };    
 
 export const startPianoBar = async () => {
-    await setVolume(settings.defaultVolume);
+    await setVolume(getSettings().defaultVolume);
     await unMuteAll();
     const path = join(__dirname, '../../public/pbStart.sh');
     await exec('bash ' + path);

@@ -1,10 +1,10 @@
 import { getPlayerState, setPlayerState } from "../routes/api/player";
 import { stopPianoBar, writeCommandToFifo } from "./pianobar";
 import { publishPlayer } from "../routes/sse";
-import { settings } from "./settings";
+import { getSettings } from "./settings";
 
-const getTimeout = () => settings.timeoutInMinutes * 60000;
-const getCloseTimeout = () => settings.closeTimeoutInMinutes * 60000;
+const getTimeout = () => getSettings().timeoutInMinutes * 60000;
+const getCloseTimeout = () => getSettings().closeTimeoutInMinutes * 60000;
 
 let timeoutCheck,
     timeoutClose;
