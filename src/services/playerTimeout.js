@@ -1,4 +1,4 @@
-import { playerState } from "../routes/api/player";
+import { getPlayerState, setPlayerState } from "../routes/api/player";
 import { stopPianoBar, writeCommandToFifo } from "./pianobar";
 import { publishPlayer } from "../routes/sse";
 import { settings } from "./settings";
@@ -12,23 +12,25 @@ let timeoutCheck,
 const setPlayerPauseTimeout = () => {
     timeoutCheck = setTimeout(async () => {
         await writeCommandToFifo('p');
-        playerState.playerTimedOut = true;
-        playerState.isPaused = true;
-        playerState.minutesRemaining = getCloseTimeout() / 60000;
-        publishPlayer(playerState);
+        setPlayerState('playerTimedOut', true);
+        setPlayerState('isPaused', true);
+        setPlayerState('minutesRemaining', getCloseTimeout() / 60000);
+        publishPlayer(getPlayerState());
         setPlayerCloseInterval();
     }, getTimeout())
 };
 
 const setPlayerCloseInterval = () => {
     timeoutClose = setInterval(() => {
-        const newMinutesRemaining = playerState.minutesRemaining - 1;
-        playerState.minutesRemaining = newMinutesRemaining;
+        const newMinutesRemaining = getPlayerState().minutesRemaining - 1;
+        setPlayerState('minutesRemaining', newMinutesRemaining);
         if (newMinutesRemaining <= 0) {
             stopPianoBar();
-            playerState.playerTimedOut = false;
+            setPlayerState('playerTimedOut', false);
+            setPlayerState('playerRunning', false);
+        
         }
-        publishPlayer(playerState);
+        publishPlayer(getPlayerState);
     }, 60000)
 };
 
@@ -38,7 +40,9 @@ export const clearPlayerTimeout = () => {
 };
 
 export const resetPlayerTimeout = () => {
-    playerState.playerTimedOut = false;
+    const newPlayerState = getPlayerState();
+    newPlayerState.playerTimedOut = false;
+    setPlayerState(newPlayerState);
     clearPlayerTimeout();
     setPlayerPauseTimeout();
 };

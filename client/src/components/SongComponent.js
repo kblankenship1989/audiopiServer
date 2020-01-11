@@ -78,7 +78,7 @@ export const SongControls = (props) => {
 	];
 
 	const toggleCaption = () => {
-		Boolean(displayCaption) ? setDisplayCaption('') : setDisplayCaption('display-caption');
+		displayCaption ? setDisplayCaption('') : setDisplayCaption('display-caption');
 	}
 
 	const progressNext = () => {

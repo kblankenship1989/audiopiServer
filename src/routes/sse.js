@@ -1,11 +1,11 @@
 import { EventEmitter } from 'eventemitter3';
-import { playerState } from './api/player';
+import { getPlayerState } from './api/player';
 import { pandoraState } from './api/pandora';
 import { getRelayStates } from '../services/relays';
 
 const emitter = new EventEmitter();
 
-export const subscribe = (req, res, next) => {
+export const subscribe = (req, res) => {
     let id = 0;
 
     res.writeHead(200, {
@@ -41,7 +41,7 @@ export const subscribe = (req, res, next) => {
 
     if (id === 0) {
         setTimeout(() => {
-            onPlayer(playerState);
+            onPlayer(getPlayerState());
             onPandora(pandoraState);
             onRelays(getRelayStates());
         }, 500);

@@ -5,7 +5,7 @@ import { publishRelays } from '../sse';
 var relayRouter = Router();
 
 /* GET users listing. */
-relayRouter.get('/', function(req, res, next) {
+relayRouter.get('/', function(req, res) {
     res.statusCode = 200;
     res.setHeader('Content-Type', 'application/json');
     res.json(getRelayStates());

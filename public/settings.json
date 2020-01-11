@@ -1,1 +1,18 @@
-{"firstFloorRelayState":"c0c","secondFloorRelayState":"2a2a","timeoutInMinutes":121,"closeTimeoutInMinutes":15,"defaultVolume":83,"songHistoryLength":5}
+{
+    "firstFloorRelayState": "c0c",
+    "secondFloorRelayState": "2a2a",
+    "timeoutInMinutes": 121,
+    "closeTimeoutInMinutes": 15,
+    "defaultVolume": 83,
+    "songHistoryLength": 5,
+    "alarms": [
+        {
+            "id": "bar",
+            "name": "foo",
+            "minute": "0",
+            "hour": "12",
+            "dayOfWeek": "0-6",
+            "isEnabled": true
+        }
+    ]
+}

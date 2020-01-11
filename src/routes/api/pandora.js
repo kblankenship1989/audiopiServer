@@ -4,7 +4,7 @@ import bodyParser from 'body-parser';
 import { writeCommandToFifo, readStations, readCurrentSong } from '../../services/pianobar';
 import { publishPandora } from '../sse'
 
-export let pandoraState = {
+let pandoraState = {
     isLoading: true,
     currentSong: {
         currentSong: {}
@@ -12,6 +12,12 @@ export let pandoraState = {
     stationList: [],
     songHistory: []
 };
+
+export const getPandoraState = () => pandoraState;
+
+export const setPandoraState = (key, value) => {
+    pandoraState[key] = value;
+}
 
 export const getInitialPandoraState = async () => {
     pandoraState.isLoading = true;
@@ -30,7 +36,7 @@ pandoraRouter.use(bodyParser.json());
 
 /* GET users listing. */
 pandoraRouter.route('/')
-    .get((req, res, next) => {
+    .get((req, res) => {
         res.statusCode = 200;
         res.setHeader('Content-Type', 'application/json');
         res.json(pandoraState);
@@ -72,7 +78,7 @@ pandoraRouter.route('/')
     });
 
 pandoraRouter.route('/stations')
-    .get((req, res, next) => {
+    .get((req, res) => {
         res.statusCode = 200;
         res.setHeader('Content-Type', 'application/json');
         res.json(pandoraState.stationList);
@@ -90,7 +96,7 @@ pandoraRouter.route('/stations')
     });
 
 pandoraRouter.route('/songs')
-    .get((req, res, next) => {
+    .get((req, res) => {
         res.statusCode = 200;
         res.setHeader('Content-Type', 'application/json');
         res.json(pandoraState.songHistory.map((song, index) => ({ id: index, song })));
