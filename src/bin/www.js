@@ -8,6 +8,10 @@
 
 import { app, server } from '../app';
 import debugLib from 'debug';
+import { initializeAlarms } from '../services/alarms';
+import { getSettings } from '../services/settings';
+import { setFirstFloor, setSecondFloor } from '../services/relays';
+import { getInitialPandoraState } from '../routes/api/pandora';
 
 const debug = debugLib('audiopiserver:server');
 
@@ -82,10 +86,23 @@ function onError(error) {
  * Event listener for HTTP server "listening" event.
  */
 
-function onListening() {
+const onListening = async () => {
   var addr = server.address();
   var bind = typeof addr === 'string'
     ? 'pipe ' + addr
     : 'port ' + addr.port;
   debug('Listening on ' + bind);
+
+  const settings = getSettings();
+
+  console.log(settings);
+  
+  try {
+    initializeAlarms(settings.alarms);
+    setFirstFloor(settings.firstFloorRelayState);
+    setSecondFloor(settings.secondFloorRelayState);
+    await getInitialPandoraState();
+  } catch (e) {
+    console.log(e);
+  }
 }
