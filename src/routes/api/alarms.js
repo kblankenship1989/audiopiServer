@@ -5,7 +5,8 @@ import {
     getAlarms,
     addAlarm,
     removeAlarm,
-    getNextAlarm
+    getNextAlarm,
+    updateAlarm
 } from '../../services/alarms';
 
 const alarmsRouter = Router();
@@ -31,7 +32,7 @@ alarmsRouter.get('/', function (req, res) {
     .put('/:alarmId', function (req, res) {
         const updatedAlarmId = req.params.alarmId;
         const updatedSettings = req.body;
-        const nextAlarmActive = addAlarm(updatedAlarmId, updatedSettings);
+        const nextAlarmActive = updateAlarm(updatedAlarmId, updatedSettings);
         res.statusCode = 200;
         res.setHeader('Content-Type', 'application/json');
         res.json(nextAlarmActive);
