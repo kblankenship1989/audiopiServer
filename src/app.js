@@ -15,6 +15,9 @@ import pandoraRouter from './routes/api/pandora';
 import relaysRouter from './routes/api/relays';
 import { subscribe } from './routes/sse';
 import settingsRouter from './routes/api/settings';
+import { getSettings } from './services/settings';
+import { initializeAlarms } from './services/alarms';
+import { setFirstFloor, setSecondFloor } from './services/relays';
 
 export const app = express();
 export const server = Server(app);
@@ -64,4 +67,13 @@ app.use(function(err, req, res) {
   res.render('error');
 });
 
+app.on('listening', () => {
+  const settings = getSettings();
+
+  console.log(settings);
+  
+  initializeAlarms(settings.alarms);
+  setFirstFloor(settings.firstFloorRelayState);
+  setSecondFloor(settings.secondFloorRelayState);
+})
 //export default app;
