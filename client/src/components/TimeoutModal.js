@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import t from 'tcomb';
+import {propTypes} from 'tcomb-react';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 
 import { apiBaseUrl } from '../helpers/baseUrls';
+
+
 
 export const TimeoutModal = (props) => {
     const [isOpen, setIsOpen] = useState(false);
@@ -37,7 +41,7 @@ export const TimeoutModal = (props) => {
                 }}>
                     {`Your listening session will be terminated in ${props.player.minutesRemaining} minutes.`}
                     <br/>
-                    Click "Resume" to continue listening.
+                    {'Click "Resume" to continue listening.'}
                 </ModalBody>
                 <ModalFooter  style={{
                     justifyContent: "center"

@@ -1,5 +1,3 @@
-// @flow
-
 import {scheduleJob} from 'node-schedule';
 import {v4} from 'uuid';
 
@@ -7,35 +5,37 @@ import { startPianoBar } from './pianobar';
 import { getPlayerState } from '../routes/api/player';
 import { getSettings, updateSetting } from './settings';
 
-type newAlarm = {
-    name: string,
-    isEnabled: boolean,
-    minute: string,
-    hour: string,
-    dayOfWeek: string
+const alarmJobs = {};
+
+const startPianoBarCallback = () => {
+    if (!getPlayerState().playerRunning) {
+        startPianoBar();
+    }
 };
 
-type alarmSettings = {
-    ...newAlarm,
-    id: string
+export const getNextAlarm = (alarmId) => {
+    return alarmJobs[alarmId].nextInvocation();
 }
 
-type alarmWithDate = {
-    ...alarmSettings,
-    nextActivation: Date
-}
+export const removeAlarm = (alarmId) => {
+    console.log('removing alarm: ', alarmId)
+    alarmJobs[alarmId].cancel();
 
-const alarms = {};
+    const currentAlarms = getSettings().alarms;
 
-const getNextAlarm = (alarmId: string): Date => {
-    return alarms[alarmId].nextInvocation();
-}
+    const updatedAlarms = currentAlarms.filter((alarm) => alarm.id !== alarmId)
 
-export const removeAlarm = (alarmId: string) => {
-    alarms[alarmId].cancel();
+    updateSetting('alarms', updatedAlarms);
+
+    return updatedAlarms;
 };
 
-export const addAlarm = (alarmSettings: newAlarm): ?Date => {
+const getSchedule = (alarm) => {
+    return `${alarm.minute} ${alarm.hour} * * ${alarm.dayOfWeek}`;
+};
+
+export const addAlarm = (alarmSettings) => {
+    console.log('adding alarm: ', alarmSettings);
     const newAlarm = {
         ...alarmSettings,
         id: v4()
@@ -48,21 +48,18 @@ export const addAlarm = (alarmSettings: newAlarm): ?Date => {
     updateSetting('alarms', currentAlarms);
 
     if (newAlarm.isEnabled) {
-        const schedule = `${newAlarm.minute} ${newAlarm.hour} * * ${newAlarm.dayOfWeek}`;
-        alarms[newAlarm.id] = scheduleJob(newAlarm.name, schedule, () => {
-            if (!getPlayerState().playerRunning) {
-                startPianoBar();
-            }
-        });
+        const schedule = getSchedule(newAlarm);
+        alarmJobs[newAlarm.id] = scheduleJob(newAlarm.name, schedule, startPianoBarCallback);
         return getNextAlarm(newAlarm.id);
     }
 };
 
-export const updateAlarm = (updatedAlarm: alarmSettings): ?Date => {
+export const updateAlarm = (alarmId, updatedAlarm) => {
+    console.log('updating alarm: ', alarmId, updatedAlarm);
     const currentAlarms = getSettings().alarms; 
 
-    const newAlarms = currentAlarms.map((alarm: alarmSettings): alarmSettings => {
-        if (alarm.id == updatedAlarm.id) {
+    const newAlarms = currentAlarms.map((alarm) => {
+        if (alarm.id == alarmId) {
             return updatedAlarm;
         }
 
@@ -73,19 +70,28 @@ export const updateAlarm = (updatedAlarm: alarmSettings): ?Date => {
 
 
     if (updatedAlarm.isEnabled) {
-        const schedule = `${updatedAlarm.minute} ${updatedAlarm.hour} * * ${updatedAlarm.dayOfWeek}`;
-        alarms[updatedAlarm.id].reschedule(schedule);
+        const schedule = getSchedule(updatedAlarm);
+        alarmJobs[alarmId].reschedule(schedule);
         return getNextAlarm(updatedAlarm.id);
     }
 
     removeAlarm(updatedAlarm.id);
 };
 
-export const getAlarms = (): Array<alarmWithDate> => {
+export const getAlarms = () => {
     const alarms = getSettings().alarms;
 
     return alarms.map((alarm) => ({
         ...alarm,
         nextActivation: getNextAlarm(alarm.id)
     }));
-}
+};
+
+export const initializeAlarms = () => {
+    const alarms = getSettings().alarms;
+
+    alarms.forEach((alarm) => {
+        const schedule = getSchedule(alarm);
+        alarmJobs[alarm.id] = scheduleJob(alarm.name, schedule, startPianoBarCallback);
+    });
+};

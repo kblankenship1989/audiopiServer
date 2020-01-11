@@ -2,6 +2,7 @@
 import {readFileSync, writeFile} from 'fs';
 import {join} from 'path';
 
+/*global __dirname*/
 const filePath = join(__dirname, '../../public/settings.json');
 
 const settingsRaw = readFileSync(filePath) || {};

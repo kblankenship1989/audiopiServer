@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+/*global process*/
+
 /**
  * Module dependencies.
  */

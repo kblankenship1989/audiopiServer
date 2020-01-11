@@ -21,5 +21,5 @@ export const getRelayStates = () => {
     }
 }
 
-setFirstFloor(settings.firstFloorRelayState);
-setSecondFloor(settings.secondFloorRelayState);
+setFirstFloor(getSettings().firstFloorRelayState);
+setSecondFloor(getSettings().secondFloorRelayState);

@@ -3,7 +3,7 @@ import { getSettings, updateSetting } from '../../services/settings';
 
 var settingsRouter = Router();
 
-settingsRouter.get('/', function(req, res, next) {
+settingsRouter.get('/', function(req, res) {
     res.statusCode = 200;
     res.setHeader('Content-Type', 'application/json');
     res.json(getSettings());

@@ -12,28 +12,25 @@ let timeoutCheck,
 const setPlayerPauseTimeout = () => {
     timeoutCheck = setTimeout(async () => {
         await writeCommandToFifo('p');
-        const newPlayerState = getPlayerState();
-        newPlayerState.playerTimedOut = true;
-        newPlayerState.isPaused = true;
-        newPlayerState.minutesRemaining = getCloseTimeout() / 60000;
-        setPlayerState(newPlayerState);
-        publishPlayer(newPlayerState);
+        setPlayerState('playerTimedOut', true);
+        setPlayerState('isPaused', true);
+        setPlayerState('minutesRemaining', getCloseTimeout() / 60000);
+        publishPlayer(getPlayerState());
         setPlayerCloseInterval();
     }, getTimeout())
 };
 
 const setPlayerCloseInterval = () => {
     timeoutClose = setInterval(() => {
-        const newPlayerState = getPlayerState();
-        const newMinutesRemaining = newPlayerState.minutesRemaining - 1;
-        newPlayerState.minutesRemaining = newMinutesRemaining;
+        const newMinutesRemaining = getPlayerState().minutesRemaining - 1;
+        setPlayerState('minutesRemaining', newMinutesRemaining);
         if (newMinutesRemaining <= 0) {
             stopPianoBar();
-            newPlayerState.playerTimedOut = false;
-            newPlayerState.playerRunning = false;
+            setPlayerState('playerTimedOut', false);
+            setPlayerState('playerRunning', false);
+        
         }
-        setPlayerState(newPlayerState);
-        publishPlayer(playerState);
+        publishPlayer(getPlayerState);
     }, 60000)
 };
 

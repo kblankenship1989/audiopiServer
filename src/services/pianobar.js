@@ -9,6 +9,7 @@ import { settings } from './settings';
 var fifo = '/home/pi/.config/pianobar/ctl';
 
 export const writeCommandToFifo = async (action) => {
+    /*global __dirname, Buffer*/
     let error;
 
     if (!getPlayerState().playerRunning) {
@@ -17,6 +18,7 @@ export const writeCommandToFifo = async (action) => {
     }
     const fileHandle = await fs.promises.open(fifo, 'w', 0o644);
     console.log('Fifo opened');
+
 
     var buf = new Buffer.from(action);
 

@@ -6,6 +6,8 @@ import * as fas from '@fortawesome/free-solid-svg-icons';
 import * as fab from '@fortawesome/free-brands-svg-icons';
 import { apiBaseUrl } from '../helpers/baseUrls';
 
+/*global process*/
+
 export const MainButtons = () => {
     const openGithub = () => {
         window.open('https://github.com/kblankenship1989/audiopiServer', '_blank');

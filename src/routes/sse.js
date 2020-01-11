@@ -5,7 +5,7 @@ import { getRelayStates } from '../services/relays';
 
 const emitter = new EventEmitter();
 
-export const subscribe = (req, res, next) => {
+export const subscribe = (req, res) => {
     let id = 0;
 
     res.writeHead(200, {

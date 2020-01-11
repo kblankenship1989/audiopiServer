@@ -3,9 +3,9 @@ import bodyParser from 'body-parser';
 import * as findProcess from 'find-process';
 
 import { writeCommandToFifo, stopPianoBar, startPianoBar } from '../../services/pianobar';
-import { publishPlayer } from '../sse';
+import { publishPlayer, publishPandora } from '../sse';
 import { resetPlayerTimeout, clearPlayerTimeout } from '../../services/playerTimeout';
-import { getInitialPandoraState } from './pandora';
+import { getInitialPandoraState, getPandoraState, setPandoraState} from './pandora';
 
 let playerState = {
     isPaused: false,
@@ -16,8 +16,8 @@ let playerState = {
 
 export const getPlayerState = () => playerState;
 
-export const setPlayerState = (newState) => {
-    playerState = newState;
+export const setPlayerState = (key, value) => {
+    playerState[key] = value;
 }
 
 setInterval(() => {
@@ -27,7 +27,7 @@ setInterval(() => {
 			if (pianobarFound != playerState.playerRunning){
 				playerState.playerRunning = pianobarFound;
 				publishPlayer(playerState);
-			};
+			}
 		});
 },5000);
 
@@ -36,7 +36,7 @@ playerRouter.use(bodyParser.json());
 
 /* GET users listing. */
 playerRouter.route('/')
-    .get((req, res, next) => {
+    .get((req, res) => {
         res.statusCode = 200;
         res.setHeader('Content-Type', 'application/json');
         res.json(playerState);
@@ -78,11 +78,11 @@ playerRouter.route('/')
                 } else {
                     if (action === validCommands.REPLAY) {
                         action = `${action}${req.query.songIndex.toString()}\n`;
-                        pandoraState.isLoading = true;
-                        publishPandora(pandoraState);
+                        setPandoraState('isLoading', true);
+                        publishPandora(getPandoraState);
                     } else if (action === validCommands.NEXT) {
-                        pandoraState.isLoading = true;
-                        publishPandora(pandoraState);
+                        setPandoraState('isLoading', true);
+                        publishPandora(getPandoraState);
                     }
                     await writeCommandToFifo(action);
                     if (action === validCommands.PLAYPAUSE) {
