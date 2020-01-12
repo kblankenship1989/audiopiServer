@@ -1,0 +1,19 @@
+{
+    "firstFloorRelayState": "c0c",
+    "secondFloorRelayState": "2a2a",
+    "timeoutInMinutes": 121,
+    "closeTimeoutInMinutes": 15,
+    "defaultVolume": 83,
+    "songHistoryLength": 5,
+    "alarms": [
+        {
+            "id": "bar",
+            "name": "Bedtime",
+            "minute": "30",
+            "hour": "19",
+            "dayOfWeek": "0-6",
+            "isEnabled": true,
+            "nextActivation": "2020-01-12T18:00:00.000Z"
+        }
+    ]
+}

@@ -4,9 +4,9 @@ import React from 'react';
 function Footer(props) {
     return(
         <>
-            <div className="container">
+            <div className="container footer">
                 <div className="row justify-content-center">
-                    <a onClick="" >Mute All</a> | <a onClick="">Restart Server</a>
+                    <span onClick={() => undefined} >Mute All</span> | <span onClick={() => undefined} >Restart Server</span>
                 </div>
             </div>
         </>

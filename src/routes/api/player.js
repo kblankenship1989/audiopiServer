@@ -3,11 +3,21 @@ import bodyParser from 'body-parser';
 import * as findProcess from 'find-process';
 
 import { writeCommandToFifo, stopPianoBar, startPianoBar } from '../../services/pianobar';
-import { publishPlayer } from '../sse';
+import { publishPlayer, publishPandora } from '../sse';
+import { resetPlayerTimeout, clearPlayerTimeout } from '../../services/playerTimeout';
+import { getInitialPandoraState, getPandoraState, setPandoraState} from './pandora';
 
-export let playerState = {
+let playerState = {
+    isPaused: false,
+    minutesRemaining: 0,
     playerRunning: false,
-    isPaused: false
+    playerTimedOut: false
+};
+
+export const getPlayerState = () => playerState;
+
+export const setPlayerState = (key, value) => {
+    playerState[key] = value;
 }
 
 setInterval(() => {
@@ -17,7 +27,7 @@ setInterval(() => {
 			if (pianobarFound != playerState.playerRunning){
 				playerState.playerRunning = pianobarFound;
 				publishPlayer(playerState);
-			};
+			}
 		});
 },5000);
 
@@ -26,44 +36,61 @@ playerRouter.use(bodyParser.json());
 
 /* GET users listing. */
 playerRouter.route('/')
-    .get((req, res, next) => {
+    .get((req, res) => {
         res.statusCode = 200;
         res.setHeader('Content-Type', 'application/json');
         res.json(playerState);
     })
     .post(async (req, res, next) => {
-        let response;
+        let action, 
+            response;
         const validCommands = {
             VOLUME_UP: ')',
             VOLUME_DOWN: '(',
             PLAYPAUSE: 'p',
             NEXT: 'n',
+            REPLAY: 'h',
             STOPPLAYER: 'STOPPLAYER',
             STARTPLAYER: 'STARTPLAYER'
         }
         console.log('Got command ' + req.query.command);
         if (Object.keys(validCommands).includes(req.query.command)) {
             console.log('Starting write to file');
-            const action = validCommands[req.query.command];
+            action = validCommands[req.query.command];
             try {
                 if (action === validCommands.STOPPLAYER) {
                     await stopPianoBar();
                     playerState.playerRunning = false;
                     playerState.isPaused = false;
+                    playerState.playerTimedOut = false;
+                    clearPlayerTimeout();
                     publishPlayer(playerState);
                     response = 'Successfully terminated PianoBar';
                 } else if (action === validCommands.STARTPLAYER) {
                     await startPianoBar();
+                    getInitialPandoraState();
                     playerState.playerRunning = true;
                     playerState.isPaused = false;
+                    playerState.playerTimedOut = false;
+                    resetPlayerTimeout();
                     publishPlayer(playerState);
                     response = 'Successfully started PianoBar';
                 } else {
+                    if (action === validCommands.REPLAY) {
+                        action = `${action}${req.query.songIndex.toString()}\n`;
+                        setPandoraState('isLoading', true);
+                        publishPandora(getPandoraState);
+                    } else if (action === validCommands.NEXT) {
+                        setPandoraState('isLoading', true);
+                        publishPandora(getPandoraState);
+                    }
                     await writeCommandToFifo(action);
                     if (action === validCommands.PLAYPAUSE) {
                         playerState.isPaused = !playerState.isPaused;
-                        publishPlayer(playerState);
+                        playerState.playerTimedOut = false;
                     }
+                    resetPlayerTimeout();
+                    publishPlayer(playerState);
                     response = action + ' has been written successfully!';
                 }
                 res.status = 200;

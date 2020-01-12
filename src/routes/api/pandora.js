@@ -4,7 +4,8 @@ import bodyParser from 'body-parser';
 import { writeCommandToFifo, readStations, readCurrentSong } from '../../services/pianobar';
 import { publishPandora } from '../sse'
 
-export let pandoraState = {
+let pandoraState = {
+    isLoading: true,
     currentSong: {
         currentSong: {}
     },
@@ -12,19 +13,28 @@ export let pandoraState = {
     songHistory: []
 };
 
-const getInitialState = async () => {
+export const getPandoraState = () => pandoraState;
+
+export const setPandoraState = (key, value) => {
+    pandoraState[key] = value;
+}
+
+export const getInitialPandoraState = async () => {
+    pandoraState.isLoading = true;
     pandoraState.currentSong.currentSong = await readCurrentSong();
     pandoraState.stationList = await readStations();
+    pandoraState.songHistory = [
+        pandoraState.currentSong.currentSong
+    ];
+    publishPandora(pandoraState);
 };
-
-getInitialState();
 
 const pandoraRouter = Router();
 pandoraRouter.use(bodyParser.json());
 
 /* GET users listing. */
 pandoraRouter.route('/')
-    .get((req, res, next) => {
+    .get((req, res) => {
         res.statusCode = 200;
         res.setHeader('Content-Type', 'application/json');
         res.json(pandoraState);
@@ -43,6 +53,11 @@ pandoraRouter.route('/')
             action = validCommands[req.query.command];
             if (action === validCommands.SETSTATION) {
                 action = `${action}${req.query.stationId.toString()}\n`;
+                pandoraState.isLoading = true;
+                publishPandora(pandoraState);
+            } else if (action === validCommands.HATE) {
+                pandoraState.isLoading = true;
+                publishPandora(pandoraState);
             }
 
             try {
@@ -61,7 +76,7 @@ pandoraRouter.route('/')
     });
 
 pandoraRouter.route('/stations')
-    .get((req, res, next) => {
+    .get((req, res) => {
         res.statusCode = 200;
         res.setHeader('Content-Type', 'application/json');
         res.json(pandoraState.stationList);
@@ -79,7 +94,7 @@ pandoraRouter.route('/stations')
     });
 
 pandoraRouter.route('/songs')
-    .get((req, res, next) => {
+    .get((req, res) => {
         res.statusCode = 200;
         res.setHeader('Content-Type', 'application/json');
         res.json(pandoraState.songHistory.map((song, index) => ({ id: index, song })));
@@ -87,6 +102,7 @@ pandoraRouter.route('/songs')
 
 pandoraRouter.route('/songs/current')
     .post(async (req, res, next) => {
+        pandoraState.isLoading = false;
         if (req.query.rating) {
             pandoraState.currentSong.currentSong.rating = req.query.rating;
             publishPandora(pandoraState);
