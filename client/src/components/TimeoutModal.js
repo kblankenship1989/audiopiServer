@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import t from 'tcomb';
-import {propTypes} from 'tcomb-react';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 
 import { apiBaseUrl } from '../helpers/baseUrls';
