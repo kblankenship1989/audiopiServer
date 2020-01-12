@@ -43,7 +43,6 @@
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.3.0",
     "tcomb": "3.2.29",
-    "tcomb-react": "^0.9.3",
     "tcomb-validation": "^3.4.1",
     "uuid": "3.3.3"
   },
@@ -110,6 +109,7 @@
     "postcss-normalize": "7.0.1",
     "postcss-preset-env": "6.6.0",
     "postcss-safe-parser": "4.0.1",
+    "prop-types": "^15.7.2",
     "react-app-polyfill": "^1.0.1",
     "react-dev-utils": "^9.0.1",
     "resolve": "1.10.0",

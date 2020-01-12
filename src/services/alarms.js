@@ -7,10 +7,15 @@ import { getSettings, updateSetting } from './settings';
 import { getInitialPandoraState } from '../routes/api/pandora';
 import { resetPlayerTimeout } from './playerTimeout';
 import { publishPlayer } from '../routes/sse';
+import { updateRelays } from './relays';
 
 const alarmJobs = {};
 
-const startPianoBarCallback = async () => {
+const startPianoBarCallback = async (alarmId) => {
+    const alarm = getSettings().alarms.find((alarm) => alarm.id = alarmId);
+
+    updateRelays(alarm.relays);
+
     if (!getPlayerState().playerRunning) {
         await startPianoBar();
         getInitialPandoraState();
@@ -27,7 +32,6 @@ export const getNextAlarm = (alarmId) => {
 }
 
 export const removeAlarm = (alarmId) => {
-    console.log('removing alarm: ', alarmId)
     alarmJobs[alarmId].cancel();
 
     const currentAlarms = getSettings().alarms;
@@ -44,7 +48,6 @@ const getSchedule = (alarm) => {
 };
 
 export const addAlarm = (alarmSettings) => {
-    console.log('adding alarm: ', alarmSettings);
     const newAlarm = {
         ...alarmSettings,
         id: v4()
@@ -64,7 +67,6 @@ export const addAlarm = (alarmSettings) => {
 };
 
 export const updateAlarm = (alarmId, updatedAlarm) => {
-    console.log('updating alarm: ', alarmId, updatedAlarm);
     const currentAlarms = getSettings().alarms; 
 
     const newAlarms = currentAlarms.map((alarm) => {
@@ -97,7 +99,6 @@ export const getAlarms = () => {
 };
 
 export const initializeAlarms = (alarms) => {
-    console.log('initializing alarms: ', alarms);
 
     alarms.forEach((alarm) => {
         const schedule = getSchedule(alarm);

@@ -1,7 +1,7 @@
 import { EventEmitter } from 'eventemitter3';
 import { getPlayerState } from './api/player';
 import { getPandoraState } from './api/pandora';
-import { getRelayStates } from '../services/relays';
+import { getRelayState } from '../services/relays';
 
 const emitter = new EventEmitter();
 
@@ -43,7 +43,7 @@ export const subscribe = (req, res) => {
         setTimeout(() => {
             onPlayer(getPlayerState());
             onPandora(getPandoraState());
-            onRelays(getRelayStates());
+            onRelays(getRelayState());
         }, 500);
     }
     

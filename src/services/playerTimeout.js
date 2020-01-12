@@ -2,6 +2,7 @@ import { getPlayerState, setPlayerState } from "../routes/api/player";
 import { stopPianoBar, writeCommandToFifo } from "./pianobar";
 import { publishPlayer } from "../routes/sse";
 import { getSettings } from "./settings";
+import { updateRelays } from "./relays";
 
 const getTimeout = () => getSettings().timeoutInMinutes * 60000;
 const getCloseTimeout = () => getSettings().closeTimeoutInMinutes * 60000;
@@ -28,7 +29,11 @@ const setPlayerCloseInterval = () => {
             stopPianoBar();
             setPlayerState('playerTimedOut', false);
             setPlayerState('playerRunning', false);
-        
+            if (getSettings().relays.alarmOverride) {
+                const relaySettings = getSettings().relays;
+                relaySettings.alarmOverride = false;
+                updateRelays(relaySettings);
+            }
         }
         publishPlayer(getPlayerState);
     }, 60000)

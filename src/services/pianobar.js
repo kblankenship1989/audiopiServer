@@ -17,8 +17,6 @@ export const writeCommandToFifo = async (action) => {
         throw error;
     }
     const fileHandle = await fs.promises.open(fifo, 'w', 0o644);
-    console.log('Fifo opened');
-
 
     var buf = new Buffer.from(action);
 
@@ -37,7 +35,6 @@ export const readCurrentSong = async () => {
     try{
         const path = join(__dirname, '../../public/currentSong');
         const fileHandle = await fs.promises.open(path, 'r');
-        console.log('reading current song')
         const currentSong = await fileHandle.readFile();
         const currentSongString = currentSong.toString();
         if (currentSongString) {
@@ -62,7 +59,6 @@ export const readCurrentSong = async () => {
 export const readStations = async () => {
     const path = join(__dirname, '../../public/stationList');
     const fileHandle = await fs.promises.open(path, 'r')
-    console.log('reading station list')
     const stationList = await fileHandle.readFile();
     const stationListString = stationList.toString();
     if (stationListString) {

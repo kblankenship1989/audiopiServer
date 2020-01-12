@@ -14,8 +14,7 @@ export const MainButtons = () => {
     };
 
     const startPlayer = () => {
-        fetch(apiBaseUrl + '/player?command=STARTPLAYER', { method: 'POST' })
-            .then(response => console.log(response), error => console.log(error));
+        fetch(apiBaseUrl + '/player?command=STARTPLAYER', { method: 'POST' });
     };
 
     return (
