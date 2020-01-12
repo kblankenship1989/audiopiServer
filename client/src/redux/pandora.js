@@ -2,9 +2,7 @@ import * as ActionTypes from './ActionTypes';
 
 const emptyState = {
     isLoading: true,
-    currentSong: {
-        currentSong: {}
-    },
+    currentSong: {},
     stationList: [],
     songHistory: []
 };
