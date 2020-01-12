@@ -1,12 +1,12 @@
 import * as ActionTypes from './ActionTypes';
 import { getDefaultRelays } from './states/relays';
 
-const updateRelays = (state, action) => Relays({ 
-    ...state,
-    ...action.payload
-})({
-
-})
+const updateRelays = (state, action) => {
+    return Relays({ 
+        ...state,
+        ...action.payload
+    })
+};
 
 export const Relays = (state = getDefaultRelays(), action) => {
 
