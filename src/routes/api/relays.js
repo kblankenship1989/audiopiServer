@@ -1,6 +1,7 @@
 import { Router } from 'express';
-import { setFirstFloor, setSecondFloor, getRelayStates } from '../../services/relays';
+import { updateRelays, getRelayState } from '../../services/relays';
 import { publishRelays } from '../sse';
+import { getSettings } from '../../services/settings';
 
 var relayRouter = Router();
 
@@ -8,28 +9,33 @@ var relayRouter = Router();
 relayRouter.get('/', function(req, res) {
     res.statusCode = 200;
     res.setHeader('Content-Type', 'application/json');
-    res.json(getRelayStates());
+    res.json(getRelayState());
 })
-.post('/', function(req, res, next) {
+.post('/', function(req, res) {
     const relayMapping = {
-        FIRST: setFirstFloor,
-        SECOND: setSecondFloor
+        FIRST: 'firstFloorRelayState',
+        SECOND: 'secondFloorRelayState',
+        ALARM: 'alarmOverride'
     }
 
-    const call = relayMapping[req.query.floor];
+    const newRelayState = getSettings().relays;
 
-    if (call) {
-        call(req.query.value, () => {
-            console.log('executing callback');
-            publishRelays(getRelayStates());
-            res.status = 200;
-            res.setHeader('Content-Type', 'text/plain');
-            res.end(`Successfully updated FLOOR: ${req.query.floor} to VALUE: ${req.query.value}`);
-        });
+    let value;
+
+    if (req.query.key === 'ALARM') {
+        value = false;
     } else {
-        var error = new Error('Invalid floor: ' + req.query.floor + ', please select from the following floors:\n' + Object.keys(relayMapping).join('\n'));
-        next(error);
+        value = req.query.value;
     }
+
+    newRelayState[relayMapping[req.query.key]] = value;
+
+    updateRelays(newRelayState, () => {
+        publishRelays(getRelayState());
+        res.status = 200;
+        res.setHeader('Content-Type', 'text/plain');
+        res.end(`Successfully updated KEY: ${req.query.key}`);
+    });
 });
 
 export default relayRouter;

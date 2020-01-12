@@ -16,14 +16,12 @@ export const TimeoutModal = (props) => {
 
     const resumePlaying = () => {
         const command = '/player?command=PLAYPAUSE';
-        fetch(apiBaseUrl + command, {method: 'POST'})
-            .then(response => console.log(response), error => console.log(error));
+        fetch(apiBaseUrl + command, {method: 'POST'});
     };
 
     const stopPlayer = () => {
         const command = '/player?command=STOPPLAYER';
-        fetch(apiBaseUrl + command, {method: 'POST'})
-            .then(response => console.log(response), error => console.log(error));
+        fetch(apiBaseUrl + command, {method: 'POST'});
     };
 
     return (

@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import { Switch, Route, Redirect } from 'react-router-dom';
 
 import Header from './HeaderComponent';
 import Footer from './FooterComponent';
 import { SSEUrl } from '../helpers/baseUrls';
 import {HomeComponent} from './HomeComponent';
-import { Settings } from './SettingsComponent';
+import { SettingsPage } from './SettingsComponent';
 import { TimeoutModal } from './TimeoutModal';
 import { RelayComponent } from './RelayComponent';
+import { Settings } from '../redux/states/settings';
+import { Relays } from '../redux/states/relays';
 
 export const Main = (props) => {
     const [isNavOpen, setIsNavOpen] = useState(false);
@@ -60,7 +63,7 @@ export const Main = (props) => {
                     />}
                 />
                 <Route path="/settings" 
-                    render={(routeProps) => <Settings
+                    render={(routeProps) => <SettingsPage
                         {...routeProps}
                         settings={props.settings}
                         updateSettings={props.updateSettings}
@@ -69,7 +72,9 @@ export const Main = (props) => {
                 <Route exact path="/relays"
                     render={(routeProps) => <RelayComponent
                         {...routeProps}
-                        relays={props.relays}
+                        firstFloorRelayState={props.relays.firstFloorRelayState}
+                        secondFloorRelayState={props.relays.secondFloorRelayState}
+                        alarmOverride={props.relays.alarmOverride}
                     />}
                 />
                 <Redirect to="/home" />
@@ -79,3 +84,12 @@ export const Main = (props) => {
         </>
     );
 }
+
+Main.propTypes = {
+    relays: PropTypes.instanceOf(Relays).isRequired,
+    settings: PropTypes.instanceOf(Settings).isRequired,
+    updateSettings: PropTypes.func.isRequired,
+    updatePandora: PropTypes.func.isRequired,
+    updatePlayer: PropTypes.func.isRequired,
+    updateRelays: PropTypes.func.isRequired
+};

@@ -53,9 +53,7 @@ playerRouter.route('/')
             STOPPLAYER: 'STOPPLAYER',
             STARTPLAYER: 'STARTPLAYER'
         }
-        console.log('Got command ' + req.query.command);
         if (Object.keys(validCommands).includes(req.query.command)) {
-            console.log('Starting write to file');
             action = validCommands[req.query.command];
             try {
                 if (action === validCommands.STOPPLAYER) {

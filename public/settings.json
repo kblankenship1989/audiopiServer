@@ -1,6 +1,9 @@
 {
-    "firstFloorRelayState": "c0c",
-    "secondFloorRelayState": "2a2a",
+    "relays": {
+        "firstFloorRelayState": "c0c",
+        "secondFloorRelayState": "2a2a",
+        "alarmOverride": false
+    },
     "timeoutInMinutes": 121,
     "closeTimeoutInMinutes": 15,
     "defaultVolume": 83,
@@ -13,7 +16,11 @@
             "hour": "19",
             "dayOfWeek": "0-6",
             "isEnabled": true,
-            "nextActivation": "2020-01-12T18:00:00.000Z"
+            "relays": {
+                "firstFloorRelayState": "c0c",
+                "secondFloorRelayState": "2a2a",
+                "alarmOverride": true
+            }
         }
     ]
 }

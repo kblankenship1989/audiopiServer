@@ -45,11 +45,9 @@ pandoraRouter.route('/')
             HATE: '-',
             SETSTATION: 's'
         }
-        console.log('Got command ' + req.query.command);
         if (Object.keys(validCommands).includes(req.query.command)) {
             let action;
 
-            console.log('Starting write to file');
             action = validCommands[req.query.command];
             if (action === validCommands.SETSTATION) {
                 action = `${action}${req.query.stationId.toString()}\n`;

@@ -4,7 +4,7 @@ import Select from 'react-select';
 import { StationSelect } from './StationsComponent';
 import { apiBaseUrl } from '../helpers/baseUrls';
 
-export const Settings = (props) => {
+export const SettingsPage = (props) => {
     const [currentSettings, setCurrentSettings] = useState({
         ...props.settings
     })
@@ -25,11 +25,8 @@ export const Settings = (props) => {
             },
             body: JSON.stringify(currentSettings),
         })
-            .then((response) => {
+            .then(() => {
                 props.updateSettings(currentSettings);
-            })
-            .catch((error) => {
-                console.log(error);
             });
     };
 
@@ -41,9 +38,6 @@ export const Settings = (props) => {
             .then((settings) => {
                 setCurrentSettings(settings);
                 props.updateSettings(settings);
-            })
-            .catch((error) => {
-                console.log(error);
             });
     }, [])
 
