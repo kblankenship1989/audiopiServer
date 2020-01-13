@@ -2,21 +2,21 @@ import fs from 'fs';
 import { exec } from 'child_process';
 import { join } from 'path';
 
-import { playerState } from '../routes/api/player'
+import { getPlayerState } from '../routes/api/player'
 import { setVolume, unMuteAll } from './volumeControl';
-import { settings } from './settings';
+import { getSettings } from './settings';
 
 var fifo = '/home/pi/.config/pianobar/ctl';
 
 export const writeCommandToFifo = async (action) => {
+    /*global __dirname, Buffer*/
     let error;
 
-    if (!playerState.playerRunning) {
+    if (!getPlayerState().playerRunning) {
         error = new Error('No player currently running.  Start player before sending commands.');
         throw error;
     }
     const fileHandle = await fs.promises.open(fifo, 'w', 0o644);
-    console.log('Fifo opened');
 
     var buf = new Buffer.from(action);
 
@@ -35,7 +35,6 @@ export const readCurrentSong = async () => {
     try{
         const path = join(__dirname, '../../public/currentSong');
         const fileHandle = await fs.promises.open(path, 'r');
-        console.log('reading current song')
         const currentSong = await fileHandle.readFile();
         const currentSongString = currentSong.toString();
         if (currentSongString) {
@@ -60,7 +59,6 @@ export const readCurrentSong = async () => {
 export const readStations = async () => {
     const path = join(__dirname, '../../public/stationList');
     const fileHandle = await fs.promises.open(path, 'r')
-    console.log('reading station list')
     const stationList = await fileHandle.readFile();
     const stationListString = stationList.toString();
     if (stationListString) {
@@ -78,7 +76,7 @@ export const readStations = async () => {
 };    
 
 export const startPianoBar = async () => {
-    await setVolume(settings.defaultVolume);
+    await setVolume(getSettings().defaultVolume);
     await unMuteAll();
     const path = join(__dirname, '../../public/pbStart.sh');
     await exec('bash ' + path);

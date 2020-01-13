@@ -1,1 +1,26 @@
-{"firstFloorRelayState":"0000","secondFloorRelayState":"0000","timeoutInMinutes":120,"closeTimeoutInMinutes":15,"defaultVolume":83,"songHistoryLength":5}
+{
+    "relays": {
+        "firstFloorRelayState": "c0c",
+        "secondFloorRelayState": "2a2a",
+        "alarmOverride": false
+    },
+    "timeoutInMinutes": 121,
+    "closeTimeoutInMinutes": 15,
+    "defaultVolume": 83,
+    "songHistoryLength": 5,
+    "alarms": [
+        {
+            "id": "bar",
+            "name": "Bedtime",
+            "minute": "30",
+            "hour": "19",
+            "dayOfWeek": "0-6",
+            "isEnabled": true,
+            "relays": {
+                "firstFloorRelayState": "c0c",
+                "secondFloorRelayState": "2a2a",
+                "alarmOverride": true
+            }
+        }
+    ]
+}

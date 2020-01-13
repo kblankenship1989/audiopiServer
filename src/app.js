@@ -9,7 +9,7 @@ import { Server } from 'http';
 import cors from 'cors';
 
 import indexRouter from './routes/index';
-import usersRouter from './routes/api/users';
+import alarmsRouter from './routes/api/alarms';
 import playerRouter from './routes/api/player';
 import pandoraRouter from './routes/api/pandora';
 import relaysRouter from './routes/api/relays';
@@ -21,8 +21,10 @@ export const server = Server(app);
 export const wsApp = expressWs(app,server, {leaveRouterUntouched: false});
 
 // view engine setup
+/*global __dirname, require*/
 app.set('views', join(__dirname, '../views'));
-app.set('view engine', 'pug');
+app.engine('ejs', require('ejs').renderFile);
+app.set('view engine', 'ejs');
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -32,7 +34,7 @@ app.use(cookieParser());
 app.use('/dist', express.static(join(__dirname, '../dist')));
 app.use(cors());
 
-app.use('/api/users', usersRouter);
+app.use('/api/alarms', alarmsRouter)
 app.use('/api/player', playerRouter);
 app.use('/api/pandora', pandoraRouter);
 app.use('/api/relays', relaysRouter);
@@ -52,7 +54,7 @@ app.use(function(req, res, next) {
 });
 
 // error handler
-app.use(function(err, req, res, next) {
+app.use(function(err, req, res) {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};

@@ -4,7 +4,7 @@ import Select from 'react-select';
 import { StationSelect } from './StationsComponent';
 import { apiBaseUrl } from '../helpers/baseUrls';
 
-export const Settings = (props) => {
+export const SettingsPage = (props) => {
     const [currentSettings, setCurrentSettings] = useState({
         ...props.settings
     })
@@ -16,27 +16,28 @@ export const Settings = (props) => {
         });
     }
 
-    const submitForm = () => {
-        fetch(apiBaseUrl + `/settings`, { method: 'post', body: JSON.stringify(currentSettings) })
-            .then((response) => {
+    const submitForm = (event) => {
+        event.preventDefault();
+        fetch(apiBaseUrl + `/settings`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(currentSettings),
+        })
+            .then(() => {
                 props.updateSettings(currentSettings);
-            })
-            .catch((error) => {
-                console.log(error);
             });
     };
 
     useEffect(() => {
-        fetch(apiBaseUrl + `/settings`, { method: 'get' })
+        fetch(apiBaseUrl + `/settings`, { method: 'GET' })
             .then((response) => {
                 return response.json();
             })
             .then((settings) => {
                 setCurrentSettings(settings);
                 props.updateSettings(settings);
-            })
-            .catch((error) => {
-                console.log(error);
             });
     }, [])
 

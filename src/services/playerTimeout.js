@@ -1,9 +1,11 @@
-import { playerState } from "../routes/api/player";
+import { getPlayerState, setPlayerState } from "../routes/api/player";
 import { stopPianoBar, writeCommandToFifo } from "./pianobar";
 import { publishPlayer } from "../routes/sse";
+import { getSettings } from "./settings";
+import { updateRelays } from "./relays";
 
-const timeout = 120 * 60000;
-const closeTimeout = 15 * 60000;
+const getTimeout = () => getSettings().timeoutInMinutes * 60000;
+const getCloseTimeout = () => getSettings().closeTimeoutInMinutes * 60000;
 
 let timeoutCheck,
     timeoutClose;
@@ -11,23 +13,29 @@ let timeoutCheck,
 const setPlayerPauseTimeout = () => {
     timeoutCheck = setTimeout(async () => {
         await writeCommandToFifo('p');
-        playerState.playerTimedOut = true;
-        playerState.isPaused = true;
-        playerState.minutesRemaining = closeTimeout / 60000;
-        publishPlayer(playerState);
+        setPlayerState('playerTimedOut', true);
+        setPlayerState('isPaused', true);
+        setPlayerState('minutesRemaining', getCloseTimeout() / 60000);
+        publishPlayer(getPlayerState());
         setPlayerCloseInterval();
-    }, timeout)
+    }, getTimeout())
 };
 
 const setPlayerCloseInterval = () => {
     timeoutClose = setInterval(() => {
-        const newMinutesRemaining = playerState.minutesRemaining - 1;
-        playerState.minutesRemaining = newMinutesRemaining;
+        const newMinutesRemaining = getPlayerState().minutesRemaining - 1;
+        setPlayerState('minutesRemaining', newMinutesRemaining);
         if (newMinutesRemaining <= 0) {
             stopPianoBar();
-            playerState.playerTimedOut = false;
+            setPlayerState('playerTimedOut', false);
+            setPlayerState('playerRunning', false);
+            if (getSettings().relays.alarmOverride) {
+                const relaySettings = getSettings().relays;
+                relaySettings.alarmOverride = false;
+                updateRelays(relaySettings);
+            }
         }
-        publishPlayer(playerState);
+        publishPlayer(getPlayerState);
     }, 60000)
 };
 
@@ -37,7 +45,9 @@ export const clearPlayerTimeout = () => {
 };
 
 export const resetPlayerTimeout = () => {
-    playerState.playerTimedOut = false;
+    const newPlayerState = getPlayerState();
+    newPlayerState.playerTimedOut = false;
+    setPlayerState(newPlayerState);
     clearPlayerTimeout();
     setPlayerPauseTimeout();
 };

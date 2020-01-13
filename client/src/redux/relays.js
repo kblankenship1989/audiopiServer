@@ -1,18 +1,18 @@
 import * as ActionTypes from './ActionTypes';
+import { getDefaultRelays } from './states/relays';
 
-const emptyState = {
-    firstFloor: '0000',
-    secondFloor: '0000'
+const updateRelays = (state, action) => {
+    return Relays({ 
+        ...state,
+        ...action.payload
+    })
 };
 
-export const Relays = (state = emptyState, action) => {
+export const Relays = (state = getDefaultRelays(), action) => {
 
     const actionMap = {
-        [ActionTypes.ADD_RELAYS]: { 
-            ...state,
-            ...action.payload
-        }
+        [ActionTypes.ADD_RELAYS]: updateRelays
     };
 
-    return Object.keys(actionMap).includes(action.type) ? actionMap[action.type] : state;
+    return Object.keys(actionMap).includes(action.type) ? actionMap[action.type](state, action) : state;
 }

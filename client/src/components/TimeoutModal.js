@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import t from 'tcomb';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 
 import { apiBaseUrl } from '../helpers/baseUrls';
+
+
 
 export const TimeoutModal = (props) => {
     const [isOpen, setIsOpen] = useState(false);
@@ -12,14 +15,12 @@ export const TimeoutModal = (props) => {
 
     const resumePlaying = () => {
         const command = '/player?command=PLAYPAUSE';
-        fetch(apiBaseUrl + command, {method: 'post'})
-            .then(response => console.log(response), error => console.log(error));
+        fetch(apiBaseUrl + command, {method: 'POST'});
     };
 
     const stopPlayer = () => {
         const command = '/player?command=STOPPLAYER';
-        fetch(apiBaseUrl + command, {method: 'post'})
-            .then(response => console.log(response), error => console.log(error));
+        fetch(apiBaseUrl + command, {method: 'POST'});
     };
 
     return (
@@ -37,7 +38,7 @@ export const TimeoutModal = (props) => {
                 }}>
                     {`Your listening session will be terminated in ${props.player.minutesRemaining} minutes.`}
                     <br/>
-                    Click "Resume" to continue listening.
+                    {'Click "Resume" to continue listening.'}
                 </ModalBody>
                 <ModalFooter  style={{
                     justifyContent: "center"

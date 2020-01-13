@@ -10,9 +10,7 @@ export const PlayerComponent = (props) => {
         const stationId = event.value;
         if (stationId) {
             const command = '/pandora?command=SETSTATION&stationId=' + stationId.toString();
-            console.log("Execute Pianobar command: " + command);
-            fetch(apiBaseUrl + command, {method: 'post'})
-                .then(response => console.log(response), error => console.log(error));
+            fetch(apiBaseUrl + command, {method: 'POST'});
         }
     }
 

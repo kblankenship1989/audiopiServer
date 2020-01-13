@@ -78,7 +78,7 @@ export const SongControls = (props) => {
 	];
 
 	const toggleCaption = () => {
-		Boolean(displayCaption) ? setDisplayCaption('') : setDisplayCaption('display-caption');
+		displayCaption ? setDisplayCaption('') : setDisplayCaption('display-caption');
 	}
 
 	const progressNext = () => {
@@ -92,9 +92,7 @@ export const SongControls = (props) => {
 	//const songPlayed = Math.round(100*parseInt(currentSong.currentSong.songPlayed)/parseInt(currentSong.currentSong.songDuration));
 	
 	const handleClick = (command) => {
-		console.log("Execute Pianobar command: " + command);
-		fetch(apiBaseUrl + command, {method: 'post'})
-			.then(response => console.log(response), error => console.log(error));
+		fetch(apiBaseUrl + command, {method: 'POST'});
 	}
 	const songHistoryReveresed = [...songHistory].reverse();
 	const songs = songHistoryReveresed.map((song, index) => {

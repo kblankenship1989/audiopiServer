@@ -1,16 +1,16 @@
 import { Router } from 'express';
-import { settings, updateSetting } from '../../services/settings';
+import { getSettings, updateSetting } from '../../services/settings';
 
 var settingsRouter = Router();
 
-settingsRouter.get('/', function(req, res, next) {
+settingsRouter.get('/', function(req, res) {
     res.statusCode = 200;
     res.setHeader('Content-Type', 'application/json');
-    res.json(settings);
+    res.json(getSettings());
 })
 .post('/', function(req, res, next) {
     try{
-        const newSettings = JSON.parse(req.body);
+        const newSettings = req.body;
         
         Object.keys(newSettings).forEach((key) => {
             updateSetting(key, newSettings[key]);

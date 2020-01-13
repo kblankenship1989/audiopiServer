@@ -1,11 +1,17 @@
 #!/usr/bin/env node
 
+/*global process*/
+
 /**
  * Module dependencies.
  */
 
 import { app, server } from '../app';
 import debugLib from 'debug';
+import { initializeAlarms } from '../services/alarms';
+import { getSettings } from '../services/settings';
+import { updateRelays } from '../services/relays';
+import { getInitialPandoraState } from '../routes/api/pandora';
 
 const debug = debugLib('audiopiserver:server');
 
@@ -86,4 +92,10 @@ function onListening() {
     ? 'pipe ' + addr
     : 'port ' + addr.port;
   debug('Listening on ' + bind);
+
+  const settings = getSettings();
+  
+  initializeAlarms(settings.alarms);
+  updateRelays(settings.relays);
+  getInitialPandoraState();
 }
