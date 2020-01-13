@@ -22,7 +22,7 @@ export const PlayerComponent = (props) => {
         >
             <StationSelect
                 stationList={props.pandora.stationList}
-                currentStationName={props.pandora.currentSong.currentSong.stationName}
+                currentStationName={props.pandora.currentSong.stationName}
                 playerRunning={props.player.playerRunning}
                 onChange={onStationChange}
             />

@@ -8,3 +8,12 @@ export const Song = t.struct({
     rating: t.String,
     stationName: t.String
 }, 'Song');
+
+export const getDefaultSong = () => Song({
+    artist: '',
+    title: '',
+    album: '',
+    coverArt: '',
+    rating: '',
+    stationName: ''
+});

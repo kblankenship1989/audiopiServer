@@ -1,18 +1,18 @@
 import { createStore, combineReducers, applyMiddleware } from 'redux';
-import { Pandora } from './pandora';
-import { Player } from './player';
+import { pandora } from './reducers/pandora';
+import { player } from './reducers/player';
 import thunk from 'redux-thunk';
 import logger from 'redux-logger';
-import { Relays } from './relays';
-import { Settings } from './settings';
+import { relays } from './reducers/relays';
+import { settings } from './reducers/settings';
 import { State } from './states/state';
 
 export const ConfigureStore = () => {
     const combinedReducers = combineReducers({
-      pandora: Pandora,
-      player: Player,
-      relays: Relays,
-      settings: Settings
+      pandora: pandora,
+      player: player,
+      relays: relays,
+      settings: settings
     });
 
     const tcombStore = (store, action) => {

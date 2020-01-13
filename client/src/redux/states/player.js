@@ -6,3 +6,10 @@ export const Player = t.struct({
     playerRunning: t.Boolean,
     playerTimedOut: t.Boolean
 }, 'Player');
+
+export const getDefaultPlayer = () => Player({
+    isPaused: false,
+    minutesRemaining: 0,
+    playerRunning: true,
+    playerTimedOut: false
+});

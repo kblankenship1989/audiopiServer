@@ -1,5 +1,5 @@
 import t from 'tcomb';
-import { Song } from './song';
+import { Song, getDefaultSong } from './song';
 import { Station } from './station';
 
 export const Pandora = t.struct({
@@ -8,3 +8,10 @@ export const Pandora = t.struct({
     stationList: t.list(Station),
     songHistory: t.list(Song)
 }, 'Pandora');
+
+export const getDefaultPandora = () => Pandora({
+    isLoading: true,
+    currentSong: getDefaultSong(),
+    stationList: [],
+    songHistory: []
+})
