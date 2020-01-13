@@ -6,9 +6,7 @@ import { publishPandora } from '../sse'
 
 let pandoraState = {
     isLoading: true,
-    currentSong: {
-        currentSong: {}
-    },
+    currentSong: {},
     stationList: [],
     songHistory: []
 };
@@ -21,10 +19,10 @@ export const setPandoraState = (key, value) => {
 
 export const getInitialPandoraState = async () => {
     pandoraState.isLoading = true;
-    pandoraState.currentSong.currentSong = await readCurrentSong();
+    pandoraState.currentSong = await readCurrentSong();
     pandoraState.stationList = await readStations();
     pandoraState.songHistory = [
-        pandoraState.currentSong.currentSong
+        pandoraState.currentSong
     ];
     publishPandora(pandoraState);
 };
@@ -102,12 +100,12 @@ pandoraRouter.route('/songs/current')
     .post(async (req, res, next) => {
         pandoraState.isLoading = false;
         if (req.query.rating) {
-            pandoraState.currentSong.currentSong.rating = req.query.rating;
+            pandoraState.currentSong.rating = req.query.rating;
             publishPandora(pandoraState);
         } else {
             try {
-                pandoraState.currentSong.currentSong = await readCurrentSong();
-                pandoraState.songHistory.unshift(pandoraState.currentSong.currentSong);
+                pandoraState.currentSong = await readCurrentSong();
+                pandoraState.songHistory.unshift(pandoraState.currentSong);
                 pandoraState.songHistory = pandoraState.songHistory.slice(0, 5);
                 publishPandora(pandoraState);
                 res.statusCode = 200;
