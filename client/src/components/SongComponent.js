@@ -31,7 +31,7 @@ export const SongControls = (props) => {
 			id: 'love',
 			class: `${currentSongClass} float-left`,
 			command: '/pandora?command=LOVE',
-			icon: currentSong.currentSong.rating === "1" ? fas.faThumbsUp : far.faThumbsUp
+			icon: currentSong.rating === "1" ? fas.faThumbsUp : far.faThumbsUp
 		},
 		{
 			id: 'pauseplay',
@@ -89,7 +89,7 @@ export const SongControls = (props) => {
 		setCurrentDisplayIndex(currentDisplayIndex-1);
 	}
 	
-	//const songPlayed = Math.round(100*parseInt(currentSong.currentSong.songPlayed)/parseInt(currentSong.currentSong.songDuration));
+	//const songPlayed = Math.round(100*parseInt(currentSong.songPlayed)/parseInt(currentSong.songDuration));
 	
 	const handleClick = (command) => {
 		fetch(apiBaseUrl + command, {method: 'POST'});
