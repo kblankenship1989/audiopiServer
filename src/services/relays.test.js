@@ -2,9 +2,13 @@ import {
     updateRelays,
     getRelayState
 } from './relays';
-import * as settings from './settings';
+import {
+    getSettings,
+    updateSetting
+} from './settings';
 import {Relay} from '../classes/Relay';
 jest.mock('../classes/Relay');
+jest.mock('./settings');
 
 describe("Relay Service => ", () => {
 
@@ -17,23 +21,21 @@ describe("Relay Service => ", () => {
     test('Setting relays should change the relay states', () => {
         const newState = {
             firstFloorRelayState: '0000',
-            secondFloorRelayState: '0000',
-            alarmOverride: true
+            secondFloorRelayState: '1111',
+            alarmOverride: false
         };
         const callback = jest.fn();
 
         updateRelays(newState, callback);
 
+        expect(Relay.mock.instances[0].setRelays).toHaveBeenCalledWith(newState.secondFloorRelayState);
         expect(Relay.mock.instances[1].setRelays).toHaveBeenCalledWith(newState.firstFloorRelayState);
-        expect(Relay.mock.instances[0].setRelays).toHaveBeenCalledwith(newState.secondFloorRelayState);
     });
 
     describe('and alarm is overriding the relays', () => {
         let expectedSettings;
 
         beforeEach(() => {
-            const getSettingsSpy = jest.spyOn(settings, 'getSettings');
-
             expectedSettings = {
                 relays: {
                     firstFloorRelayState: '3333',
@@ -42,16 +44,15 @@ describe("Relay Service => ", () => {
                 }
             };
 
-            getSettingsSpy.mockReturnValue(expectedSettings)
+            getSettings.mockReturnValue(expectedSettings)
         })
         test('Setting second floor relays should change the relay state and run the callback', () => {
             const newState = {
                 firstFloorRelayState: '0000',
-                secondFloorRelayState: '0000',
+                secondFloorRelayState: '1111',
                 alarmOverride: true
             };
             const callback = jest.fn();
-            const updateSettingSpy = jest.spyOn(settings, 'updateSetting');
 
             updateRelays(newState, callback);
 
@@ -60,7 +61,7 @@ describe("Relay Service => ", () => {
                 alarmOverride: true
             }
 
-            expect(updateSettingSpy).toHaveBeenCalledWith('relays', expectedState, callback);
+            expect(updateSetting).toHaveBeenCalledWith('relays', expectedState, callback);
         });
     });
 
@@ -68,15 +69,14 @@ describe("Relay Service => ", () => {
         test('Setting second floor relays should change the relay state and run the callback', () => {
             const newState = {
                 firstFloorRelayState: '0000',
-                secondFloorRelayState: '0000',
+                secondFloorRelayState: '1111',
                 alarmOverride: false
             };
             const callback = jest.fn();
-            const updateSettingSpy = jest.spyOn(settings, 'updateSetting');
 
             updateRelays(newState, callback);
 
-            expect(updateSettingSpy).toHaveBeenCalledWith('relays', newState, callback);
+            expect(updateSetting).toHaveBeenCalledWith('relays', newState, callback);
         });
     });
 
@@ -95,8 +95,7 @@ describe("Relay Service => ", () => {
             }
         };
 
-        const getSettingsSpy = jest.spyOn(settings, 'getSettings');
-        getSettingsSpy.mockReturnValue(mockSettingState);
+        getSettings.mockReturnValue(mockSettingState);
 
         const actualRelays = getRelayState();
 
