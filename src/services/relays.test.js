@@ -1,7 +1,6 @@
 import {
-    setFirstFloor,
-    setSecondFloor,
-    getRelayStates
+    updateRelays,
+    getRelayState
 } from './relays';
 import * as settings from './settings';
 import {Relay} from '../classes/Relay';
@@ -15,42 +14,94 @@ describe("Relay Service => ", () => {
         expect(Relay).toHaveBeenNthCalledWith(2, 25, 8, 7);
     });
 
-    test('Setting first floor relays should change the relay state and run the callback', () => {
-        const newState = '0000';
-        const callback = () => {};
-        const updateSettingSpy = jest.spyOn(settings, 'updateSetting');
+    test('Setting relays should change the relay states', () => {
+        const newState = {
+            firstFloorRelayState: '0000',
+            secondFloorRelayState: '0000',
+            alarmOverride: true
+        };
+        const callback = jest.fn();
 
-        setFirstFloor(newState, callback);
+        updateRelays(newState, callback);
 
-        expect(Relay.mock.instances[1].setRelays).toHaveBeenCalledWith(newState);
-        expect(updateSettingSpy).toHaveBeenCalledWith('firstFloorRelayState', newState, callback);
+        expect(Relay.mock.instances[1].setRelays).toHaveBeenCalledWith(newState.firstFloorRelayState);
+        expect(Relay.mock.instances[0].setRelays).toHaveBeenCalledwith(newState.secondFloorRelayState);
     });
 
-    test('Setting second floor relays should change the relay state and run the callback', () => {
-        const newState = '0000';
-        const callback = () => {};
-        const updateSettingSpy = jest.spyOn(settings, 'updateSetting');
+    describe('and alarm is overriding the relays', () => {
+        let expectedSettings;
 
-        setSecondFloor(newState, callback);
+        beforeEach(() => {
+            const getSettingsSpy = jest.spyOn(settings, 'getSettings');
 
-        expect(Relay.mock.instances[0].setRelays).toHaveBeenCalledWith(newState);
-        expect(updateSettingSpy).toHaveBeenCalledWith('secondFloorRelayState', newState, callback);
+            expectedSettings = {
+                relays: {
+                    firstFloorRelayState: '3333',
+                    secondFloorRelayState: '4444',
+                    alarmOverride: false
+                }
+            };
+
+            getSettingsSpy.mockReturnValue(expectedSettings)
+        })
+        test('Setting second floor relays should change the relay state and run the callback', () => {
+            const newState = {
+                firstFloorRelayState: '0000',
+                secondFloorRelayState: '0000',
+                alarmOverride: true
+            };
+            const callback = jest.fn();
+            const updateSettingSpy = jest.spyOn(settings, 'updateSetting');
+
+            updateRelays(newState, callback);
+
+            const expectedState = {
+                ...expectedSettings.relays,
+                alarmOverride: true
+            }
+
+            expect(updateSettingSpy).toHaveBeenCalledWith('relays', expectedState, callback);
+        });
+    });
+
+    describe('and frontend is setting the relays', () => {
+        test('Setting second floor relays should change the relay state and run the callback', () => {
+            const newState = {
+                firstFloorRelayState: '0000',
+                secondFloorRelayState: '0000',
+                alarmOverride: false
+            };
+            const callback = jest.fn();
+            const updateSettingSpy = jest.spyOn(settings, 'updateSetting');
+
+            updateRelays(newState, callback);
+
+            expect(updateSettingSpy).toHaveBeenCalledWith('relays', newState, callback);
+        });
     });
 
     test('Get Relay State should return the current state of the relays', () => {
         const expectedRelays = {
-            firstFloor: 'foo',
-            secondFloor: 'bar'
+            firstFloorRelayState: 'foo',
+            secondFloorRelayState: 'bar',
+            alarmOverride: false
         };
 
-        settings.settings = {
-            firstFloorRelayState: expectedRelays.firstFloor,
-            secondFloorRelayState: expectedRelays.secondFloor
+        const mockSettingState = {
+            relays: {
+                firstFloorRelayState: expectedRelays.firstFloorRelayState,
+                secondFloorRelayState: expectedRelays.secondFloorRelayState,
+                alarmOverride: expectedRelays.alarmOverride
+            }
         };
 
-        const actualRelays = getRelayStates();
+        const getSettingsSpy = jest.spyOn(settings, 'getSettings');
+        getSettingsSpy.mockReturnValue(mockSettingState);
 
-        expect(actualRelays.firstFloor).toStrictEqual(expectedRelays.firstFloor)
-        expect(actualRelays.secondFloor).toStrictEqual(expectedRelays.secondFloor)
+        const actualRelays = getRelayState();
+
+        expect(actualRelays.firstFloorRelayState).toStrictEqual(expectedRelays.firstFloorRelayState);
+        expect(actualRelays.secondFloorRelayState).toStrictEqual(expectedRelays.secondFloorRelayState);
+        expect(actualRelays.alarmOverride).toStrictEqual(expectedRelays.alarmOverride);
     });
 });

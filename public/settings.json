@@ -1,8 +1,8 @@
 {
     "relays": {
-        "firstFloorRelayState": "c0c",
-        "secondFloorRelayState": "2a2a",
-        "alarmOverride": false
+        "firstFloorRelayState": "0000",
+        "secondFloorRelayState": "0000",
+        "alarmOverride": true
     },
     "timeoutInMinutes": 121,
     "closeTimeoutInMinutes": 15,
