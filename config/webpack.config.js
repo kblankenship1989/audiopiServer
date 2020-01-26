@@ -12,8 +12,8 @@ const ManifestPlugin = require('webpack-manifest-plugin');
 const WorkboxWebpackPlugin = require('workbox-webpack-plugin');
 const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin');
 const getCSSModuleLocalIdent = require('react-dev-utils/getCSSModuleLocalIdent');
-const paths = require('./paths');
 const ModuleNotFoundPlugin = require('react-dev-utils/ModuleNotFoundPlugin');
+const postcssNormalize = require('postcss-normalize');
 
 const cssRegex = /\.css$/;
 const cssModuleRegex = /\.module\.css$/;
@@ -294,7 +294,7 @@ module.exports = {
                 },
             })
         ),
-        new ModuleNotFoundPlugin(paths.appPath),
+        new ModuleNotFoundPlugin(path.resolve(__dirname, '.')),
         new webpack.DefinePlugin({
             'process.env': {
                 NODE_ENV: '"production"',
