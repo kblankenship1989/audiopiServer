@@ -22,7 +22,7 @@ export const StationSelect = ({stationList, currentStationName, playerRunning, o
             <Select
                 value={getCurrentStation()}
                 options={stationsOptions()}
-                onChange={onchange}
+                onChange={onChange}
             />
         </Col>
     );
