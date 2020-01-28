@@ -7,6 +7,38 @@ import { setVolume, unMuteAll } from './volumeControl';
 import { getSettings } from './settings';
 
 var fifo = '/home/pi/.config/pianobar/ctl';
+let pandoraState = {
+    isLoading: true,
+    currentSong: {},
+    stationList: [],
+    songHistory: []
+};
+
+export const getPandoraState = () => pandoraState;
+
+export const setPandoraState = (overrides, shouldPublish = true) => {
+    pandoraState = {
+        ...pandoraState,
+        ...overrides,
+        currentSong: {
+            ...pandoraState.currentSong,
+            ...(overrides.currentSong || {})
+        }
+    };
+
+    shouldPublish && publishPandora(pandoraState);
+};
+
+export const getInitialPandoraState = async () => {
+    pandoraState.isLoading = true;
+    pandoraState.currentSong = await readCurrentSong();
+    pandoraState.stationList = await readStations();
+    pandoraState.songHistory = [
+        pandoraState.currentSong
+    ];
+    publishPandora(pandoraState);
+};
+
 
 export const writeCommandToFifo = async (action) => {
     /*global __dirname, Buffer*/

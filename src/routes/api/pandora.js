@@ -1,41 +1,17 @@
 import { Router } from 'express';
 import bodyParser from 'body-parser';
 
-import { writeCommandToFifo, readStations, readCurrentSong } from '../../services/pianobar';
+import { writeCommandToFifo, readStations, readCurrentSong, getPandoraState } from '../../services/pianobar';
 import { publishPandora } from '../sse'
-
-let pandoraState = {
-    isLoading: true,
-    currentSong: {},
-    stationList: [],
-    songHistory: []
-};
-
-export const getPandoraState = () => pandoraState;
-
-export const setPandoraState = (key, value) => {
-    pandoraState[key] = value;
-}
-
-export const getInitialPandoraState = async () => {
-    pandoraState.isLoading = true;
-    pandoraState.currentSong = await readCurrentSong();
-    pandoraState.stationList = await readStations();
-    pandoraState.songHistory = [
-        pandoraState.currentSong
-    ];
-    publishPandora(pandoraState);
-};
 
 const pandoraRouter = Router();
 pandoraRouter.use(bodyParser.json());
 
-/* GET users listing. */
 pandoraRouter.route('/')
     .get((req, res) => {
         res.statusCode = 200;
         res.setHeader('Content-Type', 'application/json');
-        res.json(pandoraState);
+        res.json(getPandoraState());
     })
     .post(async (req, res, next) => {
         const validCommands = {
