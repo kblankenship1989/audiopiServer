@@ -18,7 +18,7 @@ export const setPlayerState = (overrides, shouldPublish = true) => {
     shouldPublish && publishPlayer(playerState);
 };
 
-export const stopPlayer = () => {
+export const stopPlayer = async () => {
     await stopPianoBar();
     setPlayerState({
         playerRunning: false,
@@ -29,7 +29,7 @@ export const stopPlayer = () => {
     return 'Successfully terminated PianoBar';
 };
 
-export const startPlayer = () => {
+export const startPlayer = async () => {
     await startPianoBar();
     getInitialPandoraState();
     setPlayerState({
@@ -39,10 +39,12 @@ export const startPlayer = () => {
     });
     resetPlayerTimeout();
     return 'Successfully started PianoBar';
-}
+};
 
-export const togglePaused = () => {
-    
+export const writeAction = async (action) => {
+    await writeCommandToFifo(action);
+    resetPlayerTimeout();
+    return action + ' has been written successfully!';
 }
 
 setInterval(() => {

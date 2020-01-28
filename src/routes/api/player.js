@@ -1,10 +1,9 @@
 import { Router } from 'express';
 import bodyParser from 'body-parser';
 
-import { writeCommandToFifo} from '../../services/pianobar';
-import { resetPlayerTimeout } from '../../services/playerTimeout';
 import { setPandoraState} from './pandora';
-import { getPlayerState, startPlayer, stopPlayer } from '../../services/player';
+import { getPlayerState, startPlayer, stopPlayer, writeAction } from '../../services/player';
+import { STOPPLAYER, STARTPLAYER, NEXT, REPLAY, playerCommands } from '../../literals/playerLiterals';
 
 
 var playerRouter = Router();
@@ -20,46 +19,29 @@ playerRouter.route('/')
         let action, 
             response;
 
-        const validCommands = {
-            VOLUME_UP: ')',
-            VOLUME_DOWN: '(',
-            PLAYPAUSE: 'p',
-            NEXT: 'n',
-            REPLAY: 'h',
-            STOPPLAYER: 'STOPPLAYER',
-            STARTPLAYER: 'STARTPLAYER'
-        };
-
-        const writeAction = (action) => {
-            await writeCommandToFifo(action);
-            resetPlayerTimeout();
-            return action + ' has been written successfully!';
-        }
-
-        const setPandoraLoading = (action) => {
+        const setPandoraLoading = async (action) => {
             setPandoraState({
                 isLoading: true
             });
-            resetPlayerTimeout();
-            writeAction(action);
+            await writeAction(action);
         };
 
         const commandMap = {
-            [validCommands.STOPPLAYER]: stopPlayer,
-            [validCommands.STARTPLAYER]: startPlayer,
-            [validCommands.NEXT]: setPandoraLoading,
-            [validCommands.REPLAY]: setPandoraLoading
+            [STOPPLAYER]: stopPlayer,
+            [STARTPLAYER]: startPlayer,
+            [NEXT]: setPandoraLoading,
+            [REPLAY]: setPandoraLoading
         };
 
-        if (Object.keys(validCommands).includes(req.query.command)) {
+        if (Object.keys(playerCommands).includes(req.query.command)) {
+            action = playerCommands[req.query.command];
+
             if (songIndex in req.query) {
                 action = `${action}${req.query.songIndex.toString()}\n`;
-            } else {
-                action = validCommands[req.query.command];
             }
 
             try {
-                response = action.charAt(0) in commandMap ? commandMap[action.charAt(0)](action) : writeAction(action);
+                response = action.charAt(0) in commandMap ? await commandMap[action.charAt(0)](action) : await writeAction(action);
                 res.status = 200;
                 res.setHeader('Content-Type', 'text/plain');
                 res.end(response);
@@ -67,7 +49,7 @@ playerRouter.route('/')
                 next(error);
             }
         } else {
-            var error = new Error('Invalid command: ' + req.query.command + ', please select from the following commands:\n' + Object.keys(validCommands).join('\n'));
+            var error = new Error('Invalid command: ' + req.query.command + ', please select from the following commands:\n' + Object.keys(playerCommands).join('\n'));
             next(error);
         }
     });
