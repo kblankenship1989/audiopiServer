@@ -5,6 +5,7 @@ import { join } from 'path';
 import { getPlayerState } from '../routes/api/player'
 import { setVolume, unMuteAll } from './volumeControl';
 import { getSettings } from './settings';
+import { publishPandora } from '../routes/sse';
 
 var fifo = '/home/pi/.config/pianobar/ctl';
 let pandoraState = {
@@ -41,7 +42,6 @@ export const getInitialPandoraState = async () => {
 
 
 export const writeCommandToFifo = async (action) => {
-    /*global __dirname, Buffer*/
     let error;
 
     if (!getPlayerState().playerRunning) {
@@ -53,6 +53,7 @@ export const writeCommandToFifo = async (action) => {
     var buf = new Buffer.from(action);
 
     const written = await fileHandle.write(buf, 0, action.length, null);
+    await fileHandle.close();
     if (written.bytesWritten == action.length) {
         return written;
     } else {

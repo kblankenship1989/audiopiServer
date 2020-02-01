@@ -36,7 +36,7 @@ playerRouter.route('/')
         if (Object.keys(playerCommands).includes(req.query.command)) {
             action = playerCommands[req.query.command];
 
-            if (songIndex in req.query) {
+            if ('songIndex' in req.query) {
                 action = `${action}${req.query.songIndex.toString()}\n`;
             }
 

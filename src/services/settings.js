@@ -4,10 +4,20 @@ import {join} from 'path';
 
 const filePath = join(__dirname, '../../public/settings.json');
 
-const settingsRaw = readFileSync(filePath) || {};
-const settings = JSON.parse(settingsRaw);
+let settings;
 
-export const getSettings = () => settings;
+const initializeSettings = () => {
+    const settingsRaw = readFileSync(filePath) || {};
+    settings = JSON.parse(settingsRaw);
+}
+
+export const getSettings = () => {
+    if (!settings) {
+        initializeSettings();
+    }
+
+    return settings;
+};
 
 export const updateSetting = (key, value, callback) => {
     var noop = function(){};

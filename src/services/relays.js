@@ -5,8 +5,8 @@ const secondFloor = new Relay(11, 9, 10);
 const firstFloor = new Relay(25, 8, 7);
 
 export const  updateRelays = (newState, callback) => {
-    firstFloor.setRelays(newState.firstFloorRelayState);
-    secondFloor.setRelays(newState.secondFloorRelayState);
+    firstFloor.setRelays(newState?.firstFloorRelayState || getSettings().relays.firstFloorRelayState);
+    secondFloor.setRelays(newState?.secondFloorRelayState || getSettings().relays.secondFloorRelayState);
     if (!newState.alarmOverride) {
         updateSetting('relays', newState, callback);
     } else {
