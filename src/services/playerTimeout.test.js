@@ -22,6 +22,10 @@ test("Should clear and reapply timeouts on reset", () => {
     jest.spyOn(testModule, 'clearPlayerTimeout');
 
     getPlayerState.mockReturnValue({});
+    getSettings.mockReturnValue({
+        timeoutInMinutes: 1,
+        closeTimeoutInMinutes: 1
+    });
 
     testModule.resetPlayerTimeout();
 

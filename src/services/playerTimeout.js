@@ -50,6 +50,6 @@ export const clearPlayerTimeout = () => {
 
 export const resetPlayerTimeout = () => {
     setPlayerState({playerTimedOut: false});
-    clearPlayerTimeout();
-    _setPlayerPauseTimeout();
+    exports.clearPlayerTimeout();
+    exports._setPlayerPauseTimeout();
 };
