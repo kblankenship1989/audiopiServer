@@ -1,8 +1,9 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {Nav,NavItem,NavLink,Navbar,NavbarToggler,NavbarBrand,Collapse} from 'reactstrap';
 import {NavLink as RRNavLink} from 'react-router-dom';
 
-function Header(props) {
+const Header = (props) => {
     return(
         <>
             <Navbar dark expand="md">
@@ -14,13 +15,13 @@ function Header(props) {
                     <Collapse isOpen={props.isNavOpen} navbar>
                         <Nav navbar>
                             <NavItem>
-                                <NavLink tag={RRNavLink} className="nav-link" to="/home">Home</NavLink>
+                                <NavLink tag={RRNavLink} className="nav-link" to="/home" onClick={props.toggleNav}>Home</NavLink>
                             </NavItem>
                             <NavItem>
-                                <NavLink tag={RRNavLink} className="nav-link" to="/relays">Room Control</NavLink>
+                                <NavLink tag={RRNavLink} className="nav-link" to="/relays" onClick={props.toggleNav}>Room Control</NavLink>
                             </NavItem>
                             <NavItem>
-                                <NavLink tag={RRNavLink} className="nav-link" to="/settings">Settings</NavLink>
+                                <NavLink tag={RRNavLink} className="nav-link" to="/settings" onClick={props.toggleNav}>Settings</NavLink>
                             </NavItem>
                         </Nav>
                     </Collapse>
@@ -28,6 +29,11 @@ function Header(props) {
             </Navbar>
         </>
     );
+}
+
+Header.propTypes = {
+    isNavOpen: PropTypes.bool.isRequired,
+    toggleNav: PropTypes.func.isRequired
 }
 
 export default Header;

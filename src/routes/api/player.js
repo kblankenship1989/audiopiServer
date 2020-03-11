@@ -16,9 +16,6 @@ playerRouter.route('/')
         res.json(getPlayerState());
     })
     .post(async (req, res, next) => {
-        let action, 
-            response;
-
         const setPandoraLoading = async (action) => {
             setPandoraState({
                 isLoading: true
@@ -34,14 +31,14 @@ playerRouter.route('/')
         };
 
         if (Object.keys(playerCommands).includes(req.query.command)) {
-            action = playerCommands[req.query.command];
+            let action = playerCommands[req.query.command];
 
             if ('songIndex' in req.query) {
                 action = `${action}${req.query.songIndex.toString()}\n`;
             }
 
             try {
-                response = action.charAt(0) in commandMap ? await commandMap[action.charAt(0)](action) : await writeAction(action);
+                const response = action.charAt(0) in commandMap ? await commandMap[action.charAt(0)](action) : await writeAction(action);
                 res.status = 200;
                 res.setHeader('Content-Type', 'text/plain');
                 res.end(response);

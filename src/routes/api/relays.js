@@ -5,7 +5,6 @@ import { getSettings } from '../../services/settings';
 
 var relayRouter = Router();
 
-/* GET users listing. */
 relayRouter.get('/', function(req, res) {
     res.statusCode = 200;
     res.setHeader('Content-Type', 'application/json');

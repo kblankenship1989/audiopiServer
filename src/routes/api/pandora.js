@@ -1,8 +1,10 @@
 import { Router } from 'express';
 import bodyParser from 'body-parser';
 
-import { writeCommandToFifo, readStations, readCurrentSong, getPandoraState } from '../../services/pianobar';
-import { publishPandora } from '../sse'
+import { readStations, readCurrentSong, getPandoraState, setPandoraState } from '../../services/pianobar';
+import { publishPandora } from '../sse';
+import { HATE, SETSTATION, pandoraCommands } from '../../literals/pandoraLiterals';
+import { writeAction } from '../../services/player';
 
 const pandoraRouter = Router();
 pandoraRouter.use(bodyParser.json());
@@ -14,30 +16,30 @@ pandoraRouter.route('/')
         res.json(getPandoraState());
     })
     .post(async (req, res, next) => {
-        const validCommands = {
-            LOVE: '+',
-            HATE: '-',
-            SETSTATION: 's'
-        }
-        if (Object.keys(validCommands).includes(req.query.command)) {
-            let action;
+        const setPandoraLoading = async (action) => {
+            setPandoraState({
+                isLoading: true
+            }, true);
+            await writeAction(action);
+        };
 
-            action = validCommands[req.query.command];
-            if (action === validCommands.SETSTATION) {
+        const commandMap = {
+            [HATE]: setPandoraLoading,
+            [SETSTATION]: setPandoraLoading
+        };
+
+        if (Object.keys(pandoraCommands).includes(req.query.command)) {
+            let action = pandoraCommands[req.query.command];
+
+            if ('stationId' in req.query) {
                 action = `${action}${req.query.stationId.toString()}\n`;
-                pandoraState.isLoading = true;
-                publishPandora(pandoraState);
-            } else if (action === validCommands.HATE) {
-                pandoraState.isLoading = true;
-                publishPandora(pandoraState);
             }
 
             try {
-                await writeCommandToFifo(action)
-
+                const response = action.charAt(0) in commandMap ? await commandMap[action.charAt(0)](action) : await writeAction(action);
                 res.statusCode = 200;
                 res.setHeader('Content-Type', 'text/plain');
-                res.end(action + ' has been written successfully!');
+                res.end(response);
             } catch (error) {
                 next(error);
             }

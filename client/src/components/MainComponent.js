@@ -1,16 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { Switch, Route, Redirect } from 'react-router-dom';
 
 import Header from './HeaderComponent';
 import Footer from './FooterComponent';
 import { SSEUrl } from '../helpers/baseUrls';
-import {HomeComponent} from './HomeComponent';
-import { SettingsPage } from './SettingsComponent';
 import { TimeoutModal } from './TimeoutModal';
-import { RelayComponent } from './RelayComponent';
 import { Settings } from '../redux/states/settings';
 import { Relays } from '../redux/states/relays';
+import { Player } from '../redux/states/player';
+import { RouteFactory } from './RouteFactory';
 
 export const Main = (props) => {
     const [isNavOpen, setIsNavOpen] = useState(false);
@@ -54,31 +52,9 @@ export const Main = (props) => {
             <TimeoutModal player={props.player} />
             <Header isNavOpen={isNavOpen} toggleNav={toggleNav} />
             <br />
-            <Switch>
-                <Route path="/home" 
-                render={(routeProps) => <HomeComponent
-                    {...routeProps}
-                    pandora={props.pandora}
-                    player={props.player}
-                    />}
-                />
-                <Route path="/settings" 
-                    render={(routeProps) => <SettingsPage
-                        {...routeProps}
-                        settings={props.settings}
-                        updateSettings={props.updateSettings}
-                    />}
-                />
-                <Route exact path="/relays"
-                    render={(routeProps) => <RelayComponent
-                        {...routeProps}
-                        firstFloorRelayState={props.relays.firstFloorRelayState}
-                        secondFloorRelayState={props.relays.secondFloorRelayState}
-                        alarmOverride={props.relays.alarmOverride}
-                    />}
-                />
-                <Redirect to="/home" />
-            </Switch>
+            <RouteFactory
+                {...props}
+            />
             <br />
             <Footer />
         </>
@@ -86,6 +62,8 @@ export const Main = (props) => {
 }
 
 Main.propTypes = {
+    pandora: PropTypes.instanceOf(Pandora).isRequired,
+    player: PropTypes.instanceOf(Player).isRequired,
     relays: PropTypes.instanceOf(Relays).isRequired,
     settings: PropTypes.instanceOf(Settings).isRequired,
     updateSettings: PropTypes.func.isRequired,
