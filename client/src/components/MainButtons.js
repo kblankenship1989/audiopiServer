@@ -21,7 +21,7 @@ export const MainButtons = () => {
         <>
             <Col md={{ size: 4, offset: 4 }}><Button block color='light' onClick={startPlayer}><img src={`${process.env.PUBLIC_URL}/assets/Pandora.png`} width="150" alt="Pandora" /></Button></Col>
             <br />
-            <Col md={{ size: 4, offset: 4 }}><Button block color='light' tag={Link} to="/player" ><img src={`${process.env.PUBLIC_URL}/assets/IHeartRadio.png`} width="100" alt="IHeartRadio" /></Button></Col>
+            <Col md={{ size: 4, offset: 4 }}><Button block color='light' tag={Link} to="/player" ><img src={`${process.env.PUBLIC_URL}/assets/Spotify.png`} width="100" alt="Spotify" /></Button></Col>
             <br />
             <Col md={{ size: 4, offset: 4 }}><Button block color='light' tag={Link} to="/relays" ><FontAwesomeIcon icon={fas.faHome} /> Room Control</Button></Col>
             <br />
