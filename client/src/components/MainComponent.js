@@ -5,12 +5,9 @@ import { Switch, Route, Redirect } from 'react-router-dom';
 import Header from './HeaderComponent';
 import Footer from './FooterComponent';
 import { SSEUrl } from '../helpers/baseUrls';
-import {HomeComponent} from './HomeComponent';
 import { SettingsPage } from './SettingsComponent';
-import { TimeoutModal } from './TimeoutModal';
 import { RelayComponent } from './RelayComponent';
-import { Settings } from '../redux/states/settings';
-import { Relays } from '../redux/states/relays';
+import { MainButtons } from './MainButtons';
 
 export const Main = (props) => {
     const [isNavOpen, setIsNavOpen] = useState(false);
@@ -20,8 +17,6 @@ export const Main = (props) => {
     }
 
     const eventHandlers = {
-        'pandora': (e) => props.updatePandora(e.data),
-        'player': (e) => props.updatePlayer(e.data),
         'relays': (e) => props.updateRelays(e.data)
     };
 
@@ -51,16 +46,11 @@ export const Main = (props) => {
 
     return (
         <>
-            <TimeoutModal player={props.player} />
             <Header isNavOpen={isNavOpen} toggleNav={toggleNav} />
             <br />
             <Switch>
                 <Route path="/home" 
-                render={(routeProps) => <HomeComponent
-                    {...routeProps}
-                    pandora={props.pandora}
-                    player={props.player}
-                    />}
+                    component={MainButtons}
                 />
                 <Route path="/settings" 
                     render={(routeProps) => <SettingsPage
@@ -77,7 +67,7 @@ export const Main = (props) => {
                         alarmOverride={props.relays.alarmOverride}
                     />}
                 />
-                <Redirect to="/home" />
+                <Redirect to="/home"/>
             </Switch>
             <br />
             <Footer />
@@ -86,10 +76,8 @@ export const Main = (props) => {
 }
 
 Main.propTypes = {
-    relays: PropTypes.instanceOf(Relays).isRequired,
-    settings: PropTypes.instanceOf(Settings).isRequired,
+    relays: PropTypes.object.isRequired,
+    settings: PropTypes.object.isRequired,
     updateSettings: PropTypes.func.isRequired,
-    updatePandora: PropTypes.func.isRequired,
-    updatePlayer: PropTypes.func.isRequired,
     updateRelays: PropTypes.func.isRequired
 };

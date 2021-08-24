@@ -1,12 +1,17 @@
 import * as ActionTypes from '../ActionTypes';
-import { getDefaultRelays, Relays } from '../states/relays';
 
 const updateRelays = (state, payload) => {
-    return Relays({ 
+    return { 
         ...state,
         ...payload
-    })
+    }
 };
+
+export const getDefaultRelays = () => ({
+    firstFloorRelayState: '0000',
+    secondFloorRelayState: '0000',
+    alarmOverride: false
+});
 
 export const relays = (state = getDefaultRelays(), action) => {
 

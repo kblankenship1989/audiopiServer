@@ -1,30 +1,15 @@
 import {scheduleJob} from 'node-schedule';
 import {v4} from 'uuid';
 
-import { startPianoBar } from './pianobar';
-import { getPlayerState, setPlayerState } from '../routes/api/player';
 import { getSettings, updateSetting } from './settings';
-import { getInitialPandoraState } from '../routes/api/pandora';
-import { resetPlayerTimeout } from './playerTimeout';
-import { publishPlayer } from '../routes/sse';
 import { updateRelays } from './relays';
 
 const alarmJobs = {};
 
-const startPianoBarCallback = async (alarmId) => {
+const startAlarmPlayback = async (alarmId) => {
     const alarm = getSettings().alarms.find((alarm) => alarm.id = alarmId);
 
     updateRelays(alarm.relays);
-
-    if (!getPlayerState().playerRunning) {
-        await startPianoBar();
-        getInitialPandoraState();
-        setPlayerState('playerRunning', true);
-        setPlayerState('isPaused', false);
-        setPlayerState('playerTimedOut', false);
-        resetPlayerTimeout();
-        publishPlayer(getPlayerState());
-    }
 };
 
 export const getNextAlarm = (alarmId) => {
@@ -61,7 +46,7 @@ export const addAlarm = (alarmSettings) => {
 
     if (newAlarm.isEnabled) {
         const schedule = getSchedule(newAlarm);
-        alarmJobs[newAlarm.id] = scheduleJob(newAlarm.name, schedule, startPianoBarCallback);
+        alarmJobs[newAlarm.id] = scheduleJob(newAlarm.name, schedule, startAlarmPlayback);
         return getNextAlarm(newAlarm.id);
     }
 };
@@ -102,6 +87,6 @@ export const initializeAlarms = (alarms) => {
 
     alarms.forEach((alarm) => {
         const schedule = getSchedule(alarm);
-        alarmJobs[alarm.id] = scheduleJob(alarm.name, schedule, startPianoBarCallback);
+        alarmJobs[alarm.id] = scheduleJob(alarm.name, schedule, startAlarmPlayback);
     });
 };

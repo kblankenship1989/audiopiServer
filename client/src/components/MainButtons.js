@@ -4,24 +4,15 @@ import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import * as fas from '@fortawesome/free-solid-svg-icons';
 import * as fab from '@fortawesome/free-brands-svg-icons';
-import { apiBaseUrl } from '../helpers/baseUrls';
-
-/*global process*/
 
 export const MainButtons = () => {
     const openGithub = () => {
         window.open('https://github.com/kblankenship1989/audiopiServer', '_blank');
     };
 
-    const startPlayer = () => {
-        fetch(apiBaseUrl + '/player?command=STARTPLAYER', { method: 'POST' });
-    };
-
     return (
         <>
-            <Col md={{ size: 4, offset: 4 }}><Button block color='light' onClick={startPlayer}><img src={`${process.env.PUBLIC_URL}/assets/Pandora.png`} width="150" alt="Pandora" /></Button></Col>
-            <br />
-            <Col md={{ size: 4, offset: 4 }}><Button block color='light' tag={Link} to="/player" ><img src={`${process.env.PUBLIC_URL}/assets/IHeartRadio.png`} width="100" alt="IHeartRadio" /></Button></Col>
+            <Col md={{ size: 4, offset: 4 }}><Button block color='light' onClick={() => {window.location.pathname = `/api/auth/login`}}><FontAwesomeIcon icon={fab.faSpotify} /> Login to Spotify</Button></Col>
             <br />
             <Col md={{ size: 4, offset: 4 }}><Button block color='light' tag={Link} to="/relays" ><FontAwesomeIcon icon={fas.faHome} /> Room Control</Button></Col>
             <br />
