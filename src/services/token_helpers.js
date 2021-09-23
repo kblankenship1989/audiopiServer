@@ -1,8 +1,13 @@
 import fetch from 'node-fetch';
+import {writeFile, readFileSync} from 'fs-extra';
 
-export const storeRefreshToken = (refreshToken) => {}
+export const storeRefreshToken = (refreshToken) => {
+  writeFile('/.token', refreshToken);
+}
 
-export const getRefreshToken = () => {}
+export const getRefreshToken = () => {
+  return readFileSync('/.token').toString();
+}
 
 export const urlEncodeBody = (body) => {
     var formBody = [];

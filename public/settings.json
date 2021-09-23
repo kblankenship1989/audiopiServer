@@ -2,7 +2,7 @@
     "relays": {
         "firstFloorRelayState": "c0c",
         "secondFloorRelayState": "2a2a",
-        "alarmOverride": false
+        "alarmOverride": true
     },
     "timeoutInMinutes": 121,
     "closeTimeoutInMinutes": 15,
@@ -10,7 +10,7 @@
     "songHistoryLength": 5,
     "alarms": [
         {
-            "id": "bar",
+            "id": "2021-09-23T00:30:00.000Z",
             "name": "Bedtime",
             "minute": "30",
             "hour": "19",

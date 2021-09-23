@@ -1,9 +1,8 @@
 import {Router} from 'express';
 import querystring from 'querystring';
 import fetch from 'node-fetch';
-import { apiBaseUrl } from '../../../client/src/helpers/baseUrls';
 import { challenge_from_verifier, generateVerifier, getStateValue } from '../../services/code-helper';
-import {storeRefreshToken, urlEncodeBody } from '../../services/token_helpers';
+import {storeRefreshToken, urlEncodeBody} from '../../services/token_helpers';
 
 const client_id = '34b4f9e3c0954c59a171a424717fdec6'; // Your client id
 const redirect_uri = "http://localhost:3000/api" + "/auth/callback"; // Your redirect uri
@@ -32,7 +31,6 @@ authRouter.get('/login', async (req, res) => {
 
     await updateChallengeValues();
   
-    // your application requests authorization
     const scope = 'playlist-read-private playlist-read-collaborative user-read-playback-state user-modify-playback-state';
     res.redirect('https://accounts.spotify.com/authorize?' +
       querystring.stringify({
@@ -46,10 +44,6 @@ authRouter.get('/login', async (req, res) => {
       }));
   })
   .get('/callback', async (req, res) => {
-
-    // your application requests refresh and access tokens
-    // after checking the state parameter
-  
     const code = req.query.code || null;
     const state = req.query.state || null;
   
