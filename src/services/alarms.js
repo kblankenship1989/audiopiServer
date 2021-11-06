@@ -3,13 +3,28 @@ import {v4} from 'uuid';
 
 import { getSettings, updateSetting } from './settings';
 import { updateRelays } from './relays';
+import { getDeviceId, pausePlayback, startPlayback } from './spotify';
+import { refreshAccessToken } from './token_helpers';
 
 const alarmJobs = {};
 
-const startAlarmPlayback = async (alarmId) => {
+const getTimeout = () => getSettings().timeoutInMinutes * 60000;
+
+const setAlarmTimeout = (authToken, deviceId) => {
+    setTimeout(async () => {
+        pausePlayback(authToken, deviceId)
+    }, getTimeout())
+};
+
+export const startAlarmPlayback = async (alarmId) => {
     const alarm = getSettings().alarms.find((alarm) => alarm.id = alarmId);
 
     updateRelays(alarm.relays);
+
+    const authToken = await refreshAccessToken();
+    const deviceId = await getDeviceId(authToken);
+    setAlarmTimeout(authToken, deviceId);
+    await startPlayback(authToken, deviceId, alarm.contextUri)
 };
 
 export const getNextAlarm = (alarmId) => {

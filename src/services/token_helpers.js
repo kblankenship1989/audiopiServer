@@ -2,20 +2,20 @@ import fetch from 'node-fetch';
 import {writeFile, readFileSync} from 'fs-extra';
 
 export const storeRefreshToken = (refreshToken) => {
-  writeFile('/.token', refreshToken);
+    writeFile('/.token', refreshToken);
 }
 
 export const getRefreshToken = () => {
-  return readFileSync('/.token').toString();
+    return readFileSync('/.token').toString();
 }
 
 export const urlEncodeBody = (body) => {
     var formBody = [];
-      for (var property in body) {
+    for (var property in body) {
         var encodedKey = encodeURIComponent(property);
         var encodedValue = encodeURIComponent(body[property]);
         formBody.push(encodedKey + "=" + encodedValue);
-      }
+    }
     return formBody.join("&");
 }
 
@@ -27,18 +27,18 @@ export const refreshAccessToken = async () => {
         refresh_token: refreshToken
     })
 
-      try {
+    try {
         const response = await fetch('https://accounts.spotify.com/api/token', {
-          method: 'POST',
-          headers: {
+            method: 'POST',
+            headers: {
             'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
-          },
-          body
+            },
+            body
         });
 
         const {
-          access_token,
-          refresh_token
+            access_token,
+            refresh_token
         } = await response.json();
 
         console.log('access token: ', access_token);
@@ -46,7 +46,8 @@ export const refreshAccessToken = async () => {
         storeRefreshToken(refresh_token);
 
         return access_token;
-      } catch (err) {
+    } catch (err) {
+        console.log(err)
         return null;
-      }
+    }
 }

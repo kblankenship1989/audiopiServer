@@ -6,7 +6,8 @@ import {
     addAlarm,
     removeAlarm,
     getNextAlarm,
-    updateAlarm
+    updateAlarm,
+    startAlarmPlayback
 } from '../../services/alarms';
 
 const alarmsRouter = Router();
@@ -36,6 +37,10 @@ alarmsRouter.get('/', function (req, res) {
         res.statusCode = 200;
         res.setHeader('Content-Type', 'application/json');
         res.json(nextAlarmActive);
+    })
+    .put('/:alarmId/test', function (req, res) {
+        startAlarmPlayback(req.params.alarmId);
+        res.statusCode = 200;
     })
     .delete('/:alarmId', function (req, res) {
         const deletedAlarmId = req.params.alarmId;
