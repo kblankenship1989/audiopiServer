@@ -17,12 +17,13 @@ export const getDeviceId = async (authToken) => {
             },
             method: 'GET'
         });
+        const jsonResponse = await response.json();
 
-        console.log('devices: ', response.json());
+        console.log('devices: ', jsonResponse);
 
         const {
             devices
-        } = await response.json();
+        } = jsonResponse;
 
         return devices.find((device) => device.name === 'raspotify (pandorapi)').id;
     } catch (err) {
