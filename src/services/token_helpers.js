@@ -54,6 +54,8 @@ export const refreshAccessToken = async () => {
             body
         });
 
+        console.log('refresh: ', response);
+
         const {
             access_token,
             refresh_token
