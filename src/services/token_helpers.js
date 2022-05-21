@@ -19,15 +19,12 @@ export const storeRefreshToken = (refreshToken) => {
           console.log(err);
         } else {
           console.log("File written successfully\n");
-          console.log("The written has the following contents:");
-          console.log(readFileSync(filePath, "utf8"));
         }
     });
 }
 
 export const getRefreshToken = () => {
     const refreshToken = readFileSync(filePath, 'utf8');
-    console.log('reading: ', refreshToken);
 	return refreshToken;
 }
 
@@ -58,8 +55,6 @@ export const refreshAccessToken = async () => {
             },
             body
         });
-
-        console.log('refresh: ', response);
 
         if (!response.ok) {
             throw new Error(`Refresh token failed with status: ${response.status} - ${response.statusText}`);

@@ -18,7 +18,7 @@ export const getDeviceId = async (authToken) => {
             method: 'GET'
         });
 
-        console.log('devices: ', response);
+        console.log('devices: ', response.json());
 
         const {
             devices
