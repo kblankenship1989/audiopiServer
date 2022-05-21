@@ -15,9 +15,10 @@ playbackRouter.get('/device', async (req, res) => {
         res.setHeader('Content-Type', 'application/json');
         res.json(await getPlaylists());
     })
-    .post('/:contextUri', function (req, res) {
-        startPlayback(null, null, req.params.contextUri);
+    .put('/start', function (req, res) {
+        startPlayback(null, null, req.body.context_uri);
         res.statusCode = 200;
+        res.send("Playback started")
     });
 
 export default playbackRouter;
