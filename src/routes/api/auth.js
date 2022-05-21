@@ -2,10 +2,8 @@ import {Router} from 'express';
 import querystring from 'querystring';
 import fetch from 'node-fetch';
 import { challenge_from_verifier, generateVerifier, getStateValue } from '../../services/code-helper';
-import {storeRefreshToken, urlEncodeBody} from '../../services/token_helpers';
+import {client_id, redirect_uri, storeRefreshToken, urlEncodeBody} from '../../services/token_helpers';
 
-const client_id = '34b4f9e3c0954c59a171a424717fdec6'; // Your client id
-const redirect_uri = "http://localhost:3000/api" + "/auth/callback"; // Your redirect uri
 
 let challengeValues = {
   state: '',

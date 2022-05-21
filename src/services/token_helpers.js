@@ -2,7 +2,11 @@ import fetch from 'node-fetch';
 import {writeFile, readFileSync} from 'fs';
 import {join} from 'path';
 
+// eslint-disable-next-line no-undef
 const filePath = join(__dirname, '../../.token');
+
+export const client_id = '34b4f9e3c0954c59a171a424717fdec6'; // Your client id
+export const redirect_uri = "http://localhost:3000/api" + "/auth/callback"; // Your redirect uri
 
 export const storeRefreshToken = (refreshToken) => {
     writeFile(filePath, refreshToken, {
@@ -42,7 +46,8 @@ export const refreshAccessToken = async () => {
 
     const body = urlEncodeBody({
         grant_type: 'refresh_token',
-        refresh_token: refreshToken
+        refresh_token: refreshToken,
+        client_id
     })
 
     try {
@@ -56,6 +61,9 @@ export const refreshAccessToken = async () => {
 
         console.log('refresh: ', response);
 
+        if (!response.ok) {
+            throw new Error(`Refresh token failed with status: ${response.status} - ${response.statusText}`);
+        }
         const {
             access_token,
             refresh_token
@@ -65,6 +73,7 @@ export const refreshAccessToken = async () => {
 
         return access_token;
     } catch (err) {
+        console.log(err);
         return null;
     }
 }

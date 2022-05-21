@@ -6,6 +6,10 @@ export const getDeviceId = async (authToken) => {
         authToken = await refreshAccessToken();
     }
 
+    if (!authToken) {
+        throw new Error('No auth token available');
+    }
+
     try {
         const response = await fetch('https://api.spotify.com/v1/me/player/devices', {
             headers: {
