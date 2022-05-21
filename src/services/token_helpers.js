@@ -6,7 +6,11 @@ export const storeRefreshToken = (refreshToken) => {
 	console.log('storing: ', refreshToken);
     const filePath = join(__dirname, '../../.token');
     console.log(filePath);
-    writeFile(filePath, refreshToken, (err) => {
+    writeFile(filePath, refreshToken, {
+        encoding: 'utf8',
+        mode: 0o600,
+        flag: 'w'
+    }, (err) => {
         if (err)
           console.log(err);
         else {
