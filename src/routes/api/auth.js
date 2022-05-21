@@ -71,7 +71,6 @@ authRouter.get('/login', async (req, res) => {
         });
 
         const {
-          access_token,
           refresh_token
         } = await response.json();
 

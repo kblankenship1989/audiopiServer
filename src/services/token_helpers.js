@@ -11,9 +11,10 @@ export const storeRefreshToken = (refreshToken) => {
         mode: 0o600,
         flag: 'w'
     }, (err) => {
-        if (err)
+        if (err) {
+          console.log('Failed to write:')
           console.log(err);
-        else {
+        } else {
           console.log("File written successfully\n");
           console.log("The written has the following contents:");
           console.log(readFileSync(filePath, "utf8"));
