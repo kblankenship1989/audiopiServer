@@ -4,7 +4,17 @@ import {join} from 'path';
 
 export const storeRefreshToken = (refreshToken) => {
 	console.log('storing: ', refreshToken);
-    writeFile(join(__dirname, '../../.token'), refreshToken);
+    const filePath = join(__dirname, '../../.token');
+    console.log(filePath);
+    writeFile(filePath, refreshToken, (err) => {
+        if (err)
+          console.log(err);
+        else {
+          console.log("File written successfully\n");
+          console.log("The written has the following contents:");
+          console.log(readFileSync(filePath, "utf8"));
+        }
+    });
 }
 
 export const getRefreshToken = () => {
