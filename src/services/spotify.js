@@ -66,13 +66,13 @@ export const startPlayback = async (authToken, deviceId, contextUri) => {
     }
 
     if (!deviceId) {
-        deviceId = await getDeviceId(authToken);
+        deviceId = (await getDeviceId(authToken)).deviceId;
     }
 
     const body = {
         "context_uri": contextUri,
         "offset": {
-            "position": 5
+            "position": 1
         },
         "position_ms": 0
     }
