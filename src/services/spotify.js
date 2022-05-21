@@ -68,13 +68,13 @@ export const startPlayback = async (authToken, deviceId, contextUri) => {
         console.log(deviceId);
     }
 
-    const body = {
+    const body = JSON.stringify({
         "context_uri": contextUri,
         "offset": {
             "position": 1
         },
         "position_ms": 0
-    }
+    });
     console.log(body);
 
     try {
