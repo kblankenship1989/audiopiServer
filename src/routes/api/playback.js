@@ -10,10 +10,10 @@ playbackRouter.get('/device', async (req, res) => {
         res.statusCode = 200;
         res.setHeader('Content-Type', 'application/json');
         res.json(await getDeviceId());
-    }).get('/playlists', function(req, res) {
+    }).get('/playlists', async (req, res) => {
         res.statusCode = 200;
         res.setHeader('Content-Type', 'application/json');
-        res.json(getPlaylists());
+        res.json(await getPlaylists());
     })
     .post('/:contextUri', function (req, res) {
         startPlayback(null, null, req.params.contextUri);
