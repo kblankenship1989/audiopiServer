@@ -6,10 +6,10 @@ import { getDeviceId, getPlaylists, startPlayback } from '../../services/spotify
 const playbackRouter = Router();
 
 /* GET users listing. */
-playbackRouter.get('/device', function(req, res) {
+playbackRouter.get('/device', async (req, res) => {
         res.statusCode = 200;
         res.setHeader('Content-Type', 'application/json');
-        res.json(getDeviceId());
+        res.json(await getDeviceId());
     }).get('/playlists', function(req, res) {
         res.statusCode = 200;
         res.setHeader('Content-Type', 'application/json');

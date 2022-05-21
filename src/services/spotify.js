@@ -25,7 +25,8 @@ export const getDeviceId = async (authToken) => {
             devices
         } = jsonResponse;
 
-        return devices.find((device) => device.name === 'raspotify (pandorapi)').id;
+        const deviceId = devices.find((device) => device.name === 'raspotify (pandorapi)').id;
+        return {deviceId};
     } catch (err) {
         console.log(err);
         return null;
