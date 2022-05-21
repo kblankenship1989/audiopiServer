@@ -1,12 +1,16 @@
 import fetch from 'node-fetch';
-import {writeFile, readFileSync} from 'fs-extra';
+import {writeFile, readFileSync} from 'fs';
+import {join} from 'path';
 
 export const storeRefreshToken = (refreshToken) => {
-    writeFile('/.token', refreshToken);
+	console.log('storing: ', refreshToken);
+    writeFile(join(__dirname, '../../.token'), refreshToken);
 }
 
 export const getRefreshToken = () => {
-    return readFileSync('/.token').toString();
+    const refreshToken = readFileSync(join(__dirname, '../../.token'));
+    console.log('reading: ', refreshToken);
+	return refreshToken;
 }
 
 export const urlEncodeBody = (body) => {
@@ -41,13 +45,10 @@ export const refreshAccessToken = async () => {
             refresh_token
         } = await response.json();
 
-        console.log('access token: ', access_token);
-        console.log('refresh token: ', refresh_token);
         storeRefreshToken(refresh_token);
 
         return access_token;
     } catch (err) {
-        console.log(err)
         return null;
     }
 }

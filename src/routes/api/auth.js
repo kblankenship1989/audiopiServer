@@ -70,18 +70,15 @@ authRouter.get('/login', async (req, res) => {
           body
         });
 
-        console.log(await response.json());
-
         const {
           access_token,
           refresh_token
         } = await response.json();
 
-        console.log('access token: ', access_token);
-        console.log('refresh token: ', refresh_token);
         storeRefreshToken(refresh_token);
         res.redirect('/home');
       } catch (err) {
+	console.log('error: ', err);
         res.redirect('/#' +
         querystring.stringify({
           error: 'invalid_token'

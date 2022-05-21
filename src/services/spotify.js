@@ -1,4 +1,5 @@
 import { refreshAccessToken } from "./token_helpers"
+import fetch from 'node-fetch';
 
 export const getDeviceId = async (authToken) => {
     if (!authToken) {

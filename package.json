@@ -44,9 +44,7 @@
     "redux-thunk": "2.3.0",
     "uuid": "8.3.2"
   },
-  "optionalDependencies": {
-    "onoff": "5.0.1"
-  },
+  "optionalDependencies": {},
   "eslintConfig": {
     "extends": "react-app"
   },
