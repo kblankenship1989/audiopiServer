@@ -19,8 +19,6 @@ export const getDeviceId = async (authToken) => {
         });
         const jsonResponse = await response.json();
 
-        console.log('devices: ', jsonResponse);
-
         const {
             devices
         } = jsonResponse;
@@ -67,6 +65,7 @@ export const startPlayback = async (authToken, deviceId, contextUri) => {
 
     if (!deviceId) {
         deviceId = (await getDeviceId(authToken)).deviceId;
+        console.log(deviceId);
     }
 
     const body = {
@@ -76,15 +75,17 @@ export const startPlayback = async (authToken, deviceId, contextUri) => {
         },
         "position_ms": 0
     }
+    console.log(body);
 
     try {
-        await fetch(`https://api.spotify.com/v1/me/player/play?device_id=${deviceId}`, {
+        const response = await fetch(`https://api.spotify.com/v1/me/player/play?device_id=${deviceId}`, {
             headers: {
                 'Authorization': `Bearer ${authToken}`
             },
             method: 'PUT',
             body
         });
+        console.log(await response.json())
     } catch (err) {
         console.log(err);
     }
