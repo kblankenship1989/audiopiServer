@@ -2,10 +2,9 @@ import fetch from 'node-fetch';
 import {writeFile, readFileSync} from 'fs';
 import {join} from 'path';
 
+const filePath = join(__dirname, '../../.token');
+
 export const storeRefreshToken = (refreshToken) => {
-	console.log('storing: ', refreshToken);
-    const filePath = join(__dirname, '../../.token');
-    console.log(filePath);
     writeFile(filePath, refreshToken, {
         encoding: 'utf8',
         mode: 0o600,
@@ -23,7 +22,7 @@ export const storeRefreshToken = (refreshToken) => {
 }
 
 export const getRefreshToken = () => {
-    const refreshToken = readFileSync(join(__dirname, '../../.token'));
+    const refreshToken = readFileSync(filePath, 'utf8');
     console.log('reading: ', refreshToken);
 	return refreshToken;
 }

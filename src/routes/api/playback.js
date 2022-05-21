@@ -1,7 +1,6 @@
 import {
     Router
 } from 'express';
-import fetch from 'node-fetch';
 import { getDeviceId, getPlaylists, startPlayback } from '../../services/spotify';
 
 const playbackRouter = Router();
