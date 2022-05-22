@@ -1,7 +1,7 @@
 import {
     Router
 } from 'express';
-import { getDeviceId, getPlaylists, startPlayback } from '../../services/spotify';
+import { getDeviceId, getPlaylists, pausePlayback, startPlayback } from '../../services/spotify';
 
 const playbackRouter = Router();
 
@@ -19,6 +19,11 @@ playbackRouter.get('/device', async (req, res) => {
         startPlayback(null, null, req.body.context_uri);
         res.statusCode = 200;
         res.send("Playback started")
+    })
+    .put('/pause', function (req, res) {
+        pausePlayback();
+        res.statusCode = 200;
+        res.send("Playback puased")
     });
 
 export default playbackRouter;
