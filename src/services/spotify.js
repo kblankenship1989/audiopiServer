@@ -23,8 +23,11 @@ export const getDeviceId = async (authToken) => {
             devices
         } = jsonResponse;
 
-        const deviceId = devices.find((device) => device.name === 'raspotify (pandorapi)').id;
-        return {deviceId};
+        const raspotify = devices.find((device) => device.name === 'raspotify (pandorapi)');
+	if (raspotify) {
+        	return {deviceId: raspotify.id};
+	}
+	throw new Error('Raspotify not available.');
     } catch (err) {
         console.log(err);
         return null;
