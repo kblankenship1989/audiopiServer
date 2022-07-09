@@ -89,8 +89,12 @@ export const startPlayback = async (authToken, deviceId, contextUri) => {
             body
         });
         console.log(await response.json())
+
+        return true;
     } catch (err) {
         console.log(err);
+
+        return false
     }
 }
 

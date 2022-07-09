@@ -24,7 +24,7 @@ export const startAlarmPlayback = async (alarmId) => {
     const authToken = await refreshAccessToken();
     const deviceId = await getDeviceId(authToken);
     setAlarmTimeout(authToken, deviceId);
-    await startPlayback(authToken, deviceId, alarm.contextUri)
+    return await startPlayback(authToken, deviceId, alarm.contextUri)
 };
 
 export const getNextAlarm = (alarmId) => {

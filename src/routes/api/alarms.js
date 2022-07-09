@@ -39,8 +39,10 @@ alarmsRouter.get('/', function (req, res) {
         res.json(nextAlarmActive);
     })
     .put('/:alarmId/test', function (req, res) {
-        startAlarmPlayback(req.params.alarmId);
+        const startSuccessful = startAlarmPlayback(req.params.alarmId);
         res.statusCode = 200;
+        res.setHeader('Content-Type', 'application/json');
+        res.json({startSuccessful})
     })
     .delete('/:alarmId', function (req, res) {
         const deletedAlarmId = req.params.alarmId;
