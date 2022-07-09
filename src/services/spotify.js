@@ -25,7 +25,7 @@ export const getDeviceId = async (authToken) => {
 
         const raspotify = devices.find((device) => device.name === 'raspotify (pandorapi)');
 	if (raspotify) {
-        	return {deviceId: raspotify.id};
+        return raspotify.id;
 	}
 	throw new Error('Raspotify not available.');
     } catch (err) {
@@ -67,7 +67,7 @@ export const startPlayback = async (authToken, deviceId, contextUri) => {
     }
 
     if (!deviceId) {
-        deviceId = (await getDeviceId(authToken)).deviceId;
+        deviceId = await getDeviceId(authToken);
         console.log(deviceId);
     }
 
