@@ -88,8 +88,6 @@ export const updateAlarm = (alarmId, updatedAlarm) => {
         alarmJobs[alarmId].reschedule(schedule);
         return getNextAlarm(updatedAlarm.id);
     }
-
-    removeAlarm(updatedAlarm.id);
 };
 
 export const getAlarms = () => {
