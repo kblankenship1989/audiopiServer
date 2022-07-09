@@ -68,8 +68,8 @@ export const startPlayback = async (authToken, deviceId, contextUri) => {
 
     if (!deviceId) {
         deviceId = await getDeviceId(authToken);
-        console.log(deviceId);
     }
+    console.log('deviceId: ', deviceId);
 
     const body = JSON.stringify({
         "context_uri": contextUri,
