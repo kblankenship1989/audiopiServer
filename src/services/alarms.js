@@ -71,7 +71,10 @@ export const updateAlarm = (alarmId, updatedAlarm) => {
 
     const newAlarms = currentAlarms.map((alarm) => {
         if (alarm.id == alarmId) {
-            return updatedAlarm;
+            return {
+                ...alarm,
+                ...updatedAlarm
+            };
         }
 
         return alarm;
