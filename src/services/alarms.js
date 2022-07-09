@@ -82,11 +82,12 @@ export const updateAlarm = (alarmId, updatedAlarm) => {
 
     updateSetting('alarms', newAlarms);
 
+    const alarm = newAlarms.find((alarm) => alarm.id === alarmId);
 
-    if (updatedAlarm.isEnabled) {
-        const schedule = getSchedule(updatedAlarm);
+    if (alarm.isEnabled) {
+        const schedule = getSchedule(alarm);
         alarmJobs[alarmId].reschedule(schedule);
-        return getNextAlarm(updatedAlarm.id);
+        return getNextAlarm(alarm.id);
     }
 };
 
