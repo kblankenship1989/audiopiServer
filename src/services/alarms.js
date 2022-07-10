@@ -10,9 +10,9 @@ const alarmJobs = {};
 
 const getTimeout = () => getSettings().timeoutInMinutes * 60000;
 
-const setAlarmTimeout = (authToken, deviceId) => {
+const setAlarmTimeout = () => {
     setTimeout(async () => {
-        pausePlayback(authToken, deviceId)
+        pausePlayback()
     }, getTimeout())
 };
 
@@ -23,7 +23,7 @@ export const startAlarmPlayback = async (alarmId) => {
 
     const authToken = await refreshAccessToken();
     const deviceId = await getDeviceId(authToken);
-    setAlarmTimeout(authToken, deviceId);
+    setAlarmTimeout();
     return await startPlayback(authToken, deviceId, alarm.contextUri)
 };
 

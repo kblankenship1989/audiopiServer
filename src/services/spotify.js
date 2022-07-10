@@ -81,14 +81,13 @@ export const startPlayback = async (authToken, deviceId, contextUri) => {
     console.log(body);
 
     try {
-        const response = await fetch(`https://api.spotify.com/v1/me/player/play?device_id=${deviceId}`, {
+        await fetch(`https://api.spotify.com/v1/me/player/play?device_id=${deviceId}`, {
             headers: {
                 'Authorization': `Bearer ${authToken}`
             },
             method: 'PUT',
             body
         });
-        console.log(await response.json())
 
         return true;
     } catch (err) {
