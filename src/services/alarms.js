@@ -17,7 +17,7 @@ const setAlarmTimeout = () => {
 };
 
 export const startAlarmPlayback = async (alarmId) => {
-    const alarm = getSettings().alarms.find((alarm) => alarm.alarmId = alarmId);
+    const alarm = getSettings().alarms.find((alarm) => alarm.alarmId === alarmId);
 
     updateRelays(alarm.relays);
 
@@ -61,7 +61,7 @@ export const addAlarm = (alarmSettings) => {
 
     if (newAlarm.isEnabled) {
         const schedule = getSchedule(newAlarm);
-        alarmJobs[newAlarm.alarmId] = scheduleJob(newAlarm.name, schedule, startAlarmPlayback);
+        alarmJobs[newAlarm.alarmId] = scheduleJob(newAlarm.name, schedule, () => startAlarmPlayback(newAlarm.alarmId));
         return getNextAlarm(newAlarm.alarmId);
     }
 };
@@ -104,6 +104,6 @@ export const initializeAlarms = (alarms) => {
 
     alarms.forEach((alarm) => {
         const schedule = getSchedule(alarm);
-        alarmJobs[alarm.alarmId] = scheduleJob(alarm.name, schedule, startAlarmPlayback);
+        alarmJobs[alarm.alarmId] = scheduleJob(alarm.name, schedule, () => startAlarmPlayback(alarm.alarmId));
     });
 };
