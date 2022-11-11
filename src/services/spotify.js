@@ -1,33 +1,38 @@
 import { refreshAccessToken } from "./token_helpers"
 import fetch from 'node-fetch';
 
+let raspotify;
+
 export const getDeviceId = async (authToken) => {
-    if (!authToken) {
-        authToken = await refreshAccessToken();
-    }
-
-    if (!authToken) {
-        throw new Error('No auth token available');
-    }
-
     try {
-        const response = await fetch('https://api.spotify.com/v1/me/player/devices', {
-            headers: {
-                'Authorization': `Bearer ${authToken}`
-            },
-            method: 'GET'
-        });
-        const jsonResponse = await response.json();
+        if (!raspotify) {
+            if (!authToken) {
+                authToken = await refreshAccessToken();
+            }
+        
+            if (!authToken) {
+                throw new Error('No auth token available');
+            }
+            const response = await fetch('https://api.spotify.com/v1/me/player/devices', {
+                headers: {
+                    'Authorization': `Bearer ${authToken}`
+                },
+                method: 'GET'
+            });
+            const jsonResponse = await response.json();
 
-        const {
-            devices
-        } = jsonResponse;
+            const {
+                devices
+            } = jsonResponse;
 
-        const raspotify = devices.find((device) => device.name === 'raspotify (pandorapi)');
-	if (raspotify) {
-        return raspotify.id;
-	}
-	throw new Error('Raspotify not available.');
+            raspotify = devices.find((device) => device.name === 'raspotify (pandorapi)'); // point to /etc/default/raspotify -> DEVICE_NAME
+        }
+
+        if (raspotify) {
+            return raspotify.id;
+        }
+
+        throw new Error('Raspotify not available.');
     } catch (err) {
         console.log(err);
         return null;
@@ -61,15 +66,15 @@ export const getPlaylists = async (authToken) => {
     }
 }
 
-export const startPlayback = async (authToken, deviceId, contextUri) => {
+export const startPlayback = async (authToken, contextUri) => {
     if (!authToken) {
         authToken = await refreshAccessToken();
     }
 
-    if (!deviceId) {
-        deviceId = await getDeviceId(authToken);
+    if (!raspotify) {
+        await getDeviceId(authToken);
     }
-    console.log('deviceId: ', deviceId);
+    console.log('deviceId: ', raspotify.id);
 
     const body = JSON.stringify({
         "context_uri": contextUri,
@@ -81,7 +86,7 @@ export const startPlayback = async (authToken, deviceId, contextUri) => {
     console.log(body);
 
     try {
-        await fetch(`https://api.spotify.com/v1/me/player/play?device_id=${deviceId}`, {
+        await fetch(`https://api.spotify.com/v1/me/player/play?device_id=${raspotify.id}`, {
             headers: {
                 'Authorization': `Bearer ${authToken}`
             },
@@ -92,22 +97,22 @@ export const startPlayback = async (authToken, deviceId, contextUri) => {
         return true;
     } catch (err) {
         console.log(err);
-
+        raspotify = null;
         return false
     }
 }
 
-export const pausePlayback = async (authToken, deviceId) => {
+export const pausePlayback = async (authToken) => {
     if (!authToken) {
         authToken = await refreshAccessToken();
     }
 
-    if (!deviceId) {
-        deviceId = await getDeviceId(authToken);
+    if (!raspotify) {
+        await getDeviceId(authToken);
     }
 
     try {
-        await fetch(`https://api.spotify.com/v1/me/player/pause?device_id=${deviceId}`, {
+        await fetch(`https://api.spotify.com/v1/me/player/pause?device_id=${raspotify.id}`, {
             headers: {
                 'Authorization': `Bearer ${authToken}`
             },
@@ -115,5 +120,7 @@ export const pausePlayback = async (authToken, deviceId) => {
         });
     } catch (err) {
         console.log(err);
+
+        raspotify = null;
     }
 }
