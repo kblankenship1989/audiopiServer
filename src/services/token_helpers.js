@@ -1,12 +1,24 @@
 import fetch from 'node-fetch';
 import {writeFile, readFileSync} from 'fs';
 import {join} from 'path';
+import {networkInterfaces} from 'os';
 
 // eslint-disable-next-line no-undef
 const filePath = join(__dirname, '../../.token');
 
+const getIpAddress = () => {
+    const nets = networkInterfaces();
+    console.log(Object.keys(nets));
+    const net = Object.entries(nets).find((net) => net[0] === 'eth0')[1];
+    const ipv4Net = net.find((netFam) => netFam.family === 4 || netFam.family === 'IPv4' && !netFam.internal);
+
+    console.log(ipv4Net.address);
+
+    return ipv4Net.address;
+}
+
 export const client_id = '34b4f9e3c0954c59a171a424717fdec6'; // Your client id
-export const redirect_uri = "http://localhost:3000/api" + "/auth/callback"; // Your redirect uri
+export const redirect_uri = `http://${getIpAddress()}:3000/api/auth/callback`; // Your redirect uri
 
 let accessToken;
 
