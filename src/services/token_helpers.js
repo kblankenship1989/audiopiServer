@@ -9,7 +9,12 @@ const filePath = join(__dirname, '../../.token');
 const getIpAddress = () => {
     const nets = networkInterfaces();
     console.log(Object.keys(nets));
-    const net = Object.entries(nets).find((net) => net[0] === 'eth0')[1];
+    let net;
+    try {
+        net = Object.entries(nets).find((net) => net[0] === 'eth0')[1];
+    } catch (_err) {
+        net = Object.entries(nets).find((net) => net[0] === 'wlan0')[1];
+    }
     const ipv4Net = net.find((netFam) => netFam.family === 4 || netFam.family === 'IPv4' && !netFam.internal);
 
     console.log(ipv4Net.address);
