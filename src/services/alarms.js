@@ -50,7 +50,7 @@ const getSchedule = (alarm) => {
 export const addAlarm = (alarmSettings) => {
     const newAlarm = {
         ...alarmSettings,
-        id: v4()
+        alarmId: v4()
     };
 
     const currentAlarms = getSettings().alarms;
