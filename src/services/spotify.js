@@ -3,12 +3,11 @@ import fetch from 'node-fetch';
 
 let raspotify;
 
-export const getDeviceId = async (authToken) => {
+export const getDeviceId = async () => {
     try {
         if (!raspotify) {
-            if (!authToken) {
-                authToken = await refreshAccessToken();
-            }
+            console.log('Fetching device Id');
+            const authToken = await refreshAccessToken();
         
             if (!authToken) {
                 throw new Error('No auth token available');
@@ -72,7 +71,7 @@ export const startPlayback = async (authToken, contextUri) => {
     }
 
     if (!raspotify) {
-        await getDeviceId(authToken);
+        await getDeviceId();
     }
     console.log('deviceId: ', raspotify.id);
 
@@ -108,7 +107,7 @@ export const pausePlayback = async (authToken) => {
     }
 
     if (!raspotify) {
-        await getDeviceId(authToken);
+        await getDeviceId();
     }
 
     try {
