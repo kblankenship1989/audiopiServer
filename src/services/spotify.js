@@ -1,4 +1,4 @@
-import { refreshAccessToken } from "./token_helpers"
+import { getAccessToken } from "./token_helpers"
 import fetch from 'node-fetch';
 
 let raspotify;
@@ -7,11 +7,8 @@ export const getDeviceId = async () => {
     try {
         if (!raspotify) {
             console.log('Fetching device Id');
-            const authToken = await refreshAccessToken();
-        
-            if (!authToken) {
-                throw new Error('No auth token available');
-            }
+            const authToken = await getAccessToken();
+
             const response = await fetch('https://api.spotify.com/v1/me/player/devices', {
                 headers: {
                     'Authorization': `Bearer ${authToken}`
@@ -38,10 +35,8 @@ export const getDeviceId = async () => {
     }
 }
 
-export const getPlaylists = async (authToken) => {
-    if (!authToken) {
-        authToken = await refreshAccessToken();
-    }
+export const getPlaylists = async () => {
+    const authToken = await getAccessToken();
 
     try {
         const response = await fetch('https://api.spotify.com/v1/me/playlists', {
@@ -65,10 +60,8 @@ export const getPlaylists = async (authToken) => {
     }
 }
 
-export const startPlayback = async (authToken, contextUri) => {
-    if (!authToken) {
-        authToken = await refreshAccessToken();
-    }
+export const startPlayback = async (contextUri) => {
+    const authToken = await getAccessToken();
 
     if (!raspotify) {
         await getDeviceId();
@@ -101,10 +94,8 @@ export const startPlayback = async (authToken, contextUri) => {
     }
 }
 
-export const pausePlayback = async (authToken) => {
-    if (!authToken) {
-        authToken = await refreshAccessToken();
-    }
+export const pausePlayback = async () => {
+    const authToken = await getAccessToken();
 
     if (!raspotify) {
         await getDeviceId();

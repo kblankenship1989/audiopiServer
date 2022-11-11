@@ -2,7 +2,7 @@ import {Router} from 'express';
 import querystring from 'querystring';
 import fetch from 'node-fetch';
 import { challenge_from_verifier, generateVerifier, getStateValue } from '../../services/code-helper';
-import {client_id, redirect_uri, storeRefreshToken, urlEncodeBody} from '../../services/token_helpers';
+import {client_id, parseAccessTokenResponse, redirect_uri, urlEncodeBody} from '../../services/token_helpers';
 
 
 let challengeValues = {
@@ -68,11 +68,7 @@ authRouter.get('/login', async (req, res) => {
           body
         });
 
-        const {
-          refresh_token
-        } = await response.json();
-
-        storeRefreshToken(refresh_token);
+        await parseAccessTokenResponse(response);
         res.redirect('/home');
       } catch (err) {
 	console.log('error: ', err);

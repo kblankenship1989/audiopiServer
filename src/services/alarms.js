@@ -4,7 +4,6 @@ import {v4} from 'uuid';
 import { getSettings, updateSetting } from './settings';
 import { updateRelays } from './relays';
 import { pausePlayback, startPlayback } from './spotify';
-import { refreshAccessToken } from './token_helpers';
 
 const alarmJobs = {};
 
@@ -21,9 +20,8 @@ export const startAlarmPlayback = async (alarmId) => {
 
     updateRelays(alarm.relays);
 
-    const authToken = await refreshAccessToken();
     setAlarmTimeout();
-    return await startPlayback(authToken, alarm.contextUri);
+    return await startPlayback(alarm.contextUri);
 };
 
 export const getNextAlarm = (alarmId) => {

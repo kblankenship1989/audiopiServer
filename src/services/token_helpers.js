@@ -8,7 +8,9 @@ const filePath = join(__dirname, '../../.token');
 export const client_id = '34b4f9e3c0954c59a171a424717fdec6'; // Your client id
 export const redirect_uri = "http://localhost:3000/api" + "/auth/callback"; // Your redirect uri
 
-export const storeRefreshToken = (refreshToken) => {
+let accessToken;
+
+const storeRefreshToken = (refreshToken) => {
     writeFile(filePath, refreshToken, {
         encoding: 'utf8',
         mode: 0o600,
@@ -23,9 +25,20 @@ export const storeRefreshToken = (refreshToken) => {
     });
 }
 
-export const getRefreshToken = () => {
-    const refreshToken = readFileSync(filePath, 'utf8');
-	return refreshToken;
+export const parseAccessTokenResponse = async (response) => {
+    const {
+        refresh_token,
+        access_token,
+        expires_in
+    } = await response.json();
+
+    storeRefreshToken(refresh_token);
+
+    accessToken = access_token
+
+    setTimeout(() => {
+        accessToken = null;
+    }, Number(expires_in) * 1000);
 }
 
 export const urlEncodeBody = (body) => {
@@ -38,14 +51,14 @@ export const urlEncodeBody = (body) => {
     return formBody.join("&");
 }
 
-export const refreshAccessToken = async () => {
-    const refreshToken = getRefreshToken();
+const refreshAccessToken = async () => {
+    const refreshToken = readFileSync(filePath, 'utf8');
 
     const body = urlEncodeBody({
         grant_type: 'refresh_token',
         refresh_token: refreshToken,
         client_id
-    })
+    });
 
     try {
         const response = await fetch('https://accounts.spotify.com/api/token', {
@@ -59,16 +72,20 @@ export const refreshAccessToken = async () => {
         if (!response.ok) {
             throw new Error(`Refresh token failed with status: ${response.status} - ${response.statusText}`);
         }
-        const {
-            access_token,
-            refresh_token
-        } = await response.json();
-
-        storeRefreshToken(refresh_token);
-
-        return access_token;
+        
+        await parseAccessTokenResponse(response);
     } catch (err) {
         console.log(err);
-        return null;
+
+        throw err;
     }
+}
+
+export const getAccessToken = async () => {
+    if (!accessToken) {
+        await refreshAccessToken();
+    }
+
+
+    return accessToken;
 }
