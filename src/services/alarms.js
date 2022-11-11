@@ -17,7 +17,7 @@ const setAlarmTimeout = () => {
 };
 
 export const startAlarmPlayback = async (alarmId) => {
-    const alarm = getSettings().alarms.find((alarm) => alarm.id = alarmId);
+    const alarm = getSettings().alarms.find((alarm) => alarm.alarmId = alarmId);
 
     updateRelays(alarm.relays);
 
@@ -36,7 +36,7 @@ export const removeAlarm = (alarmId) => {
 
     const currentAlarms = getSettings().alarms;
 
-    const updatedAlarms = currentAlarms.filter((alarm) => alarm.id !== alarmId)
+    const updatedAlarms = currentAlarms.filter((alarm) => alarm.alarmId !== alarmId)
 
     updateSetting('alarms', updatedAlarms);
 
@@ -61,8 +61,8 @@ export const addAlarm = (alarmSettings) => {
 
     if (newAlarm.isEnabled) {
         const schedule = getSchedule(newAlarm);
-        alarmJobs[newAlarm.id] = scheduleJob(newAlarm.name, schedule, startAlarmPlayback);
-        return getNextAlarm(newAlarm.id);
+        alarmJobs[newAlarm.alarmId] = scheduleJob(newAlarm.name, schedule, startAlarmPlayback);
+        return getNextAlarm(newAlarm.alarmId);
     }
 };
 
@@ -70,7 +70,7 @@ export const updateAlarm = (alarmId, updatedAlarm) => {
     const currentAlarms = getSettings().alarms; 
 
     const newAlarms = currentAlarms.map((alarm) => {
-        if (alarm.id == alarmId) {
+        if (alarm.alarmId == alarmId) {
             return {
                 ...alarm,
                 ...updatedAlarm
@@ -82,12 +82,12 @@ export const updateAlarm = (alarmId, updatedAlarm) => {
 
     updateSetting('alarms', newAlarms);
 
-    const alarm = newAlarms.find((alarm) => alarm.id === alarmId);
+    const alarm = newAlarms.find((alarm) => alarm.alarmId === alarmId);
 
     if (alarm.isEnabled) {
         const schedule = getSchedule(alarm);
         alarmJobs[alarmId].reschedule(schedule);
-        return getNextAlarm(alarm.id);
+        return getNextAlarm(alarm.alarmId);
     }
 };
 
@@ -96,7 +96,7 @@ export const getAlarms = () => {
 
     return alarms.map((alarm) => ({
         ...alarm,
-        nextActivation: getNextAlarm(alarm.id)
+        nextActivation: getNextAlarm(alarm.alarmId)
     }));
 };
 
@@ -104,6 +104,6 @@ export const initializeAlarms = (alarms) => {
 
     alarms.forEach((alarm) => {
         const schedule = getSchedule(alarm);
-        alarmJobs[alarm.id] = scheduleJob(alarm.name, schedule, startAlarmPlayback);
+        alarmJobs[alarm.alarmId] = scheduleJob(alarm.name, schedule, startAlarmPlayback);
     });
 };
