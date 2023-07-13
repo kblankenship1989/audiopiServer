@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {Form, Card, FormGroup, CardBody, CardTitle, Label, Input, Row, Col, Button} from 'reactstrap';
-import Select from 'react-select';
-import { StationSelect } from './StationsComponent';
+import {Form, Card, FormGroup, CardBody, CardTitle, Label, Input, Row, Button} from 'reactstrap';
 import { apiBaseUrl } from '../helpers/baseUrls';
 
 export const SettingsPage = (props) => {
@@ -89,28 +87,6 @@ export const SettingsPage = (props) => {
                     </FormGroup>
                 </CardBody>
             </Card>
-            {/* <br />
-            <Card body>
-                <CardTitle>Pandora Configurations</CardTitle>
-                <CardBody>
-                    <FormGroup>
-                        <Label for="username">Username</Label>
-                        <Input type="text" name="username" id="username" placeholder="Pandora Account UserName" />
-                    </FormGroup>
-                    <FormGroup>
-                        <Label for="password">Password</Label>
-                        <Input type="password" name="password" id="password" />
-                    </FormGroup>
-                    <FormGroup>
-                        <Label for="defaultstation">Station on Start</Label>
-                        <StationSelect id="defaultstation" name="defaultstation"/>
-                    </FormGroup>
-                    <FormGroup>
-                        <Label for="history">Song History Size</Label>
-                        <Input type="number" min={0} max={15} step={1} name="history" id="history"/>
-                    </FormGroup>
-                </CardBody>
-            </Card> */}
             <br />
             <Button type="submit">Save Settings</Button>
         </Form>

@@ -10,11 +10,11 @@ import cors from 'cors';
 
 import indexRouter from './routes/index';
 import alarmsRouter from './routes/api/alarms';
-import playerRouter from './routes/api/player';
-import pandoraRouter from './routes/api/pandora';
 import relaysRouter from './routes/api/relays';
 import { subscribe } from './routes/sse';
 import settingsRouter from './routes/api/settings';
+import authRouter from './routes/api/auth';
+import playbackRouter from './routes/api/playback';
 
 export const app = express();
 export const server = Server(app);
@@ -34,11 +34,11 @@ app.use(cookieParser());
 app.use('/dist', express.static(join(__dirname, '../dist')));
 app.use(cors());
 
-app.use('/api/alarms', alarmsRouter)
-app.use('/api/player', playerRouter);
-app.use('/api/pandora', pandoraRouter);
+app.use('/api/alarms', alarmsRouter);
 app.use('/api/relays', relaysRouter);
 app.use('/api/settings', settingsRouter);
+app.use('/api/auth', authRouter);
+app.use('/api/playback', playbackRouter);
 
 app.use('/sse', cors(), subscribe);
 

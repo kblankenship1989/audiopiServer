@@ -1,6 +1,4 @@
 import { EventEmitter } from 'eventemitter3';
-import { getPlayerState } from './api/player';
-import { getPandoraState } from './api/pandora';
 import { getRelayState } from '../services/relays';
 
 const emitter = new EventEmitter();
@@ -26,14 +24,6 @@ export const subscribe = (req, res) => {
 		res.write(`event: ${eventName}\n`);
 		res.write(`data: ${JSON.stringify(data)}\n\n`);
     };
-    
-    const onPlayer = function(data) {
-        return onEvent('player', data);
-    };
-
-    const onPandora = function(data) {
-        return onEvent('pandora', data);
-    };
 
     const onRelays = function(data) {
         return onEvent('relays', data);
@@ -41,31 +31,16 @@ export const subscribe = (req, res) => {
 
     if (id === 0) {
         setTimeout(() => {
-            onPlayer(getPlayerState());
-            onPandora(getPandoraState());
             onRelays(getRelayState());
         }, 500);
     }
-    
-    emitter.on('player', onPlayer);
-    emitter.on('pandora', onPandora);
     emitter.on('relays', onRelays)
 
 	// Clear heartbeat and listener
 	req.on('close', function() {
 		clearInterval(hbt);
-        emitter.removeListener('player', onPlayer);
-        emitter.removeListener('pandora', onPandora);
         emitter.removeListener('relays', onRelays)
 	});
-};
-
-export const publishPandora = (eventData) => {
-    emitter.emit('pandora', eventData);
-};
-
-export const publishPlayer = (eventData) => {
-    emitter.emit('player', eventData);
 };
 
 export const publishRelays = (eventData) => {

@@ -1,9 +1,18 @@
 import * as ActionTypes from '../ActionTypes';
-import { getDefaultSettings, Settings } from '../states/settings';
+import { getDefaultRelays } from './relays';
 
-const updateSettings = (state, payload) => Settings({
+const updateSettings = (state, payload) => ({
     ...state,
     ...payload
+});
+
+export const getDefaultSettings = () => ({
+    relays: getDefaultRelays(),
+    timeoutInMinutes: 120,
+    closeTimeoutInMinutes: 15,
+    defaultVolume: 83,
+    songHistoryLength: 5,
+    alarms: []
 });
 
 export const settings = (state = getDefaultSettings(), action) => {

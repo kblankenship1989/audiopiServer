@@ -11,7 +11,6 @@ import debugLib from 'debug';
 import { initializeAlarms } from '../services/alarms';
 import { getSettings } from '../services/settings';
 import { updateRelays } from '../services/relays';
-import { getInitialPandoraState } from '../routes/api/pandora';
 
 const debug = debugLib('audiopiserver:server');
 
@@ -97,5 +96,4 @@ function onListening() {
   
   initializeAlarms(settings.alarms);
   updateRelays(settings.relays);
-  getInitialPandoraState();
 }

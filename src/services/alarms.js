@@ -1,30 +1,27 @@
 import {scheduleJob} from 'node-schedule';
 import {v4} from 'uuid';
 
-import { startPianoBar } from './pianobar';
-import { getPlayerState, setPlayerState } from '../routes/api/player';
 import { getSettings, updateSetting } from './settings';
-import { getInitialPandoraState } from '../routes/api/pandora';
-import { resetPlayerTimeout } from './playerTimeout';
-import { publishPlayer } from '../routes/sse';
 import { updateRelays } from './relays';
+import { pausePlayback, startPlayback } from './spotify';
 
 const alarmJobs = {};
 
-const startPianoBarCallback = async (alarmId) => {
-    const alarm = getSettings().alarms.find((alarm) => alarm.id = alarmId);
+const getTimeout = () => getSettings().timeoutInMinutes * 60000;
+
+const setAlarmTimeout = () => {
+    setTimeout(async () => {
+        pausePlayback()
+    }, getTimeout())
+};
+
+export const startAlarmPlayback = async (alarmId) => {
+    const alarm = getSettings().alarms.find((alarm) => alarm.alarmId === alarmId);
 
     updateRelays(alarm.relays);
 
-    if (!getPlayerState().playerRunning) {
-        await startPianoBar();
-        getInitialPandoraState();
-        setPlayerState('playerRunning', true);
-        setPlayerState('isPaused', false);
-        setPlayerState('playerTimedOut', false);
-        resetPlayerTimeout();
-        publishPlayer(getPlayerState());
-    }
+    setAlarmTimeout();
+    return await startPlayback(alarm.contextUri);
 };
 
 export const getNextAlarm = (alarmId) => {
@@ -36,7 +33,7 @@ export const removeAlarm = (alarmId) => {
 
     const currentAlarms = getSettings().alarms;
 
-    const updatedAlarms = currentAlarms.filter((alarm) => alarm.id !== alarmId)
+    const updatedAlarms = currentAlarms.filter((alarm) => alarm.alarmId !== alarmId)
 
     updateSetting('alarms', updatedAlarms);
 
@@ -50,7 +47,7 @@ const getSchedule = (alarm) => {
 export const addAlarm = (alarmSettings) => {
     const newAlarm = {
         ...alarmSettings,
-        id: v4()
+        alarmId: v4()
     };
 
     const currentAlarms = getSettings().alarms;
@@ -61,8 +58,8 @@ export const addAlarm = (alarmSettings) => {
 
     if (newAlarm.isEnabled) {
         const schedule = getSchedule(newAlarm);
-        alarmJobs[newAlarm.id] = scheduleJob(newAlarm.name, schedule, startPianoBarCallback);
-        return getNextAlarm(newAlarm.id);
+        alarmJobs[newAlarm.alarmId] = scheduleJob(newAlarm.name, schedule, () => startAlarmPlayback(newAlarm.alarmId));
+        return getNextAlarm(newAlarm.alarmId);
     }
 };
 
@@ -70,8 +67,11 @@ export const updateAlarm = (alarmId, updatedAlarm) => {
     const currentAlarms = getSettings().alarms; 
 
     const newAlarms = currentAlarms.map((alarm) => {
-        if (alarm.id == alarmId) {
-            return updatedAlarm;
+        if (alarm.alarmId == alarmId) {
+            return {
+                ...alarm,
+                ...updatedAlarm
+            };
         }
 
         return alarm;
@@ -79,14 +79,13 @@ export const updateAlarm = (alarmId, updatedAlarm) => {
 
     updateSetting('alarms', newAlarms);
 
+    const alarm = newAlarms.find((alarm) => alarm.alarmId === alarmId);
 
-    if (updatedAlarm.isEnabled) {
-        const schedule = getSchedule(updatedAlarm);
+    if (alarm.isEnabled) {
+        const schedule = getSchedule(alarm);
         alarmJobs[alarmId].reschedule(schedule);
-        return getNextAlarm(updatedAlarm.id);
+        return getNextAlarm(alarm.alarmId);
     }
-
-    removeAlarm(updatedAlarm.id);
 };
 
 export const getAlarms = () => {
@@ -94,7 +93,7 @@ export const getAlarms = () => {
 
     return alarms.map((alarm) => ({
         ...alarm,
-        nextActivation: getNextAlarm(alarm.id)
+        nextActivation: getNextAlarm(alarm.alarmId)
     }));
 };
 
@@ -102,6 +101,6 @@ export const initializeAlarms = (alarms) => {
 
     alarms.forEach((alarm) => {
         const schedule = getSchedule(alarm);
-        alarmJobs[alarm.id] = scheduleJob(alarm.name, schedule, startPianoBarCallback);
+        alarmJobs[alarm.alarmId] = scheduleJob(alarm.name, schedule, () => startAlarmPlayback(alarm.alarmId));
     });
 };
