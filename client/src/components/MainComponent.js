@@ -8,6 +8,7 @@ import { SSEUrl } from '../helpers/baseUrls';
 import { SettingsPage } from './SettingsComponent';
 import { RelayComponent } from './RelayComponent';
 import { MainButtons } from './MainButtons';
+import { AlarmsPage } from './AlarmsComponent';
 
 export const Main = (props) => {
     const [isNavOpen, setIsNavOpen] = useState(false);
@@ -53,11 +54,7 @@ export const Main = (props) => {
                     component={MainButtons}
                 />
                 <Route path="/settings" 
-                    render={(routeProps) => <SettingsPage
-                        {...routeProps}
-                        settings={props.settings}
-                        updateSettings={props.updateSettings}
-                    />}
+                    component={SettingsPage}
                 />
                 <Route exact path="/relays"
                     render={(routeProps) => <RelayComponent
@@ -65,6 +62,12 @@ export const Main = (props) => {
                         firstFloorRelayState={props.relays.firstFloorRelayState}
                         secondFloorRelayState={props.relays.secondFloorRelayState}
                         alarmOverride={props.relays.alarmOverride}
+                    />}
+                />
+                <Route path="/alarms" 
+                    render={(routeProps) => <AlarmsPage
+                        {...routeProps}
+                        relays={props.relays}
                     />}
                 />
                 <Redirect to="/home"/>

@@ -5,9 +5,6 @@
         "alarmOverride": true
     },
     "timeoutInMinutes": 121,
-    "closeTimeoutInMinutes": 15,
-    "defaultVolume": 83,
-    "songHistoryLength": 5,
     "alarms": [
         {
             "id": "12345689-12356",

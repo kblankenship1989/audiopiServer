@@ -16,6 +16,8 @@ export const MainButtons = () => {
             <br />
             <Col md={{ size: 4, offset: 4 }}><Button block color='light' tag={Link} to="/relays" ><FontAwesomeIcon icon={fas.faHome} /> Room Control</Button></Col>
             <br />
+            <Col md={{ size: 4, offset: 4 }}><Button block color='light' tag={Link} to="/alarms"><FontAwesomeIcon icon={fas.faClock} /> Alarms</Button></Col>
+            <br />
             <Col md={{ size: 4, offset: 4 }}><Button block color='light' tag={Link} to="/settings"><FontAwesomeIcon icon={fas.faWrench} /> Settings</Button></Col>
             <br />
             <Col md={{ size: 4, offset: 4 }}><Button block color='light' onClick={openGithub}><FontAwesomeIcon icon={fab.faGitAlt} /> Documentation</Button></Col>
