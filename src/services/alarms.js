@@ -81,6 +81,10 @@ export const updateAlarm = (alarmId, updatedAlarm) => {
 
     const alarm = newAlarms.find((alarm) => alarm.alarmId === alarmId);
 
+    if (alarmJobs[alarmId]) {
+        alarmJobs[alarmId].cancel();
+    }
+
     if (alarm.isEnabled) {
         const schedule = getSchedule(alarm);
         alarmJobs[alarmId].reschedule(schedule);
@@ -104,3 +108,13 @@ export const initializeAlarms = (alarms) => {
         alarmJobs[alarm.alarmId] = scheduleJob(alarm.name, schedule, () => startAlarmPlayback(alarm.alarmId));
     });
 };
+
+export const cancelNextRun = (alarmId) => {
+    if (alarmJobs[alarmId]) {
+        alarmJobs[alarmId].cancelNext();
+        return getNextAlarm(alarmId);
+    } else {
+        console.log('Failed to cancel next job for alarm ID: ' + alarmId);
+        return '';
+    }
+}

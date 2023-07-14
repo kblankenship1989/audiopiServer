@@ -45,7 +45,6 @@ export const getPlaylists = async () => {
             },
             method: 'GET'
         });
-        console.log(response);
 
         const {
             items

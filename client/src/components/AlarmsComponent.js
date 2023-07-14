@@ -163,13 +163,40 @@ export const AlarmsPage = (props) => {
         return days;
     }
 
-    const onSubmit = () => {
+    const onSubmit = (event) => {
         if (selectedAlarm.alarmId === 'add-new') {
-            addAlarm();
+            addAlarm(event);
         } else {
-            updateAlarm();
+            updateAlarm(event);
         }
     }
+
+    const cancelNext = (event) => {
+        event.preventDefault();
+        fetch(apiBaseUrl + `/alarms/${selectedAlarm.alarmId}/cancelNext`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(selectedAlarm),
+        })
+        .then((response) => {
+            return response.json();
+        })
+        .then(({nextInvocation}) => {
+            setSelectedAlarm({
+                nextInvocation
+            });
+            newAlarms = [...currentAlarms];
+            newAlarms.forEach((alarm) => {
+                if(alarm.alarmId === selectedAlarm.alarmId) {
+                    alarm.nextInvocation = nextInvocation;
+                }
+            });
+            setCurrentAlarms(newAlarms);
+        })
+    }
+
     return (
         <Form onSubmit={onSubmit}>
             <Card body>
@@ -196,6 +223,22 @@ export const AlarmsPage = (props) => {
                     </FormGroup>
                     {selectedAlarm ?
                         <>
+                            {selectedAlarm.nextInvocation ?
+                            <FormGroup>
+                                <Row>
+                                    <Label className="col-md-3" for="name">Next Run Time</Label>
+                                    <span>{(new Date(selectedAlarm.nextInvocation)).toLocaleString()}</span>
+                                    <Button
+                                        color="primary"
+                                        outline
+                                        onClick={() => cancelNext()}
+                                        active={true}
+                                    >
+                                        Cancel Next Run
+                                    </Button>
+                                </Row>
+                            </FormGroup>
+                            : null}
                             <FormGroup>
                                 <Row>
                                     <Label className="col-md-3" for="name">New Name</Label>
