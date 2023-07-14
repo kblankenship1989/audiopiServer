@@ -185,6 +185,7 @@ export const AlarmsPage = (props) => {
         })
         .then(({nextInvocation}) => {
             setSelectedAlarm({
+                ...selectedAlarm,
                 nextActivation: nextInvocation
             });
             newAlarms = [...currentAlarms];
