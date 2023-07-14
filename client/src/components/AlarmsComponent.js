@@ -188,7 +188,7 @@ export const AlarmsPage = (props) => {
                 ...selectedAlarm,
                 nextActivation: nextInvocation
             });
-            newAlarms = [...currentAlarms];
+            const newAlarms = [...currentAlarms];
             newAlarms.forEach((alarm) => {
                 if(alarm.alarmId === selectedAlarm.alarmId) {
                     alarm.nextActivation = nextInvocation;
