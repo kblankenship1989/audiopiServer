@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Button, ButtonGroup, Nav, NavItem, NavLink, TabPane, TabContent } from 'reactstrap';
 import { apiBaseUrl } from '../helpers/baseUrls';
+import {getNewRelayState, getRelayButton, firstFloorControls, firstFloorInputControl, secondFloorControls, secondFloorInputControl} from '../helpers/relay-helpers';
 
 export const RelayComponent = (props) => {
     const [activeTab, setActiveTab] = useState('FirstFloor');
@@ -15,129 +16,18 @@ export const RelayComponent = (props) => {
     }
 
     const toggleRelayState = (leftIndex, rightIndex, floor) => {
-        let currentState,
-            newState;
+        let newState;
 
         if (floor === 'FIRST') {
-            currentState = parseInt(props.firstFloorRelayState, 16);
+            newState = getNewRelayState(props.firstFloorRelayState, leftIndex, rightIndex);
         } else if (floor === 'SECOND') {
-            currentState = parseInt(props.secondFloorRelayState, 16);
+            newState = getNewRelayState(props.secondFloorRelayState, leftIndex, rightIndex);
         } else {
             return;
         }
 
-        const leftState = (currentState >> leftIndex) & 1;
-        const rightState = (currentState >> rightIndex) & 1;
-        const testIndex = (1 << leftIndex) | (1 << rightIndex);
-
-        if (leftState === rightState) {
-            newState = currentState ^ testIndex;
-        } else {
-            newState = currentState | testIndex;
-        }
-        fetch(apiBaseUrl + `/relays?key=${floor}&value=${newState.toString(16)}`, { method: 'POST' });
+        fetch(apiBaseUrl + `/relays?key=${floor}&value=${newState}`, { method: 'POST' });
     }
-
-    const getRelayButton = (state, label, clickHandler, block) => {
-        return (
-            <Button
-                block={block}
-                color={state ? 'success' : 'danger'}
-                onClick={clickHandler}>
-                {label}
-            </Button>
-        )
-    }
-
-    const firstFloorControls = [
-        {
-            label: 'Kitchen',
-            leftIndex: 11,
-            rightIndex: 3,
-            onState: 1
-        },
-        {
-            label: 'Patio',
-            leftIndex: 4,
-            rightIndex: 12,
-            onState: 1
-        },
-        {
-            label: 'Office',
-            leftIndex: 10,
-            rightIndex: 2,
-            onState: 1
-        },
-        {
-            label: 'Basement',
-            leftIndex: 5,
-            rightIndex: 13,
-            onState: 1
-        }
-    ];
-
-    const firstFloorInputControl = [
-        {
-            label: 'Aux',
-            leftIndex: 7,
-            rightIndex: 8,
-            onState: 1
-        },
-        {
-            label: 'Pi',
-            leftIndex: 7,
-            rightIndex: 8,
-            onState: 0
-        }
-    ];
-
-    const secondFloorControls = [
-        {
-            label: 'Master Bedroom',
-            leftIndex: 11,
-            rightIndex: 3,
-            onState: 1
-        },
-        {
-            label: 'Master Closet',
-            leftIndex: 4,
-            rightIndex: 12,
-            onState: 1
-        },
-        {
-            label: 'Master Bathroom',
-            leftIndex: 10,
-            rightIndex: 2,
-            onState: 1
-        },
-        {
-            label: 'Debbie\'s Room',
-            leftIndex: 5,
-            rightIndex: 13,
-            onState: 1
-        },
-        {
-            label: 'Henry\'s Room',
-            leftIndex: 9,
-            rightIndex: 1,
-            onState: 1
-        }
-    ];
-
-    const secondFloorInputControl = [
-        {
-            label: 'Aux',
-            leftIndex: 7,
-            rightIndex: 8,
-            onState: 1
-        },
-        {
-            label: 'Pi',
-            leftIndex: 7,
-            rightIndex: 8,
-            onState: 0
-        }
-    ];
 
     let currentState,
         leftState,
