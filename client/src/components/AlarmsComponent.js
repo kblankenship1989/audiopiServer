@@ -183,14 +183,14 @@ export const AlarmsPage = (props) => {
         .then((response) => {
             return response.json();
         })
-        .then(({nextInvocation}) => {
+        .then(({nextActivation}) => {
             setSelectedAlarm({
-                nextInvocation
+                nextActivation
             });
             newAlarms = [...currentAlarms];
             newAlarms.forEach((alarm) => {
                 if(alarm.alarmId === selectedAlarm.alarmId) {
-                    alarm.nextInvocation = nextInvocation;
+                    alarm.nextActivation = nextActivation;
                 }
             });
             setCurrentAlarms(newAlarms);
@@ -223,11 +223,11 @@ export const AlarmsPage = (props) => {
                     </FormGroup>
                     {selectedAlarm ?
                         <>
-                            {selectedAlarm.nextInvocation ?
+                            {selectedAlarm.nextActivation ?
                             <FormGroup>
                                 <Row>
                                     <Label className="col-md-3" for="name">Next Run Time</Label>
-                                    <span>{(new Date(selectedAlarm.nextInvocation)).toLocaleString()}</span>
+                                    <span>{(new Date(selectedAlarm.nextActivation)).toLocaleString()}</span>
                                     <Button
                                         color="primary"
                                         outline
@@ -347,11 +347,10 @@ export const AlarmsPage = (props) => {
                                 </Button>
                             </FormGroup>
                         </> : null}
-                    <p>{JSON.stringify(selectedAlarm)}</p>
                 </CardBody>
             </Card>
             <br />
-            <Button disabled={selectedAlarm === null} type="submit">Save Changes</Button>
+            <Button disabled={selectedAlarm === null} type="submit">{selectedAlaram.alarmId === 'new-alarm' ? 'Add Alarm' : 'Save Changes'}</Button>
         </Form>
     )
 }
