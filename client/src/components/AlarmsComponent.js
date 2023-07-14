@@ -59,7 +59,7 @@ export const AlarmsPage = (props) => {
             })
             .then((alarms) => {
                 setCurrentAlarms(alarms);
-                setSelectedAlarm(currentAlarms.find((alarm) => alarm.alarmId === selectedAlarm.alarmId));
+                setSelectedAlarm(alarms.find((alarm) => alarm.alarmId === selectedAlarm.alarmId));
             });
     }
 
@@ -171,7 +171,7 @@ export const AlarmsPage = (props) => {
         }
     }
 
-    const cancelNext = (event) => {
+    const onCancelNext = (event) => {
         event.preventDefault();
         fetch(apiBaseUrl + `/alarms/${selectedAlarm.alarmId}/cancelNext`, {
             method: 'PUT',
@@ -183,14 +183,14 @@ export const AlarmsPage = (props) => {
         .then((response) => {
             return response.json();
         })
-        .then(({nextActivation}) => {
+        .then(({nextInvocation}) => {
             setSelectedAlarm({
-                nextActivation
+                nextActivation: nextInvocation
             });
             newAlarms = [...currentAlarms];
             newAlarms.forEach((alarm) => {
                 if(alarm.alarmId === selectedAlarm.alarmId) {
-                    alarm.nextActivation = nextActivation;
+                    alarm.nextActivation = nextInvocation;
                 }
             });
             setCurrentAlarms(newAlarms);
@@ -227,11 +227,12 @@ export const AlarmsPage = (props) => {
                             <FormGroup>
                                 <Row>
                                     <Label className="col-md-3" for="name">Next Run Time</Label>
-                                    <span>{(new Date(selectedAlarm.nextActivation)).toLocaleString()}</span>
+                                    <span className="col-md-3">{(new Date(selectedAlarm.nextActivation)).toLocaleString()}</span>
                                     <Button
+                                        className="col-md-2" 
                                         color="primary"
                                         outline
-                                        onClick={() => cancelNext()}
+                                        onClick={onCancelNext}
                                         active={true}
                                     >
                                         Cancel Next Run
@@ -350,7 +351,7 @@ export const AlarmsPage = (props) => {
                 </CardBody>
             </Card>
             <br />
-            <Button disabled={selectedAlarm === null} type="submit">{selectedAlaram.alarmId === 'new-alarm' ? 'Add Alarm' : 'Save Changes'}</Button>
+            <Button disabled={selectedAlarm === null} type="submit">Save Changes</Button>
         </Form>
     )
 }
