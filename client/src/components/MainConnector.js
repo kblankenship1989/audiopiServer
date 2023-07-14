@@ -6,14 +6,12 @@ import * as ActionCreators from '../redux/ActionCreators';
 
 const mapStateToProps = state => {
     return {
-        relays: state.relays,
-        settings: state.settings
+        relays: state.relays
     }
 };
 
 const mapDispatchToProps = (dispatch) => ({
-    updateRelays: (newRelays) => {dispatch(ActionCreators.updateRelays(newRelays))},
-    updateSettings: (newSettings) => {dispatch(ActionCreators.updateSettings(newSettings))}
+    updateRelays: (newRelays) => {dispatch(ActionCreators.updateRelays(newRelays))}
 });
 
 export const getMainConnector = () => withRouter(connect(mapStateToProps, mapDispatchToProps)(Main));

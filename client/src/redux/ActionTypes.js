@@ -1,2 +1,1 @@
 export const ADD_RELAYS = 'ADD_RELAYS';
-export const UPDATE_SETTINGS = 'UPDATE_SETTINGS';

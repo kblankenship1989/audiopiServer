@@ -20,6 +20,9 @@ function Header(props) {
                                 <NavLink tag={RRNavLink} className="nav-link" to="/relays" onClick={props.toggleNav}>Room Control</NavLink>
                             </NavItem>
                             <NavItem>
+                                <NavLink tag={RRNavLink} className="nav-link" to="/alarms" onClick={props.toggleNav}>Alarms</NavLink>
+                            </NavItem>
+                            <NavItem>
                                 <NavLink tag={RRNavLink} className="nav-link" to="/settings" onClick={props.toggleNav}>Settings</NavLink>
                             </NavItem>
                         </Nav>

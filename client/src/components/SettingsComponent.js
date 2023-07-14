@@ -2,10 +2,8 @@ import React, { useState, useEffect } from 'react';
 import {Form, Card, FormGroup, CardBody, CardTitle, Label, Input, Row, Button} from 'reactstrap';
 import { apiBaseUrl } from '../helpers/baseUrls';
 
-export const SettingsPage = (props) => {
-    const [currentSettings, setCurrentSettings] = useState({
-        ...props.settings
-    })
+export const SettingsPage = () => {
+    const [currentSettings, setCurrentSettings] = useState({})
 
     const changeHandler = (event, setting) => {
         setCurrentSettings({
@@ -22,10 +20,7 @@ export const SettingsPage = (props) => {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify(currentSettings),
-        })
-            .then(() => {
-                props.updateSettings(currentSettings);
-            });
+        });
     };
 
     useEffect(() => {
@@ -35,7 +30,6 @@ export const SettingsPage = (props) => {
             })
             .then((settings) => {
                 setCurrentSettings(settings);
-                props.updateSettings(settings);
             });
     }, [])
 
@@ -44,21 +38,6 @@ export const SettingsPage = (props) => {
             <Card body>
                 <CardTitle>Player Configurations</CardTitle>
                 <CardBody>
-                    <FormGroup>
-                        <Row>
-                            <Label className="col-md-3" for="defaultVolume">Default Volume (%)</Label>
-                            <Input 
-                                className="col-md-2" 
-                                type="number" 
-                                min={0} 
-                                max={100} 
-                                step={1}
-                                name="defaultVolume" 
-                                id="defaultVolume"
-                                value={currentSettings.defaultVolume}
-                                onChange={(e) => changeHandler(e, 'defaultVolume')}/>
-                        </Row>
-                    </FormGroup>
                     <FormGroup>
                         <Row>
                             <Label className="col-md-3" for="timeoutInMinutes">Player Timeout</Label>
@@ -70,19 +49,6 @@ export const SettingsPage = (props) => {
                                 id="timeoutInMinutes"
                                 value={currentSettings.timeoutInMinutes}
                                 onChange={(e) => changeHandler(e, 'timeoutInMinutes')}/>
-                        </Row>
-                    </FormGroup>
-                    <FormGroup>
-                        <Row>
-                            <Label className="col-md-3" for="closeTimeoutInMinutes">Shutdown Timeout</Label>
-                            <Input 
-                                className="col-md-2" 
-                                type="number" 
-                                min={0} 
-                                name="closeTimeoutInMinutes" 
-                                id="closeTimeoutInMinutes"
-                                value={currentSettings.closeTimeoutInMinutes}
-                                onChange={(e) => changeHandler(e, 'closeTimeoutInMinutes')}/>
                         </Row>
                     </FormGroup>
                 </CardBody>
