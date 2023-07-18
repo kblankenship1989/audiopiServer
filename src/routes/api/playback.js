@@ -16,7 +16,7 @@ playbackRouter.get('/device', async (req, res) => {
         res.json(await getPlaylists(req.params.refresh));
     })
     .put('/start', function (req, res) {
-        startPlayback(null, req.body.context_uri);
+        startPlayback(req.body.context_uri);
         res.statusCode = 200;
         res.send("Playback started")
     })

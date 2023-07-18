@@ -3,6 +3,16 @@ import fetch from 'node-fetch';
 
 let raspotify;
 let playlists;
+let playbackPauseTimeout;
+
+const setPlaybackTimeout = (timeoutInMinutes) => {
+    if (playbackPauseTimeout) {
+        clearTimeout(playbackPauseTimeout);
+    }
+    playbackPauseTimeout = setTimeout(async () => {
+        pausePlayback()
+    }, timeoutInMinutes * 60000)
+};
 
 export const getDeviceId = async () => {
     try {
@@ -70,7 +80,7 @@ export const getPlaylists = async (shouldRefresh) => {
     }
 }
 
-export const startPlayback = async (contextUri) => {
+export const startPlayback = async (contextUri, timeoutInMinutes) => {
     const authToken = await getAccessToken();
 
     if (!raspotify) {
@@ -95,6 +105,10 @@ export const startPlayback = async (contextUri) => {
             method: 'PUT',
             body
         });
+
+        if (timeoutInMinutes) {
+            setPlaybackTimeout(timeoutInMinutes);
+        }
 
         return true;
     } catch (err) {

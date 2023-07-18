@@ -5,10 +5,10 @@ import { Switch, Route, Redirect } from 'react-router-dom';
 import Header from './HeaderComponent';
 import Footer from './FooterComponent';
 import { SSEUrl } from '../helpers/baseUrls';
-import { SettingsPage } from './SettingsComponent';
 import { RelayComponent } from './RelayComponent';
 import { MainButtons } from './MainButtons';
 import { AlarmsPage } from './AlarmsComponent';
+import { TimerPage } from './TimerComponent';
 
 export const Main = (props) => {
     const [isNavOpen, setIsNavOpen] = useState(false);
@@ -53,8 +53,11 @@ export const Main = (props) => {
                 <Route path="/home" 
                     component={MainButtons}
                 />
-                <Route path="/settings" 
-                    component={SettingsPage}
+                <Route path="/timer" 
+                    render={(routeProps) => <TimerPage
+                        {...routeProps}
+                        relays={props.relays}
+                    />}
                 />
                 <Route exact path="/relays"
                     render={(routeProps) => <RelayComponent

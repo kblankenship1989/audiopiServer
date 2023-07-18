@@ -10,6 +10,7 @@ import cors from 'cors';
 
 import indexRouter from './routes/index';
 import alarmsRouter from './routes/api/alarms';
+import timerRouter from './routes/api/timer';
 import relaysRouter from './routes/api/relays';
 import { subscribe } from './routes/sse';
 import settingsRouter from './routes/api/settings';
@@ -35,6 +36,7 @@ app.use('/dist', express.static(join(__dirname, '../dist')));
 app.use(cors());
 
 app.use('/api/alarms', alarmsRouter);
+app.use('/api/timer', timerRouter);
 app.use('/api/relays', relaysRouter);
 app.use('/api/settings', settingsRouter);
 app.use('/api/auth', authRouter);

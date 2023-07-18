@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Card, FormGroup, CardBody, CardTitle, Label, Input, Row, Button, ButtonGroup, Nav, TabContent, TabPane, NavItem, NavLink } from 'reactstrap';
+import { Form, Card, FormGroup, CardBody, CardTitle, Label, Input, Row, Button, ButtonGroup} from 'reactstrap';
 import { apiBaseUrl } from '../helpers/baseUrls';
-import { getNewRelayState, getRelayButton, firstFloorControls, firstFloorInputControl, secondFloorControls, secondFloorInputControl } from '../helpers/relay-helpers';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import * as fas from '@fortawesome/free-solid-svg-icons';
+import { getNewRelayState, getRelayButton, firstFloorControls, secondFloorControls } from '../helpers/relay-helpers';
+import { PlaylistSelect } from './PlaylistSelect';
 
 const DEFAULT_ALARM = (relays) => ({
     alarmId: 'add-new',
@@ -13,6 +12,7 @@ const DEFAULT_ALARM = (relays) => ({
     dayOfWeek: "",
     isEnabled: false,
     contextUri: "",
+    timeoutInMinutes: 0,
     relays: {
         ...relays,
         alarmOverride: true
@@ -21,7 +21,6 @@ const DEFAULT_ALARM = (relays) => ({
 
 export const AlarmsPage = (props) => {
     const [currentAlarms, setCurrentAlarms] = useState([]);
-    const [playlists, setPlaylists] = useState([]);
     const [selectedAlarm, setSelectedAlarm] = useState(null);
 
     const makeDayOfWeekRanges = (daysOfWeek, selected) => {
@@ -65,20 +64,6 @@ export const AlarmsPage = (props) => {
             });
     }
 
-    const fetchPlaylists = (refresh = false) => {
-        fetch(apiBaseUrl + `/playback/playlists?refresh=${refresh}`, { method: 'GET' })
-            .then((response) => {
-                return response.json();
-            })
-            .then((playlistResponse) => {
-                if (playlistResponse)
-                    setPlaylists(playlistResponse);
-                else
-                    throw new Error('No playlists returned');
-            })
-            .catch((e) => { console.log(e) });
-    }
-
     useEffect(() => {
         fetch(apiBaseUrl + `/alarms`, { method: 'GET' })
             .then((response) => {
@@ -88,7 +73,6 @@ export const AlarmsPage = (props) => {
                 setCurrentAlarms(alarms);
             })
             .catch((e) => { console.log(e) });
-        fetchPlaylists(false);
     }, [])
 
     const updateSelectedAlarm = (alarmId) => {
@@ -314,26 +298,7 @@ export const AlarmsPage = (props) => {
                                     </ButtonGroup>
                                 </Row>
                             </FormGroup>
-                            <FormGroup>
-                                <Row>
-                                    <Label className="col-md-3" for="context-uri">Playlist</Label>
-                                    <Input
-                                        className="col-md-3 col-10"
-                                        id={'context-uri'}
-                                        name={'context-uri'}
-                                        onChange={(e) => onEditChangeHandler(e, 'contextUri')}
-                                        value={selectedAlarm.contextUri}
-                                        type={'select'}
-                                    >
-                                        {playlists.map((playlist) => (
-                                            <option value={playlist.uri}>{playlist.name}</option>
-                                        ))}
-                                    </Input>
-                                    <Button className='col-2' onClick={() => fetchPlaylists(true)}>
-                                        <FontAwesomeIcon icon={fas.faRedo} />
-                                    </Button>
-                                </Row>
-                            </FormGroup>
+                            <PlaylistSelect currentValue={selectedAlarm.contextUri} onSelect={(e) => onEditChangeHandler(e, 'contextUri')}/>
                             <FormGroup>
                                 <Row>
                                     <Label className="col-md-3" for="first-floor">First Floor</Label>
