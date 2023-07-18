@@ -257,7 +257,7 @@ export const AlarmsPage = (props) => {
                                 <Row>
                                     <Label className="col-md-3" for="time">Time</Label>
                                     <Input
-                                        className="col-md-1 col-xs-6"
+                                        className="col-md-1 col-6"
                                         type="number"
                                         min={0}
                                         max={23}
@@ -266,7 +266,7 @@ export const AlarmsPage = (props) => {
                                         value={selectedAlarm.hour}
                                         onChange={(e) => onEditChangeHandler(e, 'hour')} />
                                     <Input
-                                        className="col-md-1 col-xs-6"
+                                        className="col-md-1 col-6"
                                         type="number"
                                         min={0}
                                         max={59}
@@ -296,7 +296,7 @@ export const AlarmsPage = (props) => {
                                     <ButtonGroup>
                                         {['Su', 'M', 'Tu', 'W', 'Th', 'F', 'Sa'].map((dayOfWeek, index) => (
                                             <Button
-                                                className='col-xs-1'
+                                                className='col-1'
                                                 color="primary"
                                                 outline
                                                 onClick={() => onEditDayOfWeekSelect(index.toString())}
