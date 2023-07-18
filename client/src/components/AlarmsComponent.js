@@ -257,7 +257,7 @@ export const AlarmsPage = (props) => {
                                 <Row>
                                     <Label className="col-md-3" for="time">Time</Label>
                                     <Input
-                                        className="col-md-1"
+                                        className="col-md-1 col-xs-6"
                                         type="number"
                                         min={0}
                                         max={23}
@@ -266,7 +266,7 @@ export const AlarmsPage = (props) => {
                                         value={selectedAlarm.hour}
                                         onChange={(e) => onEditChangeHandler(e, 'hour')} />
                                     <Input
-                                        className="col-md-1"
+                                        className="col-md-1 col-xs-6"
                                         type="number"
                                         min={0}
                                         max={59}
@@ -278,10 +278,25 @@ export const AlarmsPage = (props) => {
                             </FormGroup>
                             <FormGroup>
                                 <Row>
+                                    <Label className="col-md-3" for="timeout">{'Timeout (in Minutes)'}</Label>
+                                    <Input
+                                        className="col-md-3"
+                                        type="number"
+                                        min="0"
+                                        max="120"
+                                        name="timeout"
+                                        id="timeout"
+                                        value={selectedAlarm.timeoutInMinutes || 0}
+                                        onChange={(e) => onEditChangeHandler(e, 'timeoutInMinutes')} />
+                                </Row>
+                            </FormGroup>
+                            <FormGroup>
+                                <Row>
                                     <Label className="col-md-3" for="days">Days of the Week</Label>
                                     <ButtonGroup>
-                                        {['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'].map((dayOfWeek, index) => (
+                                        {['Su', 'M', 'Tu', 'W', 'Th', 'F', 'Sa'].map((dayOfWeek, index) => (
                                             <Button
+                                                className='col-xs-1'
                                                 color="primary"
                                                 outline
                                                 onClick={() => onEditDayOfWeekSelect(index.toString())}

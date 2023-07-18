@@ -6,21 +6,24 @@ import { updateRelays } from './relays';
 import { pausePlayback, startPlayback } from './spotify';
 
 const alarmJobs = {};
+let activeAlarmJob;
 
-const getTimeout = () => getSettings().timeoutInMinutes * 60000;
-
-const setAlarmTimeout = () => {
-    setTimeout(async () => {
+const setAlarmTimeout = (timeoutInMinutes) => {
+    if (activeAlarmJob) {
+        clearTimeout(activeAlarmJob);
+    }
+    activeAlarmJob = setTimeout(async () => {
         pausePlayback()
-    }, getTimeout())
+    }, timeoutInMinutes * 60000)
 };
 
 export const startAlarmPlayback = async (alarmId) => {
-    const alarm = getSettings().alarms.find((alarm) => alarm.alarmId === alarmId);
+    const {alarms, timeoutInMinutes} = getSettings();
+    const alarm = alarms.find((alarm) => alarm.alarmId === alarmId);
 
     updateRelays(alarm.relays);
 
-    setAlarmTimeout();
+    setAlarmTimeout(alarm.timeoutInMinutes || timeoutInMinutes);
     return await startPlayback(alarm.contextUri);
 };
 
