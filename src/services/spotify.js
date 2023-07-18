@@ -2,6 +2,7 @@ import { getAccessToken } from "./token_helpers"
 import fetch from 'node-fetch';
 
 let raspotify;
+let playlists;
 
 export const getDeviceId = async () => {
     try {
@@ -35,7 +36,14 @@ export const getDeviceId = async () => {
     }
 }
 
-export const getPlaylists = async () => {
+export const getPlaylists = async (shouldRefresh) => {
+    if (playlists && !shouldRefresh) {
+        console.log('returning saved playlists');
+        return playlists;
+    }
+
+    console.log('fetching playlists from spotify');
+
     const authToken = await getAccessToken();
 
     try {
@@ -50,10 +58,12 @@ export const getPlaylists = async () => {
             items
         } = await response.json();
 
-        return items.map((playlist) => ({
+        playlists = items.map((playlist) => ({
             name: playlist.name,
             uri: playlist.uri
         }));
+
+        return playlists;
     } catch (err) {
         console.log(err);
         return null;

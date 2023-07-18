@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Form, Card, FormGroup, CardBody, CardTitle, Label, Input, Row, Button, ButtonGroup, Nav, TabContent, TabPane, NavItem, NavLink } from 'reactstrap';
 import { apiBaseUrl } from '../helpers/baseUrls';
 import { getNewRelayState, getRelayButton, firstFloorControls, firstFloorInputControl, secondFloorControls, secondFloorInputControl } from '../helpers/relay-helpers';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import * as fas from '@fortawesome/free-solid-svg-icons';
 
 const DEFAULT_ALARM = (relays) => ({
     alarmId: 'add-new',
@@ -63,16 +65,8 @@ export const AlarmsPage = (props) => {
             });
     }
 
-    useEffect(() => {
-        fetch(apiBaseUrl + `/alarms`, { method: 'GET' })
-            .then((response) => {
-                return response.json();
-            })
-            .then((alarms) => {
-                setCurrentAlarms(alarms);
-            })
-            .catch((e) => { console.log(e) });
-        fetch(apiBaseUrl + '/playback/playlists', { method: 'GET' })
+    const fetchPlaylists = (refresh = false) => {
+        fetch(apiBaseUrl + `/playback/playlists?refresh=${refresh}`, { method: 'GET' })
             .then((response) => {
                 return response.json();
             })
@@ -83,6 +77,18 @@ export const AlarmsPage = (props) => {
                     throw new Error('No playlists returned');
             })
             .catch((e) => { console.log(e) });
+    }
+
+    useEffect(() => {
+        fetch(apiBaseUrl + `/alarms`, { method: 'GET' })
+            .then((response) => {
+                return response.json();
+            })
+            .then((alarms) => {
+                setCurrentAlarms(alarms);
+            })
+            .catch((e) => { console.log(e) });
+        fetchPlaylists(false);
     }, [])
 
     const updateSelectedAlarm = (alarmId) => {
@@ -312,7 +318,7 @@ export const AlarmsPage = (props) => {
                                 <Row>
                                     <Label className="col-md-3" for="context-uri">Playlist</Label>
                                     <Input
-                                        className="col-md-3"
+                                        className="col-md-3 col-10"
                                         id={'context-uri'}
                                         name={'context-uri'}
                                         onChange={(e) => onEditChangeHandler(e, 'contextUri')}
@@ -323,6 +329,9 @@ export const AlarmsPage = (props) => {
                                             <option value={playlist.uri}>{playlist.name}</option>
                                         ))}
                                     </Input>
+                                    <Button className='col-2' onClick={() => fetchPlaylists(true)}>
+                                        <FontAwesomeIcon icon={fas.faRedo} />
+                                    </Button>
                                 </Row>
                             </FormGroup>
                             <FormGroup>
