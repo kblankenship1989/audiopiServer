@@ -3,19 +3,9 @@ import {v4} from 'uuid';
 
 import { getSettings, updateSetting } from './settings';
 import { updateRelays } from './relays';
-import { pausePlayback, startPlayback } from './spotify';
+import { startPlayback } from './spotify';
 
 const alarmJobs = {};
-let activeAlarmJob;
-
-const setAlarmTimeout = (timeoutInMinutes) => {
-    if (activeAlarmJob) {
-        clearTimeout(activeAlarmJob);
-    }
-    activeAlarmJob = setTimeout(async () => {
-        pausePlayback()
-    }, timeoutInMinutes * 60000)
-};
 
 export const startAlarmPlayback = async (alarmId) => {
     const {alarms, timeoutInMinutes} = getSettings();
@@ -23,8 +13,7 @@ export const startAlarmPlayback = async (alarmId) => {
 
     updateRelays(alarm.relays);
 
-    setAlarmTimeout(alarm.timeoutInMinutes || timeoutInMinutes);
-    return await startPlayback(alarm.contextUri);
+    return await startPlayback(alarm.contextUri, alarm.timeoutInMinutes || timeoutInMinutes);
 };
 
 export const getNextAlarm = (alarmId) => {

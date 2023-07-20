@@ -2,6 +2,17 @@ import { getAccessToken } from "./token_helpers"
 import fetch from 'node-fetch';
 
 let raspotify;
+let playlists;
+let playbackPauseTimeout;
+
+const setPlaybackTimeout = (timeoutInMinutes) => {
+    if (playbackPauseTimeout) {
+        clearTimeout(playbackPauseTimeout);
+    }
+    playbackPauseTimeout = setTimeout(async () => {
+        pausePlayback()
+    }, timeoutInMinutes * 60000)
+};
 
 export const getDeviceId = async () => {
     try {
@@ -35,7 +46,14 @@ export const getDeviceId = async () => {
     }
 }
 
-export const getPlaylists = async () => {
+export const getPlaylists = async (shouldRefresh) => {
+    if (playlists && !shouldRefresh) {
+        console.log('returning saved playlists');
+        return playlists;
+    }
+
+    console.log('fetching playlists from spotify');
+
     const authToken = await getAccessToken();
 
     try {
@@ -50,17 +68,19 @@ export const getPlaylists = async () => {
             items
         } = await response.json();
 
-        return items.map((playlist) => ({
+        playlists = items.map((playlist) => ({
             name: playlist.name,
             uri: playlist.uri
         }));
+
+        return playlists;
     } catch (err) {
         console.log(err);
         return null;
     }
 }
 
-export const startPlayback = async (contextUri) => {
+export const startPlayback = async (contextUri, timeoutInMinutes) => {
     const authToken = await getAccessToken();
 
     if (!raspotify) {
@@ -85,6 +105,10 @@ export const startPlayback = async (contextUri) => {
             method: 'PUT',
             body
         });
+
+        if (timeoutInMinutes) {
+            setPlaybackTimeout(timeoutInMinutes);
+        }
 
         return true;
     } catch (err) {
