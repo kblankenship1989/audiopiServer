@@ -37,7 +37,7 @@ export const TimerPage = ({relays}) => {
     }
 
     return (
-        <Form onSubmit={submitForm}>
+        <Form onSubmit={onSubmit}>
             <Card body>
                 <CardTitle>Player Configurations</CardTitle>
                 <CardBody>
