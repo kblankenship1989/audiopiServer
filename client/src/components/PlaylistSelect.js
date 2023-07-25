@@ -34,7 +34,7 @@ export const PlaylistSelect = ({currentValue, onSelect}) => {
                     id={'context-uri'}
                     name={'context-uri'}
                     onChange={onSelect}
-                    value={selectedAlarm.contextUri}
+                    value={currentValue}
                     type={'select'}
                 >
                     <option value="">Select Playlist</option>
