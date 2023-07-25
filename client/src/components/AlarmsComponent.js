@@ -286,7 +286,7 @@ export const AlarmsPage = (props) => {
                                     <ButtonGroup>
                                         {['Su', 'M', 'Tu', 'W', 'Th', 'F', 'Sa'].map((dayOfWeek, index) => (
                                             <Button
-                                                className='col-1'
+                                                className='col-2'
                                                 color="primary"
                                                 outline
                                                 onClick={() => onEditDayOfWeekSelect(index.toString())}

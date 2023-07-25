@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import * as fas from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { FormGroup, Label, Input, Row, Button} from 'reactstrap';
+import { FormGroup, Label, Input, Row, Button, Col} from 'reactstrap';
 import { apiBaseUrl } from '../helpers/baseUrls';
 
 export const PlaylistSelect = ({currentValue, onSelect}) => {
@@ -42,7 +42,8 @@ export const PlaylistSelect = ({currentValue, onSelect}) => {
                         <option value={playlist.uri}>{playlist.name}</option>
                     ))}
                 </Input>
-                <Button className='col-2' onClick={() => fetchPlaylists(true)}>
+                <Col className='col-1'/>
+                <Button className='col-1' onClick={() => fetchPlaylists(true)}>
                     <FontAwesomeIcon icon={fas.faRedo} />
                 </Button>
             </Row>

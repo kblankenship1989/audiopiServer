@@ -47,7 +47,7 @@ export const getDeviceId = async () => {
 }
 
 export const getPlaylists = async (shouldRefresh) => {
-    if (playlists && !shouldRefresh) {
+    if (playlists && shouldRefresh === 'false') {
         console.log('returning saved playlists');
         return playlists;
     }
