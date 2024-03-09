@@ -138,6 +138,19 @@ export const AlarmsPage = (props) => {
             });
     };
 
+    const deleteAlarm = (event) => {
+        event.preventDefault();
+        fetch(apiBaseUrl + `/alarms` + selectedAlarm.alarmId, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        })
+            .then(() => {
+                loadAlarms();
+            });
+    };
+
     const parseDaysOfWeek = (daysOfWeek) => {
         const days = [];
         const ranges = daysOfWeek.split(',');
@@ -342,6 +355,14 @@ export const AlarmsPage = (props) => {
                                     active={selectedAlarm.isEnabled}
                                 >
                                     {selectedAlarm.isEnabled ? 'Enabled' : 'Disabled'}
+                                </Button>
+                                <Button
+                                    color="danger"
+                                    outline
+                                    onClick={() => deleteAlarm()}
+                                    active={selectedAlarm.isEnabled}
+                                >
+                                    Delete
                                 </Button>
                             </FormGroup>
                         </> : null}
