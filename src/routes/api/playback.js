@@ -14,12 +14,12 @@ playbackRouter.get('/device', async (req, res) => {
     .get('/playlists', async (req, res) => {
         res.statusCode = 200;
         res.setHeader('Content-Type', 'application/json');
-        res.json(await getPlaylists(req.params.refresh));
+        res.json(await getPlaylists(req.query.refresh));
     })
     .get('/tracks', async (req, res) => {
         res.statusCode = 200;
         res.setHeader('Content-Type', 'application/json');
-        res.json(await getPlaylistTracks(req.params.playlistId));
+        res.json(await getPlaylistTracks(req.query.playlistId));
     })
     .put('/start', function (req, res) {
         startPlayback(req.body.context_uri);
