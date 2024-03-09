@@ -1,10 +1,15 @@
 //Restart Pi, Shutdown Pi, Restart server, Mute all
 import React from 'react';
+import { apiBaseUrl } from '../helpers/baseUrls';
 
 const Footer = (props) => {
     const muteAll = async () => {
         await fetch(apiBaseUrl + `/relays?key=FIRST&value=0`, { method: 'POST' });
         await fetch(apiBaseUrl + `/relays?key=SECOND&value=0`, { method: 'POST' });
+    }
+
+    const restartServer = () => {
+        fetch(apiBaseUrl + `/server/restart`, { method: 'POST' })
     }
 
     return(

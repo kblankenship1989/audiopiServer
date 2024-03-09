@@ -29,7 +29,7 @@ export const PlaylistSelect = ({onSelect, playlistUri, startSongIndex, shuffleSt
     const fetchTracks = () => {
         const currentPlaylist = playlists.find((playlist) => playlist.uri === playlistUri);
 
-        fetch(apiBaseUrl + `/playback/tracks?trackHref=${encodeURIComponent(currentPlaylist.trackHref)}`, { method: 'GET' })
+        fetch(apiBaseUrl + `/playback/tracks?trackHref=${encodeURIComponent(currentPlaylist.tracksHref)}`, { method: 'GET' })
             .then((response) => {
                 return response.json();
             })
@@ -88,7 +88,7 @@ export const PlaylistSelect = ({onSelect, playlistUri, startSongIndex, shuffleSt
                         type={'select'}
                     >
                         {tracks.map((track, index) => (
-                            <option value={index}>{track}</option>
+                            <option value={index}>{track.name}</option>
                         ))}
                     </Input>
                     <Col className='col-1'/>
