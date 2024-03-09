@@ -140,7 +140,7 @@ export const AlarmsPage = (props) => {
 
     const deleteAlarm = (event) => {
         event.preventDefault();
-        fetch(apiBaseUrl + `/alarms` + selectedAlarm.alarmId, {
+        fetch(apiBaseUrl + `/alarms/` + selectedAlarm.alarmId, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
