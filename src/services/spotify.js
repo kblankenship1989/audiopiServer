@@ -69,6 +69,7 @@ export const getPlaylists = async (shouldRefresh) => {
         } = await response.json();
 
         playlists = items.map((playlist) => ({
+            playlistId: playlist.id,
             name: playlist.name,
             uri: playlist.uri,
             tracksHref: playlist.tracks.href
@@ -81,13 +82,13 @@ export const getPlaylists = async (shouldRefresh) => {
     }
 }
 
-export const getPlaylistTracks = async (tracksHref) => {
+export const getPlaylistTracks = async (playlistId) => {
     console.log('fetching tracks for playlist.');
 
     const authToken = await getAccessToken();
 
     try {
-        const response = await fetch(tracksHref + "&fields=items(track(name)", {
+        const response = await fetch(`https://api.spotify.com/v1/playlists/${playlistId}/tracks?offset=0&limit=100&locale=en-US%2Cen%3Bq%3D0.9&fields=items(track(name)`, {
             headers: {
                 'Authorization': `Bearer ${authToken}`
             },
