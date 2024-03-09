@@ -2,7 +2,7 @@
 import React from 'react';
 import { apiBaseUrl } from '../helpers/baseUrls';
 
-const Footer = (props) => {
+const Footer = () => {
     const muteAll = async () => {
         await fetch(apiBaseUrl + `/relays?key=FIRST&value=0`, { method: 'POST' });
         await fetch(apiBaseUrl + `/relays?key=SECOND&value=0`, { method: 'POST' });
@@ -16,7 +16,7 @@ const Footer = (props) => {
         <>
             <div className="container footer">
                 <div className="row justify-content-center">
-                    <span onClick={muteAll} >Mute All</span>|<span onClick={() => undefined} >Restart Server</span>
+                    <span onClick={muteAll} >Mute All</span>|<span onClick={restartServer} >Restart Server</span>
                 </div>
             </div>
         </>
