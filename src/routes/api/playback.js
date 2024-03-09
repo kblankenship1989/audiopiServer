@@ -19,7 +19,7 @@ playbackRouter.get('/device', async (req, res) => {
     .get('/tracks', async (req, res) => {
         res.statusCode = 200;
         res.setHeader('Content-Type', 'application/json');
-        res.json(await getPlaylistTracks(req.params.trackHref));
+        res.json(await getPlaylistTracks(req.params.playlistId));
     })
     .put('/start', function (req, res) {
         startPlayback(req.body.context_uri);

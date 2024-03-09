@@ -8,28 +8,24 @@ export const PlaylistSelect = ({onSelect, playlistUri, startSongIndex, shuffleSt
     const [playlists, setPlaylists] = useState([]);
     const [tracks, setTracks] = useState([]);
 
-    const fetchPlaylists = (refresh = false) => {
-        fetch(apiBaseUrl + `/playback/playlists?refresh=${refresh}`, { method: 'GET' })
-            .then((response) => {
-                return response.json();
-            })
-            .then((playlistResponse) => {
-                if (playlistResponse.length)
-                    setPlaylists(playlistResponse);
-                else
-                    throw new Error('No playlists returned');
-            })
-            .catch((e) => { console.log(e) });
-    }
+    const fetchPlaylists = async (refresh = false) => {
+        try {
+            const response = await fetch(apiBaseUrl + `/playback/playlists?refresh=${refresh}`, { method: 'GET' })
+            const playlistResponse = await response.json();
 
-    useEffect(() => {
-        fetchPlaylists(false);
-    }, []);
+            if (playlistResponse.length)
+                setPlaylists(playlistResponse);
+            else
+                throw new Error('No playlists returned');
+        } catch(e) {
+            console.log(e);
+        }
+    }
 
     const fetchTracks = () => {
         const currentPlaylist = playlists.find((playlist) => playlist.uri === playlistUri);
 
-        fetch(apiBaseUrl + `/playback/tracks?trackHref=${encodeURIComponent(currentPlaylist.tracksHref)}`, { method: 'GET' })
+        fetch(apiBaseUrl + `/playback/tracks?playlistId=${currentPlaylist.playlistId}`, { method: 'GET' })
             .then((response) => {
                 return response.json();
             })
@@ -41,6 +37,14 @@ export const PlaylistSelect = ({onSelect, playlistUri, startSongIndex, shuffleSt
             })
             .catch((e) => { console.log(e) });
     }
+
+    useEffect(async () => {
+        await fetchPlaylists(false);
+
+        if (playlistUri) {
+            fetchTracks()
+        }
+    }, []);
 
     const onChangePlaylist = (e) => {
         onSelect(e, 'contextUri');
