@@ -301,9 +301,9 @@ export const AlarmsPage = (props) => {
                                 </Row>
                             </FormGroup>
                             <PlaylistSelect 
-                                onPlaylistSelect={(e) => onEditChangeHandler(e, 'contextUri')}
-                                onStartSongSelect={(e) => onEditChangeHandler(e, 'startSongIndex')}
+                                onSelect={(e, key) => onEditChangeHandler(e, key)}
                                 playlistUri={selectedAlarm.contextUri}
+                                shuffleState={selectedAlarm.shuffleState}
                                 startSongIndex={selectedAlarm.startSongIndex}
                             />
                             <FormGroup>
