@@ -4,8 +4,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { FormGroup, Label, Input, Row, Button, Col} from 'reactstrap';
 import { apiBaseUrl } from '../helpers/baseUrls';
 
-export const PlaylistSelect = ({currentValue, onSelect}) => {
+export const PlaylistSelect = ({onSelect, playlistUri, startSongIndex, shuffleState}) => {
     const [playlists, setPlaylists] = useState([]);
+    const [tracks, setTracks] = useState([]);
 
     const fetchPlaylists = (refresh = false) => {
         fetch(apiBaseUrl + `/playback/playlists?refresh=${refresh}`, { method: 'GET' })
@@ -13,7 +14,7 @@ export const PlaylistSelect = ({currentValue, onSelect}) => {
                 return response.json();
             })
             .then((playlistResponse) => {
-                if (playlistResponse)
+                if (playlistResponse.length)
                     setPlaylists(playlistResponse);
                 else
                     throw new Error('No playlists returned');
@@ -25,28 +26,83 @@ export const PlaylistSelect = ({currentValue, onSelect}) => {
         fetchPlaylists(false);
     }, []);
 
+    const fetchTracks = () => {
+        const currentPlaylist = playlists.find((playlist) => playlist.uri === playlistUri);
+
+        fetch(apiBaseUrl + `/playback/tracks?trackHref=${encodeURIComponent(currentPlaylist.trackHref)}`, { method: 'GET' })
+            .then((response) => {
+                return response.json();
+            })
+            .then((tracksResponse) => {
+                if (tracksResponse.length)
+                    setTracks(tracksResponse);
+                else
+                    throw new Error('No tracks returned');
+            })
+            .catch((e) => { console.log(e) });
+    }
+
+    const onChangePlaylist = (e) => {
+        onSelect(e, 'contextUri');
+        fetchTracks();
+    }
+
     return (
-        <FormGroup>
-            <Row>
-                <Label className="col-md-3" for="context-uri">Playlist</Label>
-                <Input
-                    className="col-md-3 col-10"
-                    id={'context-uri'}
-                    name={'context-uri'}
-                    onChange={onSelect}
-                    value={currentValue}
-                    type={'select'}
-                >
-                    <option value="">Select Playlist</option>
-                    {playlists.map((playlist) => (
-                        <option value={playlist.uri}>{playlist.name}</option>
-                    ))}
-                </Input>
-                <Col className='col-1'/>
-                <Button className='col-1' onClick={() => fetchPlaylists(true)}>
-                    <FontAwesomeIcon icon={fas.faRedo} />
-                </Button>
-            </Row>
-        </FormGroup>
+        <>
+            <FormGroup>
+                <Row>
+                    <Label className="col-md-3" for="context-uri">Playlist</Label>
+                    <Input
+                        className="col-md-3 col-10"
+                        id={'context-uri'}
+                        name={'context-uri'}
+                        onChange={onChangePlaylist}
+                        value={playlistUri}
+                        type={'select'}
+                    >
+                        <option value="">Select Playlist</option>
+                        {playlists.map((playlist) => (
+                            <option value={playlist.uri}>{playlist.name}</option>
+                        ))}
+                    </Input>
+                    <Col className='col-1'/>
+                    <Button
+                        className='col-1'
+                        onClick={() => fetchPlaylists(true)}
+                        size='sm'
+                    >
+                        <FontAwesomeIcon icon={fas.faRedo}/>
+                    </Button>
+                </Row>
+            </FormGroup>
+            <FormGroup>
+                <Row>
+                    <Label className="col-md-3" for="start-song-index">Start Track</Label>
+                    <Input
+                        className="col-md-3 col-10"
+                        disabled={!playlistUri}
+                        id={'start-song-index'}
+                        name={'start-song-index'}
+                        onChange={(e) => onSelect(e, 'startSongIndex')}
+                        value={startSongIndex}
+                        type={'select'}
+                    >
+                        {tracks.map((track, index) => (
+                            <option value={index}>{track}</option>
+                        ))}
+                    </Input>
+                    <Col className='col-1'/>
+                    <Button
+                        className='col-1'
+                        color={shuffleState ? 'primary' : 'secondary'}
+                        onClick={() => onSelect({target: {value: !shuffleState}}, 'shuffleState')}
+                        disabled={!playlistUri}
+                        size='sm'
+                    >
+                        <FontAwesomeIcon icon={fas.faRandom}/>
+                    </Button>
+                </Row>
+            </FormGroup>
+        </>
     );
 }

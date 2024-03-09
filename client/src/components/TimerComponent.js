@@ -7,6 +7,8 @@ import { apiBaseUrl } from '../helpers/baseUrls';
 const DEFAULT_STATE = (relays) => ({
     contextUri: '',
     timeoutInMinutes: 0,
+    startSongIndex: 0,
+    shuffleState: false,
     relays
 });
 
@@ -41,7 +43,12 @@ export const TimerPage = ({relays}) => {
             <Card body>
                 <CardTitle>Player Configurations</CardTitle>
                 <CardBody>
-                    <PlaylistSelect currentValue={selections.contextUri} onSelect={(e) => setSelections({...selections, contextUri: e.target.value})}/>
+                    <PlaylistSelect
+                        onSelect={(e, key) => setSelections({...selections, [key]: e.target.value})}
+                        playlistUri={selections.contextUri}
+                        shuffleState={selections.shuffleState}
+                        startSongIndex={selections.startSongIndex}
+                    />
                     <FormGroup>
                         <Row>
                             <Label className="col-md-3" for="timeout">{'Duration (in Minutes)'}</Label>

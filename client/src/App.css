@@ -13,6 +13,11 @@ nav {
 	background-color: rgb(0, 51, 135);
 }
 
+label {
+	align-self: center !important;
+	margin: 0 !important;
+}
+
 #details {
 	margin:10px 0;
 	padding:0 40px;
@@ -43,10 +48,6 @@ nav {
 
 .song-controls {
   background-color: #146194
-}
-
-.btn {
-	height: 50px;
 }
 
 .btn * {
@@ -143,4 +144,12 @@ nav {
 
 .relays .nav-tabs {
 	border-bottom: 0px;
+}
+
+.footer {
+	color: #999;
+}
+
+.footer span {
+	padding: 0 10px;
 }

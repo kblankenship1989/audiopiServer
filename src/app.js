@@ -16,6 +16,7 @@ import { subscribe } from './routes/sse';
 import settingsRouter from './routes/api/settings';
 import authRouter from './routes/api/auth';
 import playbackRouter from './routes/api/playback';
+import serverRouter from './routes/api/server';
 
 export const app = express();
 export const server = Server(app);
@@ -41,6 +42,7 @@ app.use('/api/relays', relaysRouter);
 app.use('/api/settings', settingsRouter);
 app.use('/api/auth', authRouter);
 app.use('/api/playback', playbackRouter);
+app.use('/api/server', serverRouter);
 
 app.use('/sse', cors(), subscribe);
 

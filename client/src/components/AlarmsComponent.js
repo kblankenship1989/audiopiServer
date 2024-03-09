@@ -13,6 +13,8 @@ const DEFAULT_ALARM = (relays) => ({
     isEnabled: false,
     contextUri: "",
     timeoutInMinutes: 0,
+    startSongIndex: 0,
+    shuffleState: false,
     relays: {
         ...relays,
         alarmOverride: true
@@ -218,7 +220,7 @@ export const AlarmsPage = (props) => {
                             <FormGroup>
                                 <Row>
                                     <Label className="col-md-3" for="name">Next Run Time</Label>
-                                    <span className="col-md-3">{(new Date(selectedAlarm.nextActivation)).toLocaleString()}</span>
+                                    <Label className="col-md-3">{(new Date(selectedAlarm.nextActivation)).toLocaleString()}</Label>
                                     <Button
                                         className="col-md-2" 
                                         color="primary"
@@ -298,7 +300,12 @@ export const AlarmsPage = (props) => {
                                     </ButtonGroup>
                                 </Row>
                             </FormGroup>
-                            <PlaylistSelect currentValue={selectedAlarm.contextUri} onSelect={(e) => onEditChangeHandler(e, 'contextUri')}/>
+                            <PlaylistSelect 
+                                onPlaylistSelect={(e) => onEditChangeHandler(e, 'contextUri')}
+                                onStartSongSelect={(e) => onEditChangeHandler(e, 'startSongIndex')}
+                                playlistUri={selectedAlarm.contextUri}
+                                startSongIndex={selectedAlarm.startSongIndex}
+                            />
                             <FormGroup>
                                 <Row>
                                     <Label className="col-md-3" for="first-floor">First Floor</Label>
