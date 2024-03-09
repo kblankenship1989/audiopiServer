@@ -22,8 +22,8 @@ export const PlaylistSelect = ({onSelect, playlistUri, startSongIndex, shuffleSt
         }
     }
 
-    const fetchTracks = () => {
-        const currentPlaylist = playlists.find((playlist) => playlist.uri === playlistUri);
+    const fetchTracks = (newPlaylistUri) => {
+        const currentPlaylist = playlists.find((playlist) => playlist.uri === newPlaylistUri);
 
         fetch(apiBaseUrl + `/playback/tracks?playlistId=${currentPlaylist.playlistId}`, { method: 'GET' })
             .then((response) => {
@@ -42,13 +42,15 @@ export const PlaylistSelect = ({onSelect, playlistUri, startSongIndex, shuffleSt
         await fetchPlaylists(false);
 
         if (playlistUri) {
-            fetchTracks()
+            fetchTracks(playlistUri)
         }
     }, []);
 
     const onChangePlaylist = (e) => {
         onSelect(e, 'contextUri');
-        fetchTracks();
+        if (e.target.value) {
+            fetchTracks(e.target.value);
+        }
     }
 
     return (
