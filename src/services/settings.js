@@ -5,12 +5,13 @@ import {join} from 'path';
 /*global __dirname*/
 const filePath = join(__dirname, '../../public/settings.json');
 
-const settingsRaw = readFileSync(filePath) || {};
-const settings = JSON.parse(settingsRaw);
-
-export const getSettings = () => settings;
+export const getSettings = () => {
+    const settingsRaw = readFileSync(filePath) || {};
+    return JSON.parse(settingsRaw);
+}
 
 export const updateSetting = (key, value, callback) => {
+    const settings = getSettings();
     var noop = function(){};
     const callbackToExecute = callback || noop;
     settings[key] = value;
