@@ -38,13 +38,15 @@ export const PlaylistSelect = ({onSelect, playlistUri, startSongIndex, shuffleSt
             .catch((e) => { console.log(e) });
     }
 
-    useEffect(async () => {
-        await fetchPlaylists(false);
+    useEffect(() => {
+        fetchPlaylists(false);
+    }, []);
 
+    useEffect(() => {
         if (playlistUri) {
             fetchTracks(playlistUri)
         }
-    }, []);
+    }, [playlistUri]);
 
     const onChangePlaylist = (e) => {
         onSelect(e, 'contextUri');

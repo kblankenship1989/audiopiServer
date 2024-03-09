@@ -110,32 +110,28 @@ export const AlarmsPage = (props) => {
         })
     }
 
-    const addAlarm = (event) => {
+    const addAlarm = async (event) => {
         event.preventDefault();
-        fetch(apiBaseUrl + `/alarms`, {
+        await fetch(apiBaseUrl + `/alarms`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify(selectedAlarm),
-        })
-            .then(() => {
-                loadAlarms();
-            });
+        });
+        loadAlarms();
     };
 
-    const updateAlarm = (event) => {
+    const updateAlarm = async (event) => {
         event.preventDefault();
-        fetch(apiBaseUrl + `/alarms/${selectedAlarm.alarmId}`, {
+        await fetch(apiBaseUrl + `/alarms/${selectedAlarm.alarmId}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify(selectedAlarm),
-        })
-            .then(() => {
-                return loadAlarms();
-            });
+        });
+        loadAlarms();
     };
 
     const deleteAlarm = (event) => {
@@ -359,7 +355,7 @@ export const AlarmsPage = (props) => {
                                 <Button
                                     color="danger"
                                     outline
-                                    onClick={() => deleteAlarm()}
+                                    onClick={deleteAlarm}
                                     active={selectedAlarm.isEnabled}
                                     disabled={selectedAlarm.alarmId === 'add-new'}
                                 >
