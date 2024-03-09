@@ -86,9 +86,12 @@ export const getPlaylistTracks = async (playlistId) => {
     console.log('fetching tracks for playlist ', playlistId);
 
     const authToken = await getAccessToken();
+    const url = `https://api.spotify.com/v1/playlists/${playlistId}/tracks?offset=0&limit=100&locale=en-US%2Cen%3Bq%3D0.9&fields=items(track(name)`;
+
+    console.log(url);
 
     try {
-        const response = await fetch(`https://api.spotify.com/v1/playlists/${playlistId}/tracks?offset=0&limit=100&locale=en-US%2Cen%3Bq%3D0.9&fields=items(track(name)`, {
+        const response = await fetch(url, {
             headers: {
                 'Authorization': `Bearer ${authToken}`
             },
