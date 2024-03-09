@@ -70,17 +70,69 @@ export const getPlaylists = async (shouldRefresh) => {
 
         playlists = items.map((playlist) => ({
             name: playlist.name,
-            uri: playlist.uri
+            uri: playlist.uri,
+            tracksHref: playlist.tracks.href
         }));
 
         return playlists;
     } catch (err) {
         console.log(err);
-        return null;
+        return [];
     }
 }
 
-export const startPlayback = async (contextUri, timeoutInMinutes) => {
+export const getPlaylistTracks = async (tracksHref) => {
+    console.log('fetching tracks for playlist.');
+
+    const authToken = await getAccessToken();
+
+    try {
+        const response = await fetch(tracksHref + "&fields=items(track(name)", {
+            headers: {
+                'Authorization': `Bearer ${authToken}`
+            },
+            method: 'GET'
+        });
+
+        const {
+            items
+        } = await response.json();
+
+        const tracks = items.map(({track}) => ({
+            name: track.name
+        }));
+
+        return tracks;
+    } catch (err) {
+        console.log(err);
+        return [];
+    }
+}
+
+const toggleShuffle = async (shuffleState) => {
+    const authToken = await getAccessToken();
+
+    if (!raspotify) {
+        await getDeviceId();
+    }
+
+    try {
+        await fetch(`https://api.spotify.com/v1/me/player/shuffle?device_id=${raspotify.id}&state=${shuffleState}`, {
+            headers: {
+                'Authorization': `Bearer ${authToken}`
+            },
+            method: 'PUT'
+        });
+
+        return true;
+    } catch (err) {
+        console.log(err);
+        raspotify = null;
+        return false
+    }
+}
+
+export const startPlayback = async (contextUri, timeoutInMinutes, startTrack = 1, shuffleState = false) => {
     const authToken = await getAccessToken();
 
     if (!raspotify) {
@@ -91,7 +143,7 @@ export const startPlayback = async (contextUri, timeoutInMinutes) => {
     const body = JSON.stringify({
         "context_uri": contextUri,
         "offset": {
-            "position": 1
+            "position": startTrack
         },
         "position_ms": 0
     });
@@ -105,6 +157,8 @@ export const startPlayback = async (contextUri, timeoutInMinutes) => {
             method: 'PUT',
             body
         });
+
+        await toggleShuffle(shuffleState);
 
         if (timeoutInMinutes) {
             setPlaybackTimeout(timeoutInMinutes);
@@ -132,6 +186,8 @@ export const pausePlayback = async () => {
             },
             method: 'PUT'
         });
+
+        await toggleShuffle(false);
     } catch (err) {
         console.log(err);
 

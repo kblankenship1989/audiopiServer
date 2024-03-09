@@ -4,9 +4,11 @@ import { startPlayback } from "./spotify";
 export const startTimer = ({
     relays,
     contextUri,
-    timeoutInMinutes
+    timeoutInMinutes,
+    startSongIndex,
+    shuffleState
 }) => {
     updateRelays(relays);
 
-    startPlayback(contextUri, timeoutInMinutes);
+    startPlayback(contextUri, timeoutInMinutes, startSongIndex, shuffleState);
 };

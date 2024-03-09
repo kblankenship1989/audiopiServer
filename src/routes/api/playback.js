@@ -1,7 +1,7 @@
 import {
     Router
 } from 'express';
-import { getDeviceId, getPlaylists, pausePlayback, startPlayback } from '../../services/spotify';
+import { getDeviceId, getPlaylistTracks, getPlaylists, pausePlayback, startPlayback } from '../../services/spotify';
 
 const playbackRouter = Router();
 
@@ -10,10 +10,16 @@ playbackRouter.get('/device', async (req, res) => {
         res.statusCode = 200;
         res.setHeader('Content-Type', 'application/json');
         res.json(await getDeviceId());
-    }).get('/playlists', async (req, res) => {
+    })
+    .get('/playlists', async (req, res) => {
         res.statusCode = 200;
         res.setHeader('Content-Type', 'application/json');
         res.json(await getPlaylists(req.params.refresh));
+    })
+    .get('/tracks', async (req, res) => {
+        res.statusCode = 200;
+        res.setHeader('Content-Type', 'application/json');
+        res.json(await getPlaylistTracks(req.params.trackHref));
     })
     .put('/start', function (req, res) {
         startPlayback(req.body.context_uri);
