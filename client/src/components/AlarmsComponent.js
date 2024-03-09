@@ -361,6 +361,7 @@ export const AlarmsPage = (props) => {
                                     outline
                                     onClick={() => deleteAlarm()}
                                     active={selectedAlarm.isEnabled}
+                                    disabled={selectedAlarm.alarmId === 'add-new'}
                                 >
                                     Delete
                                 </Button>
