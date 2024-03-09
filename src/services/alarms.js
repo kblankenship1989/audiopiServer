@@ -13,7 +13,12 @@ export const startAlarmPlayback = async (alarmId) => {
 
     updateRelays(alarm.relays);
 
-    return await startPlayback(alarm.contextUri, alarm.timeoutInMinutes || timeoutInMinutes);
+    return await startPlayback(
+        alarm.contextUri,
+        alarm.timeoutInMinutes || timeoutInMinutes,
+        alarm.startSongIndex,
+        alarm.shuffleState
+    );
 };
 
 export const getNextAlarm = (alarmId) => {
