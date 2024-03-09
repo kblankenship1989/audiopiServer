@@ -83,7 +83,7 @@ export const getPlaylists = async (shouldRefresh) => {
 }
 
 export const getPlaylistTracks = async (playlistId) => {
-    console.log('fetching tracks for playlist.');
+    console.log('fetching tracks for playlist ', playlistId);
 
     const authToken = await getAccessToken();
 
@@ -95,11 +95,11 @@ export const getPlaylistTracks = async (playlistId) => {
             method: 'GET'
         });
 
-        const {
-            items
-        } = await response.json();
+        const responseData = await response.json();
 
-        const tracks = items.map(({track}) => ({
+        console.log(JSON.stringify(responseData));
+
+        const tracks = responseData.items.map(({track}) => ({
             name: track.name
         }));
 
