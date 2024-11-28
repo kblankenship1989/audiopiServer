@@ -17,7 +17,8 @@ export const startAlarmPlayback = async (alarmId) => {
         alarm.contextUri,
         alarm.timeoutInMinutes || timeoutInMinutes,
         alarm.startSongIndex,
-        alarm.shuffleState
+        alarm.shuffleState,
+        alarm.volume
     );
 };
 

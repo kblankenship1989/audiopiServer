@@ -6,9 +6,10 @@ export const startTimer = ({
     contextUri,
     timeoutInMinutes,
     startSongIndex,
-    shuffleState
+    shuffleState,
+    volume
 }) => {
     updateRelays(relays);
 
-    startPlayback(contextUri, timeoutInMinutes, startSongIndex, shuffleState);
+    startPlayback(contextUri, timeoutInMinutes, startSongIndex, shuffleState, volume);
 };

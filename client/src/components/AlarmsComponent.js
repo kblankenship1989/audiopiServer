@@ -18,7 +18,8 @@ const DEFAULT_ALARM = (relays) => ({
     relays: {
         ...relays,
         alarmOverride: true
-    }
+    },
+    volume: 50
 });
 
 export const AlarmsPage = (props) => {
@@ -81,7 +82,10 @@ export const AlarmsPage = (props) => {
         if (alarmId === 'add-new') {
             setSelectedAlarm(DEFAULT_ALARM(props.relays));
         } else {
-            setSelectedAlarm(currentAlarms.find((alarm) => alarm.alarmId === alarmId));
+            setSelectedAlarm({
+                ...DEFAULT_ALARM(props.relays),
+                ...currentAlarms.find((alarm) => alarm.alarmId === alarmId)
+            });
         }
     };
 
@@ -287,7 +291,7 @@ export const AlarmsPage = (props) => {
                                         max="120"
                                         name="timeout"
                                         id="timeout"
-                                        value={selectedAlarm.timeoutInMinutes || 0}
+                                        value={selectedAlarm.timeoutInMinutes}
                                         onChange={(e) => onEditChangeHandler(e, 'timeoutInMinutes')} />
                                 </Row>
                             </FormGroup>
@@ -315,6 +319,19 @@ export const AlarmsPage = (props) => {
                                 shuffleState={selectedAlarm.shuffleState}
                                 startSongIndex={selectedAlarm.startSongIndex}
                             />
+                            <FormGroup>
+                                <Row>
+                                    <Label className="col-md-3" for="volume">{'Volume'}</Label>
+                                    <Input
+                                        type="range"
+                                        min="0"
+                                        max="100"
+                                        name="volume"
+                                        id="volume"
+                                        value={selectedAlarm.volume}
+                                        onChange={(e) => onEditChangeHandler(e, 'volume')} />
+                                </Row>
+                            </FormGroup>
                             <FormGroup>
                                 <Row>
                                     <Label className="col-md-3" for="first-floor">First Floor</Label>

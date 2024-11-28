@@ -9,7 +9,8 @@ const DEFAULT_STATE = (relays) => ({
     timeoutInMinutes: 0,
     startSongIndex: 0,
     shuffleState: false,
-    relays
+    relays,
+    volume: 50
 });
 
 export const TimerPage = ({relays}) => {
@@ -51,6 +52,19 @@ export const TimerPage = ({relays}) => {
                     />
                     <FormGroup>
                         <Row>
+                            <Label className="col-md-3" for="volume">{'Volume'}</Label>
+                            <Input
+                                type="range"
+                                min="0"
+                                max="100"
+                                name="volume"
+                                id="volume"
+                                value={selections.volume}
+                                onChange={(e) => setSelections({...selections, volume: e.target.value})} />
+                        </Row>
+                    </FormGroup>
+                    <FormGroup>
+                        <Row>
                             <Label className="col-md-3" for="timeout">{'Duration (in Minutes)'}</Label>
                             <Input
                                 className="col-md-3"
@@ -59,7 +73,7 @@ export const TimerPage = ({relays}) => {
                                 max="120"
                                 name="timeout"
                                 id="timeout"
-                                value={selections.timeoutInMinutes || 0}
+                                value={selections.timeoutInMinutes}
                                 onChange={(e) => setSelections({...selections, timeoutInMinutes: e.target.value})} />
                         </Row>
                     </FormGroup>
