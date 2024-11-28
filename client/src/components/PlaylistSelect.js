@@ -25,17 +25,19 @@ export const PlaylistSelect = ({onSelect, playlistUri, startSongIndex, shuffleSt
     const fetchTracks = (newPlaylistUri) => {
         const currentPlaylist = playlists.find((playlist) => playlist.uri === newPlaylistUri);
 
-        fetch(apiBaseUrl + `/playback/tracks?playlistId=${currentPlaylist.playlistId}`, { method: 'GET' })
-            .then((response) => {
-                return response.json();
-            })
-            .then((tracksResponse) => {
-                if (tracksResponse.length)
-                    setTracks(tracksResponse);
-                else
-                    throw new Error('No tracks returned');
-            })
-            .catch((e) => { console.log(e) });
+        if (currentPlaylist) {
+            fetch(apiBaseUrl + `/playback/tracks?playlistId=${currentPlaylist.playlistId}`, { method: 'GET' })
+                .then((response) => {
+                    return response.json();
+                })
+                .then((tracksResponse) => {
+                    if (tracksResponse.length)
+                        setTracks(tracksResponse);
+                    else
+                        throw new Error('No tracks returned');
+                })
+                .catch((e) => { console.log(e) });
+        }
     }
 
     useEffect(() => {
@@ -88,7 +90,7 @@ export const PlaylistSelect = ({onSelect, playlistUri, startSongIndex, shuffleSt
                     <Label className="col-md-3" for="start-song-index">Start Track</Label>
                     <Input
                         className="col-md-3 col-10"
-                        disabled={!playlistUri}
+                        disabled={!tracks.length}
                         id={'start-song-index'}
                         name={'start-song-index'}
                         onChange={(e) => onSelect(e, 'startSongIndex')}
