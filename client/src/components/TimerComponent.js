@@ -52,8 +52,9 @@ export const TimerPage = ({relays}) => {
                     />
                     <FormGroup>
                         <Row>
-                            <Label className="col-md-3" for="volume">{'Volume'}</Label>
+                            <Label className="col-md-3" for="volume">{`Volume: ${selections.volume}`}</Label>
                             <Input
+                                className="col-md-6"
                                 type="range"
                                 min="0"
                                 max="100"
