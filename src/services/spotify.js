@@ -68,7 +68,7 @@ export const getPlaylists = async (shouldRefresh) => {
             items
         } = await response.json();
 
-        playlists = items.map((playlist) => ({
+        playlists = items.filter((playlist) => Boolean(playlist)).map((playlist) => ({
             playlistId: playlist.id,
             name: playlist.name,
             uri: playlist.uri,
