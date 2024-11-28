@@ -1,8 +1,8 @@
 import {Relay} from '../classes/Relay';
 import {getSettings, updateSetting} from './settings';
 
-const secondFloor = new Relay(11, 9, 10);
-const firstFloor = new Relay(25, 8, 7);
+const secondFloor = new Relay(523, 521, 522);
+const firstFloor = new Relay(537, 520, 519);
 
 export const  updateRelays = (newState, callback) => {
     firstFloor.setRelays(newState.firstFloorRelayState);

@@ -32,7 +32,7 @@ export const getDeviceId = async () => {
                 devices
             } = jsonResponse;
 
-            raspotify = devices.find((device) => device.name === 'raspotify (pandorapi)'); // point to /etc/default/raspotify -> DEVICE_NAME
+            raspotify = devices.find((device) => device.name === 'Spotipi Spotify'); // point to /etc/default/raspotify -> DEVICE_NAME
         }
 
         if (raspotify) {
@@ -113,6 +113,29 @@ export const getPlaylistTracks = async (playlistId) => {
     }
 }
 
+const setVolume = async (volumePercent) => {
+    const authToken = await getAccessToken();
+
+    if (!raspotify) {
+        await getDeviceId();
+    }
+
+    try {
+        await fetch(`https://api.spotify.com/v1/me/player/volume?device_id=${raspotify.id}&volume_percent=${volumePercent}`, {
+            headers: {
+                'Authorization': `Bearer ${authToken}`
+            },
+            method: 'PUT'
+        });
+
+        return true;
+    } catch (err) {
+        console.log(err);
+        raspotify = null;
+        return false
+    }
+}
+
 const toggleShuffle = async (shuffleState) => {
     const authToken = await getAccessToken();
 
@@ -163,6 +186,7 @@ export const startPlayback = async (contextUri, timeoutInMinutes, startTrack = 1
         });
 
         await toggleShuffle(shuffleState);
+        await setVolume(50);
 
         if (timeoutInMinutes) {
             setPlaybackTimeout(timeoutInMinutes);
