@@ -159,7 +159,7 @@ const toggleShuffle = async (shuffleState) => {
     }
 }
 
-export const startPlayback = async (contextUri, timeoutInMinutes, startTrack = 1, shuffleState = false) => {
+export const startPlayback = async (contextUri, timeoutInMinutes, startTrack = 1, shuffleState = false, volume = 50) => {
     const authToken = await getAccessToken();
 
     if (!raspotify) {
@@ -186,7 +186,7 @@ export const startPlayback = async (contextUri, timeoutInMinutes, startTrack = 1
         });
 
         await toggleShuffle(shuffleState);
-        await setVolume(50);
+        await setVolume(volume);
 
         if (timeoutInMinutes) {
             setPlaybackTimeout(timeoutInMinutes);

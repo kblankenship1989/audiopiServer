@@ -1,15 +1,6 @@
 import {
     Router
 } from 'express';
-import {
-    getAlarms,
-    addAlarm,
-    removeAlarm,
-    getNextAlarm,
-    updateAlarm,
-    startAlarmPlayback,
-    cancelNextRun
-} from '../../services/alarms';
 import { startTimer } from '../../services/timer';
 
 const timerRouter = Router();
