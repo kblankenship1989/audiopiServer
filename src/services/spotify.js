@@ -72,7 +72,7 @@ export const getPlaylists = async (shouldRefresh) => {
             playlistId: playlist.id,
             name: playlist.name,
             uri: playlist.uri,
-            tracksHref: playlist.tracks.href
+            tracksHref: playlist.items.href
         }));
 
         return playlists;
@@ -86,7 +86,7 @@ export const getPlaylistTracks = async (playlistId) => {
     console.log('fetching tracks for playlist ', playlistId);
 
     const authToken = await getAccessToken();
-    const url = `https://api.spotify.com/v1/playlists/${playlistId}/tracks?offset=0&limit=100&locale=en-US%2Cen%3Bq%3D0.9&fields=items(track(name)`;
+    const url = `https://api.spotify.com/v1/playlists/${playlistId}/items?offset=0&limit=100&locale=en-US%2Cen%3Bq%3D0.9&fields=items(track(name)`;
 
     console.log(url);
 
@@ -102,8 +102,8 @@ export const getPlaylistTracks = async (playlistId) => {
 
         console.log(JSON.stringify(responseData));
 
-        const tracks = responseData.items.map(({track}) => ({
-            name: track.name
+        const tracks = responseData.items.map(({item}) => ({
+            name: item.name
         }));
 
         return tracks;
