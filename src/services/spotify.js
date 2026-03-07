@@ -36,6 +36,7 @@ export const getDeviceId = async () => {
         }
 
         if (raspotify) {
+            console.log('found Spotipi deviceId: ', raspotify.id);
             return raspotify.id;
         }
 
@@ -78,6 +79,9 @@ export const getPlaylists = async (shouldRefresh) => {
         return playlists;
     } catch (err) {
         console.log(err);
+        if (items) {
+            console.log(items)
+        }
         return [];
     }
 }
@@ -165,7 +169,7 @@ export const startPlayback = async (contextUri, timeoutInMinutes, startTrack = 1
     if (!raspotify) {
         await getDeviceId();
     }
-    console.log('deviceId: ', raspotify.id);
+    
 
     const body = JSON.stringify({
         "context_uri": contextUri,
