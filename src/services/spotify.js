@@ -65,6 +65,12 @@ export const getPlaylists = async (shouldRefresh) => {
             method: 'GET'
         });
 
+        if (response.headers.get('content-type') !== 'application/json') {
+            const rawText = await response.text();
+            console.log(rawText);
+
+            throw new Error('No json returned, received ' + rawText);
+        }
         const {
             items
         } = await response.json();
@@ -79,9 +85,6 @@ export const getPlaylists = async (shouldRefresh) => {
         return playlists;
     } catch (err) {
         console.log(err);
-        if (items) {
-            console.log(items)
-        }
         return [];
     }
 }
